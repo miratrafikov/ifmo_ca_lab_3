@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29613.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ifmo_ca_lab_3", "ifmo_ca_lab_3\ifmo_ca_lab_3.csproj", "{FEA057CF-8C65-4ACD-B72A-26655C3800A0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FEA057CF-8C65-4ACD-B72A-26655C3800A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FEA057CF-8C65-4ACD-B72A-26655C3800A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FEA057CF-8C65-4ACD-B72A-26655C3800A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FEA057CF-8C65-4ACD-B72A-26655C3800A0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {642F4386-5C87-4CA4-AEA4-06493C03BEAA}
+	EndGlobalSection
+EndGlobal
