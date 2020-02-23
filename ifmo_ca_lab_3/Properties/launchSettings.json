@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "ifmo_ca_lab_3": {
+      "commandName": "Project",
+      "commandLineArgs": "test"
+    }
+  }
+}
