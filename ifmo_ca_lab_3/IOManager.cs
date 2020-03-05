@@ -2,11 +2,15 @@
 using System.IO;
 using System.Xml;
 using System.Diagnostics;
+using ifmo_ca_lab_3.Base;
+using ifmo_ca_lab_3.Base.Expressions;
+using ifmo_ca_lab_3.Base.Interfaces;
+using System.Collections.Generic;
 
 namespace ShiftCo.ITMO.CA.Lab_2
 {
     class IOManager
-    {
+    {/*
         #region Messages
         const string invalidArgumentsMessage = "ERROR: Program takes 1 required argument and 1 optional." +
                                                "\nPossible required arguments are:\n" +
@@ -97,6 +101,14 @@ namespace ShiftCo.ITMO.CA.Lab_2
                                      TimeSpan.Milliseconds / 10);
                 Console.Write("Time elapsed (h:m:s:ms): " + elapsedTime);
             }
+        }
+    */
+        public static void Main()
+        {
+            Expression sum4 = new SumExpression(new List<IOperand> { new Value(4) });
+            var list = new List<IOperand> { new Value(3), new Value(5), new Symbol("a"), sum4};
+            Expression expr = new SumExpression(list);
+            expr.Evaluate();
         }
     }
 }
