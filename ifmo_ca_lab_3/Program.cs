@@ -7,7 +7,7 @@ namespace ifmo_ca_lab_3
 {
     class Program
     {
-        static string str = "add(pow(1, x), sub(y, 5))";
+        static string str = "add(pow(1, x), 2)";
 
         // Список найденных лексером токенов
         static List<Token> Tokens = new List<Token>();
@@ -16,6 +16,7 @@ namespace ifmo_ca_lab_3
         {
             NormalizeString(ref str);
             Console.WriteLine(Lexer.Tokenize(str, ref Tokens));
+            Console.WriteLine(Parser.Validate(Tokens));
         }
 
         static void NormalizeString(ref string str)
