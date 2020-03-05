@@ -4,31 +4,17 @@ namespace ifmo_ca_lab_3.Lexical
 {
     struct Token
     {
-        public int type;
+        public int typeId;
         public string content;
         public int startPos;
         public string typeDescription;
 
         public Token(int tokenType, string tokenContent, int tokenStartPos)
         {
-            type = tokenType;
+            typeId = tokenType;
             content = tokenContent;
             startPos = tokenStartPos;
-            typeDescription = Enum.GetName(typeof(TokenTypes), type);
+            typeDescription = Enum.GetName(typeof(TokenTypes), typeId);
         }
-    }
-
-    public enum TokenTypes
-    {
-        Add,
-        Sub,
-        Mul,
-        Pow,
-        Variable,
-        Number,
-        LeftBracket,
-        RightBracket,
-        Comma,
-        Space
     }
 }

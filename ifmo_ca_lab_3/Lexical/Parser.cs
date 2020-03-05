@@ -1,75 +1,60 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+
+using ifmo_ca_lab_3.Base;
+using ifmo_ca_lab_3.Base.Expressions;
 
 namespace ifmo_ca_lab_3.Lexical
 {
     static class Parser
     {
-        static string[] regulars = new string[10];
-        static int[] opCodes = { (int)TokenTypes.Add, (int)TokenTypes.Sub, (int)TokenTypes.Mul, (int)TokenTypes.Pow };
+        // Список токенов и его итератор
+        static List<Token> Tokens;
+        static int itToken = 0;
 
-        static int currToken = 0;
-
-        public static void ParseExpression(List<Token> Tokens)
+        public static object ParseTokenList(List<Token> Tokens)
         {
-            switch (Tokens[currToken].type)
-            {
-                case (int)TokenTypes.Number:
-                    return ParseNumber(List < Token > Tokens);
-                    break;
-                case (int)TokenTypes.Variable:
-
-                    break;
-                default:
-                    if (Tokens[currToken].type == (int)TokenTypes.Add || Tokens[currToken].type == (int)TokenTypes.Mul ||
-                        Tokens[currToken].type == (int)TokenTypes.Pow)
-                    {
-
-                    }
-                    else
-                    {
-
-                    }
-                    break;
-            }
+            Parser.Tokens = Tokens;
+            return ParseToken();
         }
 
-
-
-
-
-        public static string Validate(List<Token> Tokens)
+        private static object ParseToken()
         {
-            InitializeRegulars();
-            Console.WriteLine(regulars[(int)TokenTypes.Add]);
-
-            string str = "";
-            foreach (Token Token in Tokens)
+            if (Tokens[itToken].typeId == (int)TokenTypes.Number)
             {
-                str += Token.type.ToString();
+                object result = ParseNumber();
+                itToken++;
+                return result;
             }
-            return str;
+            if (Tokens[itToken].typeId == (int)TokenTypes.Variable)
+            {
+                object result = ParseVariable();
+                itToken++;
+                return result;
+            }
+            if (Tokens[itToken].typeId == (int)TokenTypes.Sum || Tokens[itToken].typeId == (int)TokenTypes.Mul ||
+                Tokens[itToken].typeId == (int)TokenTypes.Pow)
+            {
+                object result = ParseExpression();
+                itToken++;
+                return result;
+            }
+            throw new Exception("Token error");
         }
 
-        private static void InitializeRegulars()
+        private static Value ParseNumber()
         {
-            regulars[(int)TokenTypes.Add] = BuildRule((int)TokenTypes.Add, false);
+            return new Value(Convert.ToInt32(Tokens[itToken].content));
         }
 
-        private static string BuildRule(int opCode, bool second)
+        private static Symbol ParseVariable()
         {
-            string rule = $"_{opCode}_{(int)TokenTypes.LeftBracket}";
-            rule += "(";
-            foreach(int code in opCodes)
-            {
-                rule += $"_{code}";
-            }
-            rule += $"_{(int)TokenTypes.Variable}_{(int)TokenTypes.Number}";
-            rule += ")";
-            rule += $"_{(int)TokenTypes.Comma}";
-            rule += $"_{(int)TokenTypes.RightBracket}";
-            return rule;
+            return new Symbol(Tokens[itToken].content);
+        }
+
+        private static Expression ParseExpression()
+        {
+            return new SumExpression();
         }
     }
 }
