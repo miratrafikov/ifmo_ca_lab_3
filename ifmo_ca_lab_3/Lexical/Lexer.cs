@@ -23,23 +23,23 @@ namespace ifmo_ca_lab_3.Lexical
         {
             foreach (char ch in str)
             {
-                State.currPos++;
+                LexerState.currPos++;
                 if (!alphabet.Contains(ch))
                 {
-                    throw new Exception($"Error: Unrecognized character \"{ch}\" at position {State.currPos}.");
+                    throw new Exception($"Error: Unrecognized character \"{ch}\" at position {LexerState.currPos}.");
                 }
-                switch (State.tokenExpected)
+                switch (LexerState.tokenExpected)
                 {
                     case (int)TokenExpectations.No:
-                        State.tokenStartPos = State.currPos;
+                        LexerState.tokenStartPos = LexerState.currPos;
                         if (letters.Contains(ch))
                         {
-                            State.tokenExpected = (int)TokenExpectations.Letter;
+                            LexerState.tokenExpected = (int)TokenExpectations.Letter;
                             continue;
                         }
                         if (numbers.Contains(ch))
                         {
-                            State.tokenExpected = (int)TokenExpectations.Number;
+                            LexerState.tokenExpected = (int)TokenExpectations.Number;
                             continue;
                         }
                         MakeToken(str);
@@ -47,32 +47,32 @@ namespace ifmo_ca_lab_3.Lexical
                     case (int)TokenExpectations.Letter:
                         if (CharDisallowed(ch))
                         {
-                            throw new Exception($"Error: Forbidden character \"{ch}\" at position {State.currPos}.");
+                            throw new Exception($"Error: Forbidden character \"{ch}\" at position {LexerState.currPos}.");
                         }
                         if (!letters.Contains(ch))
                         {
                             MakeToken(str);
-                            State.tokenStartPos = State.currPos;
+                            LexerState.tokenStartPos = LexerState.currPos;
                             MakeToken(str);
                         }
                         break;
                     case (int)TokenExpectations.Number:
                         if (CharDisallowed(ch))
                         {
-                            throw new Exception($"Error: Forbidden character \"{ch}\" at position {State.currPos}.");
+                            throw new Exception($"Error: Forbidden character \"{ch}\" at position {LexerState.currPos}.");
                         }
                         if (!numbers.Contains(ch))
                         {
                             MakeToken(str);
-                            State.tokenStartPos = State.currPos;
+                            LexerState.tokenStartPos = LexerState.currPos;
                             MakeToken(str);
                         }
                         break;
                 }
             }
-            if (State.tokenExpected != (int)TokenExpectations.No)
+            if (LexerState.tokenExpected != (int)TokenExpectations.No)
             {
-                State.currPos++;
+                LexerState.currPos++;
                 MakeToken(str);
             }
             return Tokens;
@@ -80,7 +80,7 @@ namespace ifmo_ca_lab_3.Lexical
 
         private static bool CharDisallowed(char ch)
         {
-            switch (State.tokenExpected)
+            switch (LexerState.tokenExpected)
             {
                 case (int)TokenExpectations.Letter:
                     if (numbers.Contains(ch) || space.Contains(ch))
@@ -101,18 +101,18 @@ namespace ifmo_ca_lab_3.Lexical
         private static void MakeToken(string str)
         {
             // Сбор информации и добавление нового токена в коллекцию
-            int contentLength = Convert.ToBoolean(State.tokenExpected) ? State.currPos - State.tokenStartPos : 1;
-            string tokenContent = str.Substring(State.tokenStartPos, contentLength);
+            int contentLength = Convert.ToBoolean(LexerState.tokenExpected) ? LexerState.currPos - LexerState.tokenStartPos : 1;
+            string tokenContent = str.Substring(LexerState.tokenStartPos, contentLength);
             int tokenType = DetermineTokenType(tokenContent);
-            Tokens.Add(new Token(tokenType, tokenContent, State.tokenStartPos));
+            Tokens.Add(new Token(tokenType, tokenContent, LexerState.tokenStartPos));
 
             // Сброс состояния ожидания
-            State.tokenExpected = (int)TokenExpectations.No;
+            LexerState.tokenExpected = (int)TokenExpectations.No;
         }
 
         private static int DetermineTokenType(string tokenContent)
         {
-            switch (State.tokenExpected)
+            switch (LexerState.tokenExpected)
             {
                 case (int)TokenExpectations.Letter:
                     if (Array.Exists(Functions, el => el == tokenContent))

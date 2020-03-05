@@ -2,12 +2,16 @@
 using System.Collections.Generic;
 
 using ifmo_ca_lab_3.Lexical;
+using ifmo_ca_lab_3.Base;
+using ifmo_ca_lab_3.Base.Interfaces;
+using ifmo_ca_lab_3.Base.Expressions;
+using System.Linq;
 
 namespace ifmo_ca_lab_3
 {
     class Program
     {
-        static string str = "add(1, pow(54, x))";
+        static string str = "sum(1, sum(54, 5))";
 
         // Список найденных лексером токенов
         static List<Token> Tokens;
@@ -29,6 +33,9 @@ namespace ifmo_ca_lab_3
 
                 // Работа парсера
                 RetrievedObject = Parser.ParseTokenList(Tokens);
+
+                // Вывод дерева объектов
+                OutputObjectTree(RetrievedObject, 0);
             }
             catch (Exception ex)
             {
@@ -49,7 +56,26 @@ namespace ifmo_ca_lab_3
             {
                 table.AddRow(Token.typeId, Token.typeDescription, Token.content, Token.startPos);
             }
-            table.Write();
+            table.Write(ConsoleTables.Format.Alternative);
+        }
+
+        private static int OutputObjectTree(object Node, int layer)
+        {
+            Console.Write($"{string.Concat(Enumerable.Repeat("-", layer*2))}{Node.GetType().Name}");
+            if (Node.GetType() == typeof(SumExpression))
+            {
+                foreach (IOperand Op in ((Expression)Node).Operands)
+                {
+                    Console.WriteLine();
+                    layer++;
+                    layer = OutputObjectTree(Op, layer);
+                }
+            }
+            if (Node.GetType() == typeof(Value))
+            {
+                Console.Write($" {((Value)Node).Key}");
+            }
+            return --layer;
         }
     }
 }
