@@ -1,16 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using ifmo_ca_lab_3.Lexical;
 using ifmo_ca_lab_3.Base;
 using ifmo_ca_lab_3.Base.Interfaces;
 using ifmo_ca_lab_3.Base.Expressions;
-using System.Linq;
 
 namespace ifmo_ca_lab_3
 {
     class Program
     {
+        // АХТУНГ
+        // Раскаменчивай нужный регион, каменчивай ненужный
+        // Можно свернуть регион и закомментить, но лудше тогда начинать с нижнего камента
+        // Или забить хуй и тупа юзать CTRL+K CTRL+F, чтобы идэйе исправила пошедшие по пизде отступы и проч.
+
+        /*
+        #region Код Патоха 🤮
+        static void Main()
+        {
+        }
+        #endregion
+        */
+
+        #region Код Мирата 😎
         static string str = "sum(1, sum(54, 5))";
 
         // Список найденных лексером токенов
@@ -42,6 +56,7 @@ namespace ifmo_ca_lab_3
                 // Вывод информации об ошибке
                 Console.WriteLine(ex.Message);
             }
+            #endregion
         }
 
         private static void NormalizeString(ref string str)
@@ -61,7 +76,7 @@ namespace ifmo_ca_lab_3
 
         private static int OutputObjectTree(object Node, int layer)
         {
-            Console.Write($"{string.Concat(Enumerable.Repeat("-", layer*2))}{Node.GetType().Name}");
+            Console.Write($"{string.Concat(Enumerable.Repeat("-", layer * 2))}{Node.GetType().Name}");
             if (Node.GetType() == typeof(SumExpression))
             {
                 foreach (IOperand Op in ((Expression)Node).Operands)
