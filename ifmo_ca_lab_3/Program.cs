@@ -32,10 +32,10 @@ namespace ifmo_ca_lab_3
                 OutputTokens();
 
                 // Работа парсера
-                RetrievedObject = Parser.ParseTokenList(Tokens);
+                //RetrievedObject = Parser.ParseTokenList(Tokens);
 
                 // Вывод дерева объектов
-                OutputObjectTree(RetrievedObject, 0);
+                //OutputObjectTree(RetrievedObject, 0);
             }
             catch (Exception ex)
             {

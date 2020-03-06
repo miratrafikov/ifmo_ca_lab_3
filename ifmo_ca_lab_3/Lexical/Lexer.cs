@@ -21,12 +21,12 @@ namespace ifmo_ca_lab_3.Lexical
 
         public static List<Token> Tokenize(string str)
         {
-            foreach (char ch in str)
+            for (LexerState.currPos = 0; LexerState.currPos < str.Length; LexerState.currPos++)
             {
-                LexerState.currPos++;
+                char ch = str[LexerState.currPos];
                 if (!alphabet.Contains(ch))
                 {
-                    throw new Exception($"Error: Unrecognized character \"{ch}\" at position {LexerState.currPos}.");
+                    throw new Exception($"Non-alphabetical character \"{ch}\" at position {LexerState.currPos}.");
                 }
                 switch (LexerState.tokenExpected)
                 {
