@@ -1,10 +1,8 @@
-﻿using ifmo_ca_lab_3.Base.Interfaces;
-using System;
+﻿using ifmo_ca_lab_3.Evaluation.Base.Interfaces;
 using System.Collections.Generic;
-using System.Text;
 using System.Linq;
 
-namespace ifmo_ca_lab_3.Base.Expressions
+namespace ifmo_ca_lab_3.Evaluation.Base.Expressions
 {
     public class MulExpression : Expression
     {
@@ -19,14 +17,14 @@ namespace ifmo_ca_lab_3.Base.Expressions
             this.Attributes = new List<IAttribute> { };
         }
 
-        public override void Evaluate() 
+        public override void Evaluate()
         {
             //evaluate each elemnt
             foreach (IOperand operand in Operands)
             {
                 if (operand is Expression)
                 {
-                    ((Expression) operand).Evaluate();
+                    ((Expression)operand).Evaluate();
                     if (((Expression)operand).IsPrimitive())
                     {
                         Operands.Add(((Expression)operand).Operands.First());
@@ -46,9 +44,9 @@ namespace ifmo_ca_lab_3.Base.Expressions
             // apply built-in definitions
             // primitive product
             var product = 1;
-            foreach (IOperand operand in Operands) 
+            foreach (IOperand operand in Operands)
             {
-                if (operand is Value) product *= ((Value) operand).Key;
+                if (operand is Value) product *= ((Value)operand).Key;
             }
             Operands.RemoveAll(o => o is Value);
             Operands.Add(new Value(product));

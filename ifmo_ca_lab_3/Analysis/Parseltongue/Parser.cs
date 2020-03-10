@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using ifmo_ca_lab_3.Base;
-using ifmo_ca_lab_3.Base.Interfaces;
-using ifmo_ca_lab_3.Base.Expressions;
+using ifmo_ca_lab_3.Evaluation.Base;
+using ifmo_ca_lab_3.Evaluation.Base.Interfaces;
+using ifmo_ca_lab_3.Evaluation.Base.Expressions;
+using ifmo_ca_lab_3.Analysis.Lexington;
 
-namespace ifmo_ca_lab_3.Lexical
+namespace ifmo_ca_lab_3.Analysis.Parseltongue
 {
+    /*
     static class Parser
     {
         // Список токенов и его итератор
@@ -21,20 +23,20 @@ namespace ifmo_ca_lab_3.Lexical
 
         private static object ParseToken()
         {
-            if (Tokens[itToken].typeId == (int)TokenTypes.Number)
+            if (Tokens[itToken].type == (int)TokenType.Number)
             {
                 object result = ParseNumber();
                 itToken++;
                 return result;
             }
-            if (Tokens[itToken].typeId == (int)TokenTypes.Variable)
+            if (Tokens[itToken].type == (int)TokenType.Variable)
             {
                 object result = ParseVariable();
                 itToken++;
                 return result;
             }
-            if (Tokens[itToken].typeId == (int)TokenTypes.Sum || Tokens[itToken].typeId == (int)TokenTypes.Mul ||
-                Tokens[itToken].typeId == (int)TokenTypes.Pow)
+            if (Tokens[itToken].type == (int)TokenType.Sum || Tokens[itToken].type == (int)TokenType.Mul ||
+                Tokens[itToken].type == (int)TokenType.Pow)
             {
                 object result = ParseExpression();
                 itToken++;
@@ -55,13 +57,13 @@ namespace ifmo_ca_lab_3.Lexical
 
         private static Expression ParseExpression()
         {
-            switch (Tokens[itToken].typeId)
+            switch (Tokens[itToken].type)
             {
-                case (int)TokenTypes.Sum:
+                case (int)TokenType.Sum:
                     return ParseSumExpression();
-                case (int)TokenTypes.Mul:
+                case (int)TokenType.Mul:
                     return ParseMulExpression();
-                case (int)TokenTypes.Pow:
+                case (int)TokenType.Pow:
                     return ParsePowExpression();
             }
             return new SumExpression();
@@ -71,25 +73,25 @@ namespace ifmo_ca_lab_3.Lexical
         {
             List<IOperand> Operands = new List<IOperand>();
             itToken++;
-            if (Tokens[itToken].typeId != (int)TokenTypes.LeftBracket)
+            if (Tokens[itToken].type != (int)TokenType.LeftBracket)
             {
                 throw new Exception($"Expected bracket token, token #{itToken}");
             }
             while (true)
             {
                 itToken++;
-                if (Tokens[itToken].typeId != (int)TokenTypes.Number && Tokens[itToken].typeId != (int)TokenTypes.Variable &&
-                    Tokens[itToken].typeId != (int)TokenTypes.Sum && Tokens[itToken].typeId != (int)TokenTypes.Mul &&
-                    Tokens[itToken].typeId != (int)TokenTypes.Pow)
+                if (Tokens[itToken].type != (int)TokenType.Number && Tokens[itToken].type != (int)TokenType.Variable &&
+                    Tokens[itToken].type != (int)TokenType.Sum && Tokens[itToken].type != (int)TokenType.Mul &&
+                    Tokens[itToken].type != (int)TokenType.Pow)
                 {
                     throw new Exception($"Expected number, variable or expression token, token #{itToken}");
                 }
-                switch (Tokens[itToken].typeId)
+                switch (Tokens[itToken].type)
                 {
-                    case (int)TokenTypes.Number:
+                    case (int)TokenType.Number:
                         Operands.Add(ParseNumber());
                         break;
-                    case (int)TokenTypes.Variable:
+                    case (int)TokenType.Variable:
                         Operands.Add(ParseVariable());
                         break;
                     default:
@@ -97,11 +99,11 @@ namespace ifmo_ca_lab_3.Lexical
                         break;
                 }
                 itToken++;
-                if (Tokens[itToken].typeId == (int)TokenTypes.RightBracket)
+                if (Tokens[itToken].type == (int)TokenType.RightBracket)
                 {
                     break;
                 }
-                if (Tokens[itToken].typeId != (int)TokenTypes.Comma)
+                if (Tokens[itToken].type != (int)TokenType.Comma)
                 {
                     throw new Exception($"Expected comma token, token #{itToken}");
                 }
@@ -118,4 +120,5 @@ namespace ifmo_ca_lab_3.Lexical
             return new SumExpression();
         }
     }
+    */
 }

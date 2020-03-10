@@ -1,10 +1,7 @@
-﻿using ifmo_ca_lab_3.Base.Interfaces;
-using System;
+﻿using ifmo_ca_lab_3.Evaluation.Base.Interfaces;
 using System.Collections.Generic;
-using System.Text;
-using System.Linq;
 
-namespace ifmo_ca_lab_3.Base.Expressions
+namespace ifmo_ca_lab_3.Evaluation.Base.Expressions
 {
     class SumExpression : Expression
     {
@@ -26,7 +23,7 @@ namespace ifmo_ca_lab_3.Base.Expressions
             {
                 if (operand is Expression)
                 {
-                    ((Expression) operand).Evaluate();
+                    ((Expression)operand).Evaluate();
                 }
             }
             /*int sumOfPrimitives = Operands.Where(o => o is Expression && ((Expression)o).IsPrimitive()).Aggregate(0, (acc, val) => acc + ((Value) ((Expression) val).Operands.First()).Key);
@@ -34,7 +31,7 @@ namespace ifmo_ca_lab_3.Base.Expressions
 
             RemovePrimitives();
 
-            
+
             // apply attributes
             foreach (IAttribute attr in Attributes)
             {

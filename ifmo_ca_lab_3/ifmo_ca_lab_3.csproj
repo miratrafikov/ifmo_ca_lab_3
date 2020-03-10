@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Base\Attributes\" />
+    <Folder Include="Evaluation\Base\Attributes\" />
     <PackageReference Include="ConsoleTables" Version="2.4.0" />
   </ItemGroup>
 

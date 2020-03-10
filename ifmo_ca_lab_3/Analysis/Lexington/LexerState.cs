@@ -1,4 +1,4 @@
-﻿namespace ifmo_ca_lab_3.Lexical
+﻿namespace ifmo_ca_lab_3.Analysis.Lexington
 {
     static class LexerState
     {
