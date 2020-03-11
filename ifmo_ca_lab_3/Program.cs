@@ -6,7 +6,6 @@ using ifmo_ca_lab_3.Analysis.Lexington;
 using ifmo_ca_lab_3.Talk;
 using ifmo_ca_lab_3.Evaluation.Base;
 using ifmo_ca_lab_3.Evaluation.Base.Interfaces;
-using ifmo_ca_lab_3.Evaluation.Base.Expressions;
 
 namespace ifmo_ca_lab_3
 {
@@ -18,14 +17,14 @@ namespace ifmo_ca_lab_3
         // Или забить хуй и тупа юзать CTRL+K CTRL+F, чтобы идэйе исправила пошедшие по пизде отступы и проч.
         // Ващета я это сделал т.к. произвел слияние вместо
 
-        /*
+       
         #region Код Патоха 🤮
         static void Main()
         {
         }
         #endregion
-        */
-
+        
+        /*
         #region Код Мирата 😎
         static string str = "sum(1, sum(54, 5))";
 
@@ -65,6 +64,6 @@ namespace ifmo_ca_lab_3
         {
             str = str.Replace(" ", String.Empty).ToLower();
         }
-        #endregion
+        #endregion*/
     }
 }

@@ -22,8 +22,7 @@ namespace ifmo_ca_lab_3.Base
         }
 
         public string Head { get; set; }
-
-        public dynamic Value { get; set; }
+        public object Key { get; set; }
 
         public int Operation(int val1, int val2)
         {

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using ifmo_ca_lab_3.Base.Interfaces;
+using ifmo_ca_lab_3.Evaluation.Interfaces;
 
-namespace ifmo_ca_lab_3.Base.Attributes
+namespace ifmo_ca_lab_3.Evaluation.Attributes
 {
     class OrderlessAttribute: IAttribute
     {

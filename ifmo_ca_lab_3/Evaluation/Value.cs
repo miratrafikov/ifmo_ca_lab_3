@@ -1,13 +1,17 @@
-﻿using ifmo_ca_lab_3.Evaluation.Base.Interfaces;
+﻿using ifmo_ca_lab_3.Evaluation.Interfaces;
 
 namespace ifmo_ca_lab_3.Evaluation.Base
 {
-    public class Value : IOperand
+    public class Value : IExpression
     {
-        public int Key { get; set; }
         public Value(int val)
         {
+            Head = "Value";
             Key = val;
         }
+
+        public object Key { get; set; }
+        public string Head { get; set; }
+        public void Evaluate() { }
     }
 }
