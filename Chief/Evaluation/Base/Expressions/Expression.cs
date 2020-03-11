@@ -1,8 +1,8 @@
-﻿using ifmo_ca_lab_3.Evaluation.Base.Interfaces;
+﻿using ShiftCo.ifmo_ca_lab_3.Evaluation.Base.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ifmo_ca_lab_3.Evaluation.Base.Expressions
+namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Base.Expressions
 {
     public abstract class Expression : IOperand
     {

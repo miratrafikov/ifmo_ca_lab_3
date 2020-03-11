@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using ifmo_ca_lab_3.Analysis.Lexington;
-using ifmo_ca_lab_3.Talk;
-using ifmo_ca_lab_3.Evaluation.Base;
-using ifmo_ca_lab_3.Evaluation.Base.Interfaces;
-using ifmo_ca_lab_3.Evaluation.Base.Expressions;
+using ShiftCo.ifmo_ca_lab_3.Analysis.Lexington;
+using ShiftCo.ifmo_ca_lab_3.Talk;
+using ShiftCo.ifmo_ca_lab_3.Evaluation.Base;
+using ShiftCo.ifmo_ca_lab_3.Evaluation.Base.Interfaces;
+using ShiftCo.ifmo_ca_lab_3.Evaluation.Base.Expressions;
 
-namespace ifmo_ca_lab_3
+namespace ShiftCo.ifmo_ca_lab_3
 {
     class Program
     {

@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "ifmo_ca_lab_3": {
+    "Chief": {
       "commandName": "Project",
       "commandLineArgs": "test"
     }

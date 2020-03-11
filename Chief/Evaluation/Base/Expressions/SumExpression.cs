@@ -1,7 +1,7 @@
-﻿using ifmo_ca_lab_3.Evaluation.Base.Interfaces;
+﻿using ShiftCo.ifmo_ca_lab_3.Evaluation.Base.Interfaces;
 using System.Collections.Generic;
 
-namespace ifmo_ca_lab_3.Evaluation.Base.Expressions
+namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Base.Expressions
 {
     class SumExpression : Expression
     {
