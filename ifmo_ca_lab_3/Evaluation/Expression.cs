@@ -42,41 +42,56 @@ namespace ifmo_ca_lab_3.Base
         public void Evaluate()
         {
             // evaluate the head of the expression
-            // look for head name in the context, replace if needed
-
+            // TODO: look for head name in the context, replace if needed
+            switch (Enum.Parse(typeof(HeadsEnum), Head))
+            {
+                case Heads.Set:
+                    // TODO: set stuff
+                    break;
+                case Heads.Delayed:
+                    // TODO: delayed stuff
+                    return;
+                case Heads.Head:
+                    Key = Head;
+                    return;
+                case Heads.Value:
+                    return;
+                case Heads.Symbol:
+                    return;
+                default:
+                    break;
+            }
             // evaluate each element
             foreach (var operand in Operands)
             {
+                switch (Enum.Parse(typeof(HeadsEnum), operand.Head))
+                {
+                    case Heads.Head:
+                        throw new Exception("\"Head\" expression can not be used as inner expression");
+                    case Heads.Set:
+                        throw new Exception("\"Set\" expression can not be used as inner expression");
+                    case Heads.Delayed:
+                        throw new Exception("\"Delayed\" expression can not be used as inner expression");
+                    default:
+                        break;
+                }
                 operand.Evaluate();
             }
 
             // apply attributes
-            // pseudo flat
+            foreach (var attr in Attributes)
+            {
+                attr.Apply(this);
+            }
+            // TODO: pseudo flat
             //RemovePrimitives();
             
             // apply given definitions
-            // context stuff
+            // TODO: context stuff
 
             // apply built-in definitions
-            switch (Enum.Parse(typeof(HeadsEnum), Head))
-            {
-                case Heads.Add:
-                    break;
-                case Heads.Mul:
-                    break;
-                case Heads.Pow:
-                    break;
-                case Heads.Set:
-                    break;
-                case Heads.Delayed:
-                    break;
-                case Heads.Head:
-                    break;
-                case Heads.Value:
-                    break;
-                default:
-                    break;
-            }
+            // TODO: built ins
+            
         }
 
         /*public bool IsPrimitive()
