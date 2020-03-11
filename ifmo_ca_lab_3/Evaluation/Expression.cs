@@ -4,16 +4,28 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using ifmo_ca_lab_3.Evaluation.Attributes;
-using static ifmo_ca_lab_3.Base.HeadsEnum;
+using static ifmo_ca_lab_3.Evaluation.HeadsEnum;
 
-namespace ifmo_ca_lab_3.Base
+namespace ifmo_ca_lab_3.Evaluation
 {
     public class Expression : IExpression
     {
         public Expression (string head)
         {
             Head = head;
-            Operands = new List<Expression>();
+            Operands = new List<IExpression>();
+            Attributes = new List<IAttribute>()
+            {
+                new FlatAttribute(),
+                new OrderlessAttribute()
+            };
+        }
+
+        public Expression(string head, string key)
+        {
+            Head = head;
+            Key = key;
+            Operands = new List<IExpression>();
             Attributes = new List<IAttribute>()
             {
                 new FlatAttribute(),
@@ -35,7 +47,7 @@ namespace ifmo_ca_lab_3.Base
             };
         }
 
-        public List<Expression> Operands { get; set; }
+        public List<IExpression> Operands { get; set; }
 
         public List<IAttribute> Attributes { get; set; }
 
@@ -43,34 +55,35 @@ namespace ifmo_ca_lab_3.Base
         {
             // evaluate the head of the expression
             // TODO: look for head name in the context, replace if needed
-            switch (Enum.Parse(typeof(HeadsEnum), Head))
+            switch (Head)
             {
-                case Heads.Set:
+                case nameof(Heads.Set):
                     // TODO: set stuff
                     break;
-                case Heads.Delayed:
+                case nameof(Heads.Delayed):
                     // TODO: delayed stuff
                     return;
-                case Heads.Head:
+                case nameof(Heads.Head):
                     Key = Head;
                     return;
-                case Heads.Value:
+                case nameof(Heads.Value):
                     return;
-                case Heads.Symbol:
+                case nameof(Heads.Symbol):
                     return;
                 default:
+                    // Add, Mul, Pow, default symbols
                     break;
             }
             // evaluate each element
             foreach (var operand in Operands)
             {
-                switch (Enum.Parse(typeof(HeadsEnum), operand.Head))
+                switch (operand.Head)
                 {
-                    case Heads.Head:
+                    case nameof(Heads.Head):
                         throw new Exception("\"Head\" expression can not be used as inner expression");
-                    case Heads.Set:
+                    case nameof(Heads.Set):
                         throw new Exception("\"Set\" expression can not be used as inner expression");
-                    case Heads.Delayed:
+                    case nameof(Heads.Delayed):
                         throw new Exception("\"Delayed\" expression can not be used as inner expression");
                     default:
                         break;
@@ -81,7 +94,7 @@ namespace ifmo_ca_lab_3.Base
             // apply attributes
             foreach (var attr in Attributes)
             {
-                attr.Apply(this);
+                Operands = attr.Apply(Operands);
             }
             // TODO: pseudo flat
             //RemovePrimitives();

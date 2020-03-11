@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using ifmo_ca_lab_3.Evaluation.Base;
-using ifmo_ca_lab_3.Evaluation.Base.Interfaces;
-using ifmo_ca_lab_3.Evaluation.Base.Expressions;
+using ifmo_ca_lab_3.Evaluation;
+using ifmo_ca_lab_3.Evaluation.Interfaces;
 using ifmo_ca_lab_3.Analysis.Lexington;
 
 namespace ifmo_ca_lab_3.Analysis.Parseltongue

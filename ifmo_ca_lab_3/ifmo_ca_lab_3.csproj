@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -6,7 +6,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Evaluation\Base\Attributes\" />
+    <Compile Remove="Evaluation\Base\**" />
+    <EmbeddedResource Remove="Evaluation\Base\**" />
+    <None Remove="Evaluation\Base\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="ConsoleTables" Version="2.4.0" />
   </ItemGroup>
 

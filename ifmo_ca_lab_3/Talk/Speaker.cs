@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using ifmo_ca_lab_3.Analysis.Lexington;
-using ifmo_ca_lab_3.Evaluation.Base;
-using ifmo_ca_lab_3.Evaluation.Base.Expressions;
-using ifmo_ca_lab_3.Evaluation.Base.Interfaces;
+using ifmo_ca_lab_3.Evaluation;
+using ifmo_ca_lab_3.Evaluation.Interfaces;
 
 namespace ifmo_ca_lab_3.Talk
 {
@@ -13,9 +12,9 @@ namespace ifmo_ca_lab_3.Talk
         public static int TalkObjectTrees(object Node, int layer)
         {
             Console.Write($"{string.Concat(Enumerable.Repeat("-", layer * 2))}{Node.GetType().Name}");
-            if (Node.GetType() == typeof(SumExpression))
+            if (Node.GetType() == typeof(Expression))
             {
-                foreach (IOperand Op in ((Expression)Node).Operands)
+                foreach (IExpression Op in ((Expression)Node).Operands)
                 {
                     Console.WriteLine();
                     layer++;

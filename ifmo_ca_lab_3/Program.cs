@@ -4,8 +4,8 @@ using System.Linq;
 
 using ifmo_ca_lab_3.Analysis.Lexington;
 using ifmo_ca_lab_3.Talk;
-using ifmo_ca_lab_3.Evaluation.Base;
-using ifmo_ca_lab_3.Evaluation.Base.Interfaces;
+using ifmo_ca_lab_3.Evaluation;
+using ifmo_ca_lab_3.Evaluation.Interfaces;
 
 namespace ifmo_ca_lab_3
 {
@@ -21,6 +21,11 @@ namespace ifmo_ca_lab_3
         #region Код Патоха 🤮
         static void Main()
         {
+            Expression expr = new Expression("Sum");
+            var pow = new Expression("Pow");
+            pow.Operands = new List<IExpression>() { new Expression("Symbol", "a"), new Value(2)};
+            expr.Operands =  new List<IExpression> { new Value(2), new Expression("Symbol", "x"), pow, new Value(5) };
+            expr.Evaluate();
         }
         #endregion
         

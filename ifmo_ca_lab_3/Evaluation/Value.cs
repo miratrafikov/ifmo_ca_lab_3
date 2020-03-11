@@ -1,6 +1,6 @@
 ﻿using ifmo_ca_lab_3.Evaluation.Interfaces;
 
-namespace ifmo_ca_lab_3.Evaluation.Base
+namespace ifmo_ca_lab_3.Evaluation
 {
     public class Value : IExpression
     {
