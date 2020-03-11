@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ifmo_ca_lab_3.Analysis.Lexington;
-using ifmo_ca_lab_3.Evaluation.Base;
-using ifmo_ca_lab_3.Evaluation.Base.Expressions;
-using ifmo_ca_lab_3.Evaluation.Base.Interfaces;
+using ShiftCo.ifmo_ca_lab_3.Analysis.Lexington;
+using ShiftCo.ifmo_ca_lab_3.Evaluation.Base;
+using ShiftCo.ifmo_ca_lab_3.Evaluation.Base.Expressions;
+using ShiftCo.ifmo_ca_lab_3.Evaluation.Base.Interfaces;
 
-namespace ifmo_ca_lab_3.Talk
+namespace ShiftCo.ifmo_ca_lab_3.Talk
 {
     static class Speaker
     {

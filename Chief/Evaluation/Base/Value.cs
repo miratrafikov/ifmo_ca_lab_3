@@ -1,6 +1,6 @@
-﻿using ifmo_ca_lab_3.Evaluation.Base.Interfaces;
+﻿using ShiftCo.ifmo_ca_lab_3.Evaluation.Base.Interfaces;
 
-namespace ifmo_ca_lab_3.Evaluation.Base
+namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Base
 {
     public class Value : IOperand
     {

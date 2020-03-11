@@ -1,4 +1,4 @@
-﻿namespace ifmo_ca_lab_3.Evaluation.Base.Interfaces
+﻿namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Base.Interfaces
 {
     public interface IAttribute
     {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ifmo_ca_lab_3.Analysis.Lexington
+namespace ShiftCo.ifmo_ca_lab_3.Analysis.Lexington
 {
     static class Grammar
     {

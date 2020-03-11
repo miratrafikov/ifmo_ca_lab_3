@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace ifmo_ca_lab_3.Analysis.Lexington
+namespace ShiftCo.ifmo_ca_lab_3.Analysis.Lexington
 {
     static class Lexer
     {

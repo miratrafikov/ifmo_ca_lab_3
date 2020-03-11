@@ -1,4 +1,4 @@
-﻿namespace ifmo_ca_lab_3.Analysis.Lexington
+﻿namespace ShiftCo.ifmo_ca_lab_3.Analysis.Lexington
 {
     public enum TokenExpectations
     {
