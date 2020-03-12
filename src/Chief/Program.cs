@@ -37,7 +37,7 @@ namespace ShiftCo.ifmo_ca_lab_3
 
         static void Main()
         {
-            
+
             // Приведение строки к нормальному виду
             NormalizeString(ref str);
             try
