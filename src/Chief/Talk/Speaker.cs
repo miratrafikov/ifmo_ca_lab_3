@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Lexington;
-using ShiftCo.ifmo_ca_lab_3.Evaluation.Base;
-using ShiftCo.ifmo_ca_lab_3.Evaluation.Base.Expressions;
-using ShiftCo.ifmo_ca_lab_3.Evaluation.Base.Interfaces;
+using ShiftCo.ifmo_ca_lab_3.Evaluation;
+using ShiftCo.ifmo_ca_lab_3.Evaluation.Expressions;
+using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
 
 namespace ShiftCo.ifmo_ca_lab_3.Talk
 {
