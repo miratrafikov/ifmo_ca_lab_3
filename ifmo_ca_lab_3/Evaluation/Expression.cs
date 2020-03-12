@@ -1,15 +1,13 @@
 ﻿using ifmo_ca_lab_3.Evaluation.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
 using ifmo_ca_lab_3.Evaluation.Attributes;
 
 namespace ifmo_ca_lab_3.Evaluation
 {
     public class Expression : IExpression
     {
-        public Expression (string head)
+        public Expression(string head)
         {
             Head = head;
             Operands = new List<IExpression>();
@@ -41,7 +39,7 @@ namespace ifmo_ca_lab_3.Evaluation
             {
                 "Add" => val1 + val2,
                 "Mul" => val1 * val2,
-                "Pow" =>val1 ^ val2,
+                "Pow" => val1 ^ val2,
                 _ => default,
             };
         }
@@ -97,13 +95,13 @@ namespace ifmo_ca_lab_3.Evaluation
             }
             // TODO: pseudo flat
             //RemovePrimitives();
-            
+
             // apply given definitions
             // TODO: context stuff
 
             // apply built-in definitions
             // TODO: built ins
-            
+
         }
 
         /*public bool IsPrimitive()
