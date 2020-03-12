@@ -17,18 +17,18 @@ namespace ifmo_ca_lab_3
         // Или забить хуй и тупа юзать CTRL+K CTRL+F, чтобы идэйе исправила пошедшие по пизде отступы и проч.
         // Ващета я это сделал т.к. произвел слияние вместо
 
-       
+
         #region Код Патоха 🤮
         static void Main()
         {
             Expression expr = new Expression("Sum");
             var pow = new Expression("Pow");
-            pow.Operands = new List<IExpression>() { new Expression("Symbol", "a"), new Value(2)};
-            expr.Operands =  new List<IExpression> { new Value(2), new Expression("Symbol", "x"), pow, new Value(5) };
+            pow.Operands = new List<IExpression>() { new Expression("Symbol", "a"), new Value(2) };
+            expr.Operands = new List<IExpression> { new Value(2), new Expression("Symbol", "x"), pow, new Value(5) };
             expr.Evaluate();
         }
         #endregion
-        
+
         /*
         #region Код Мирата 😎
         static string str = "sum(1, sum(54, 5))";

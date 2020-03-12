@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
-using static ifmo_ca_lab_3.Evaluation.HeadsEnum;
+using static ifmo_ca_lab_3.Evaluation.Heads;
 
 namespace ifmo_ca_lab_3.Evaluation.Commons
 {
