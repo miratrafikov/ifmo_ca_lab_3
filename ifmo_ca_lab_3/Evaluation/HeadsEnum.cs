@@ -4,18 +4,15 @@ using System.Text;
 
 namespace ifmo_ca_lab_3.Evaluation
 {
-    public class HeadsEnum
+    public enum Heads
     {
-        public enum Heads
-        {
-            Add,
-            Mul,
-            Pow,
-            Head,
-            Set,
-            Delayed,
-            Value,
-            Symbol
-        };
-    }
+        Value,
+        Symbol,
+        Add,
+        Mul,
+        Pow,
+        Head,
+        Set,
+        Delayed
+    };
 }

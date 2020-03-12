@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using ifmo_ca_lab_3.Evaluation.Attributes;
-using static ifmo_ca_lab_3.Evaluation.HeadsEnum;
 
 namespace ifmo_ca_lab_3.Evaluation
 {

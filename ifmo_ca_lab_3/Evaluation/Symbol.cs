@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ifmo_ca_lab_3.Evaluation
 {
-    class Symbol : IExpression
+    public class Symbol : IExpression
     {
         public Symbol(string key)
         {
