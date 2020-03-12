@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace ShiftCo.ifmo_ca_lab_3.Analysis.Lexington
+namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Lexington
 {
-    static class Lexer
+    public static class Lexer
     {
         // Алфавит лексера
         private static readonly string letters = "abcdefghijklmnopqrstuvwxyz";

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -6,8 +6,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Evaluation\Base\Attributes\" />
     <PackageReference Include="ConsoleTables" Version="2.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Evaluation\Evaluation.csproj" />
+    <ProjectReference Include="..\SyntaxAnalysis\SyntaxAnalysis.csproj" />
   </ItemGroup>
 
 </Project>

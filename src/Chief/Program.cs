@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using ShiftCo.ifmo_ca_lab_3.Analysis.Lexington;
+using ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Lexington;
 using ShiftCo.ifmo_ca_lab_3.Talk;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Base;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Base.Interfaces;

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Base.Expressions
 {
-    class SumExpression : Expression
+    public class SumExpression : Expression
     {
         public SumExpression()
         {

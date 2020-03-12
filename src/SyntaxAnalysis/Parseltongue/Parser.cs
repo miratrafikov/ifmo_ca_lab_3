@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Base;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Base.Interfaces;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Base.Expressions;
-using ShiftCo.ifmo_ca_lab_3.Analysis.Lexington;
+using ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Lexington;
 
-namespace ShiftCo.ifmo_ca_lab_3.Analysis.Parseltongue
+namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Parseltongue
 {
     /*
     static class Parser
