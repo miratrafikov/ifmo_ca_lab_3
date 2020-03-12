@@ -1,6 +1,6 @@
-﻿namespace ShiftCo.ifmo_ca_lab_3.Analysis.Lexington
+﻿namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Lexington
 {
-    struct Token
+    public struct Token
     {
         public int type;
         public string content;

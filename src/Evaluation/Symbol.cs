@@ -1,6 +1,6 @@
-﻿using ShiftCo.ifmo_ca_lab_3.Evaluation.Base.Interfaces;
+﻿using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
 
-namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Base
+namespace ShiftCo.ifmo_ca_lab_3.Evaluation
 {
     public class Symbol : IOperand
     {
