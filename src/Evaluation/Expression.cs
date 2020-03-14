@@ -67,6 +67,15 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
                     return;
                 case nameof(Heads.Symbol):
                     return;
+                case nameof(Heads.Pow):
+                    for (int i = 1; i < Operands.Count; i++)
+                    {
+                        if (Operands[i].Head != "Value")
+                        {
+                            throw new Exception("Symbol \"Pow\" can contain only integer exponent");
+                        }
+                    }
+                    break;
                 default:
                     // Add, Mul, Pow, default symbols
                     break;
@@ -91,7 +100,16 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
             // apply attributes
             foreach (var attr in Attributes)
             {
-                Operands = attr.Apply(Operands);
+                // kostili naske vse
+                if (Head == nameof(Heads.Pow) && attr is OrderlessAttribute)
+                {
+                    continue;
+                }
+                else
+                {
+                    Operands = attr.Apply(Operands);
+                }
+
             }
             // TODO: pseudo flat
             //RemovePrimitives();

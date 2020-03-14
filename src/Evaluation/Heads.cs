@@ -2,13 +2,14 @@
 {
     public enum Heads
     {
+
+        Value,
+        Symbol,
         Add,
         Mul,
         Pow,
         Head,
         Set,
-        Delayed,
-        Value,
-        Symbol
+        Delayed
     };
 }

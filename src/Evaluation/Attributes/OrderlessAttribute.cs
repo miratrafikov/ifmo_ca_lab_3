@@ -12,8 +12,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Attributes
     {
         public List<IExpression> Apply(List<IExpression> operands)
         {
-            var comparer = new ExpressionComparer();
-            operands.Sort(comparer);
+            operands.Sort(new ExpressionComparer());
             return operands;
         }
     }
