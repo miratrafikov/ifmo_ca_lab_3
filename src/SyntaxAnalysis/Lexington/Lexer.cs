@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 
 namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Lexington
 {
