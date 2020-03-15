@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Chief": {
+      "commandName": "Project",
+      "commandLineArgs": "test"
+    }
+  }
+}
