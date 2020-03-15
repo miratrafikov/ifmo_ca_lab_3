@@ -18,6 +18,7 @@ namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Lexington
 
         public static List<Token> Tokenize(string str)
         {
+            AlphabetCheck(str);
             while (!string.IsNullOrEmpty(str))
             {
                 var token = GetToken(str);
@@ -28,6 +29,17 @@ namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Lexington
                 }
             }
             return Tokens;
+        }
+
+        private static void AlphabetCheck(string str)
+        {
+            for (int i = 0; i < str.Length; i++)
+            {
+                if (!alphabet.Contains(str[i]))
+                {
+                    throw new Exception($"Col. #{i}: Non-alphabetical character \"{str[i]}\".");
+                }
+            }
         }
 
         private static Token GetToken(string str)
