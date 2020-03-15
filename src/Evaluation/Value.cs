@@ -13,5 +13,9 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
         public object Key { get; set; }
         public string Head { get; set; }
         public void Evaluate() { }
+        public bool IsAlike(IExpression iexpr)
+        {
+            return iexpr is Value;
+        }
     }
 }

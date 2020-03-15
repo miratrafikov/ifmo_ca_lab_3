@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
+using static ShiftCo.ifmo_ca_lab_3.Evaluation.Commons.Converter;
 
 namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Attributes
 {
@@ -16,7 +17,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Attributes
             {
                 if (operand.Head == head)
                 {
-                    operands = operands.Concat(((Expression)operand).Operands).ToList();
+                    operands = operands.Concat(ToExpression(operand).Operands).ToList();
                 } 
                 else
                 {

@@ -1,7 +1,9 @@
 ﻿using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Attributes;
+using static ShiftCo.ifmo_ca_lab_3.Evaluation.Commons.Converter;
 
 namespace ShiftCo.ifmo_ca_lab_3.Evaluation
 {
@@ -77,7 +79,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
                     }
                     break;
                 default:
-                    // Add, Mul, Pow, default symbols
+                    // Add, Mul, default symbols
                     break;
             }
             // evaluate each element
@@ -92,9 +94,9 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
                     case nameof(Heads.Delayed):
                         throw new Exception("\"Delayed\" expression can not be used as inner expression");
                     default:
+                        operand.Evaluate();
                         break;
                 }
-                operand.Evaluate();
             }
 
             // apply attributes
@@ -102,32 +104,87 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
             {
                 Operands = attr.Apply(this);
             }
-            // TODO: pseudo flat
-            //RemovePrimitives();
 
             // apply given definitions
             // TODO: context stuff
 
-            // apply built-in definitions
-            // TODO: built ins
+            // apply built-in definitions            
+            //Operands = ApplyBuiltins();
 
         }
 
-        /*public bool IsPrimitive()
+        // Assuming attributes are applied
+        // Returns if this expression is alike the given one
+        // Will be used only on monomials
+        public bool IsAlike(IExpression iexpr)
         {
-            return (Operands.Count == 1);
-        }
-
-        /*public void RemovePrimitives()
-        {
-            foreach (var op in Operands.Where(op => op is Expression && ((Expression)op).IsPrimitive()))
+            // Allways false
+            if (iexpr is Value) return iexpr.IsAlike(this);
+            // Expression ~ Symbol
+            if (iexpr is Symbol) return iexpr.IsAlike(this);
+            // Add ~ Add | Pow ~ Pow
+            if (iexpr.Head == Head && 
+                (Head == nameof(Heads.Add) || Head == nameof(Heads.Pow)))
             {
-                Console.WriteLine(Head + " " + (op is Expression).ToString());
+                return AreOperandsAlike(Operands, ToExpression(iexpr).Operands);
             }
-            List<IExpression> var = Operands.Where(o => o is Expression && ((Expression)o).IsPrimitive())
-                .Select(o => ((Expression)o).Operands.First()).ToList();
-            Operands = Operands.Concat(var).ToList();
-            Operands.RemoveAll(o => o is Expression && ((Expression)o).IsPrimitive());
-            }*/
+            // Mul ~ Expression
+            if (Head == nameof(Heads.Mul))
+            {
+                var l = GetAlikeOperands(this);
+                var r = GetAlikeOperands(ToExpression(iexpr));
+                return AreOperandsAlike(l ,r);
+            }
+            return false;
+        }
+
+        // Returns list of operands except by coefficient aka Value
+        private List<IExpression> GetAlikeOperands(Expression expr)
+        {
+            var operands = new List<IExpression>();
+            if (Operands.First() is Value)
+            {
+                operands = Operands.Skip(1).ToList();
+            }
+            else
+            {
+                operands = Operands;
+            }
+            return operands;
+        }
+
+        private bool AreOperandsAlike(List<IExpression> left, List<IExpression> right)
+        {
+            if (left.Count != right.Count) return false;
+            var zipedOperands = left.Zip(right,
+                (l, r) => new { Left = l, Right = r });
+            foreach (var zip in zipedOperands)
+            {
+                if (!zip.Left.IsAlike(zip.Right)) return false;
+            }
+            return true;
+        }
+
+        private List<IExpression> ApplyBuiltins()
+        {
+            var result = Operands;
+            if (Head == nameof(Heads.Pow))
+            {
+                var exponent = Operands.OfType<Value>().Aggregate(1, (a, b) => a * (int)b.Key);
+                result.RemoveAll(o => o is Value);
+                result.Add(new Value(exponent));
+                if (result.Count > 1)
+                {
+                    Head = nameof(Heads.Mul);
+                    result = Enumerable.Repeat(result.First(), (int)ToValue(result[1]).Key).ToList();
+                }
+            }
+            if (Head == nameof(Heads.Add))
+            {
+                
+            }
+
+            return result;
+        }
     }
 }

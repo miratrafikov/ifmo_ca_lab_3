@@ -24,13 +24,13 @@ namespace ShiftCo.ifmo_ca_lab_3
             pow.Operands = new List<IExpression>() { new Expression("Symbol", "a"), new Value(2) };
             expr.Operands = new List<IExpression> { new Value(2), new Expression("Symbol", "x"), pow, new Value(5) };
             expr.Evaluate();*/
-            var expr1 = new Expression("Sum");
-            expr1.Operands = new List<IExpression>{ new Symbol("x"), new Symbol("y") };
+            var expr1 = new Expression("Mul");
+            expr1.Operands = new List<IExpression>{ new Symbol("x"), new Symbol("y"), new Value(2) };
             expr1.Evaluate();
-            var expr2 = new Expression("Sum");
+            var expr2 = new Expression("Mul");
             expr2.Operands = new List<IExpression> { new Symbol("y"), new Symbol("x") };
             expr2.Evaluate();
-            Console.WriteLine(expr1.Equals(expr2));
+            Console.WriteLine(expr1.IsAlike(expr2));
         }
         #endregion
 

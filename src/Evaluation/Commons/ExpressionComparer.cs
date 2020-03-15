@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using static ShiftCo.ifmo_ca_lab_3.Evaluation.Heads;
+using static ShiftCo.ifmo_ca_lab_3.Evaluation.Commons.Converter;
 
 namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Commons
 {
@@ -29,18 +30,18 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Commons
             {
                 return string.Compare(left.Key.ToString(), right.Key.ToString());
             }
-            // No operands means that Expresiion is Symbol
-            if (Converter.ToExpression(left).Operands.Count == 0 && Converter.ToExpression(right).Operands.Count == 0)
+            // No operands means that Expression is Symbol
+            if (ToExpression(left).Operands.Count == 0 && ToExpression(right).Operands.Count == 0)
             {
                 return string.Compare(left.Key.ToString(), right.Key.ToString());
             }
             // Expression with lesser operands is less than the other one
-            if (Converter.ToExpression(left).Operands.Count != Converter.ToExpression(left).Operands.Count)
+            if (ToExpression(left).Operands.Count != ToExpression(left).Operands.Count)
             {
-                return Converter.ToExpression(left).Operands.Count - Converter.ToExpression(left).Operands.Count;
+                return ToExpression(left).Operands.Count - ToExpression(left).Operands.Count;
             }
             // Compare each operand
-            var zipedOperands = Converter.ToExpression(left).Operands.Zip(Converter.ToExpression(right).Operands,
+            var zipedOperands = ToExpression(left).Operands.Zip(ToExpression(right).Operands,
                 (l, r) => new { Left = l, Right = r });
             foreach (var operand in zipedOperands)
             {
