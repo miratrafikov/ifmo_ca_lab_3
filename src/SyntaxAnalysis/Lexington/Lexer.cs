@@ -11,23 +11,40 @@ namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Lexington
         private static readonly string numbers = "0123456789";
         private static readonly string brackets = "()";
         private static readonly string comma = ",";
-        private static readonly string alphabet = letters + numbers + brackets + comma;
+        private static readonly string modificators = "-+";
+        private static readonly string alphabet = letters + numbers + brackets + comma + modificators;
 
         // Список найденных токенов
         private static readonly List<Token> Tokens = new List<Token>();
 
         public static List<Token> Tokenize(string str)
         {
-            while (!string.IsNullOrEmpty(str))
+            AlphabetCheck(str);
+            for (int i = 0; i < str.Length; i++)
             {
-                var token = GetToken(str);
+                var token = GetToken(str.Substring(i));
                 if (!token.Equals(default))
                 {
                     Tokens.Add(token);
-                    str = str.Substring(token.Content.Length);
+                    i += token.Content.Length - 1;
+                }
+                else
+                {
+                    throw  new Exception($"Col. #{i}: No suitable token for the suffix \"{str.Substring(i)}\".");
                 }
             }
             return Tokens;
+        }
+
+        private static void AlphabetCheck(string str)
+        {
+            for (int i = 0; i < str.Length; i++)
+            {
+                if (!alphabet.Contains(str[i]))
+                {
+                    throw new Exception($"Col. #{i}: Non-alphabetical character \"{str[i]}\".");
+                }
+            }
         }
 
         private static Token GetToken(string str)
