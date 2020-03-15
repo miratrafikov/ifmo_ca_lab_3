@@ -2,13 +2,13 @@
 {
     public struct Token
     {
-        public int type;
-        public string content;
+        public TokenType Type { get; }
+        public string Content { get; }
 
-        public Token(int tokenType, string tokenContent)
+        public Token(TokenType type, string content)
         {
-            type = tokenType;
-            content = tokenContent;
+            Type = type;
+            Content = content;
         }
     }
 }
