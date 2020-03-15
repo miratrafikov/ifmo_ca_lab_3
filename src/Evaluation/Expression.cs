@@ -122,6 +122,11 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
             if (iexpr is Value) return iexpr.IsAlike(this);
             // Expression ~ Symbol
             if (iexpr is Symbol) return iexpr.IsAlike(this);
+            // Symbol ~ Symbol but both are expressions
+            if (iexpr is Expression && iexpr.Head == nameof(Heads.Symbol) && Head == iexpr.Head)
+            {
+                return Head.Equals(iexpr.Head);
+            }
             // Add ~ Add | Pow ~ Pow
             if (iexpr.Head == Head && 
                 (Head == nameof(Heads.Add) || Head == nameof(Heads.Pow)))
