@@ -23,7 +23,7 @@ namespace ShiftCo.ifmo_ca_lab_3
         */
 
         #region Код Мирата 😎
-        static string str = "sum(1, sum(54, 5))";
+        static string str = "sum(1, sum(54, -5))";
 
         // Список найденных лексером токенов
         static List<Token> Tokens;

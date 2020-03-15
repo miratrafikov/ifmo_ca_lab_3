@@ -11,7 +11,8 @@ namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Lexington
         private static readonly string numbers = "0123456789";
         private static readonly string brackets = "()";
         private static readonly string comma = ",";
-        private static readonly string alphabet = letters + numbers + brackets + comma;
+        private static readonly string modificators = "-+";
+        private static readonly string alphabet = letters + numbers + brackets + comma + modificators;
 
         // Список найденных токенов
         private static readonly List<Token> Tokens = new List<Token>();
