@@ -4,6 +4,7 @@ using System.Linq;
 using System.Collections.Generic;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Attributes;
 using static ShiftCo.ifmo_ca_lab_3.Evaluation.Commons.Converter;
+using ShiftCo.ifmo_ca_lab_3.Evaluation.Commons;
 
 namespace ShiftCo.ifmo_ca_lab_3.Evaluation
 {
@@ -33,7 +34,15 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
         }
 
         public string Head { get; set; }
+
         public object Key { get; set; }
+        
+        public override bool Equals(object obj)
+        {
+            if (!(obj is IExpression)) return false;
+            var comparer = new ExpressionComparer();
+            return comparer.Compare(this, (IExpression)obj) == 0;
+        }
 
         public int Operation(int val1, int val2)
         {
@@ -53,7 +62,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
         public void Evaluate()
         {
             // evaluate the head of the expression
-            // TODO: look for head name in the context, replace if needed
+            // TODO: look for the head name in the context, replace if needed
             switch (Head)
             {
                 case nameof(Heads.Set):
@@ -172,12 +181,13 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
 
         private List<IExpression> ApplyBuiltins()
         {
-            var result = Operands;
+            var result = new List<IExpression>();
             if (Head == nameof(Heads.Pow))
             {
                 var exponent = Operands.OfType<Value>().Aggregate(1, (a, b) => a * (int)b.Key);
                 result.RemoveAll(o => o is Value);
                 result.Add(new Value(exponent));
+                // Kind of Pow(base, exponent)
                 if (result.Count > 1)
                 {
                     Head = nameof(Heads.Mul);
@@ -189,6 +199,12 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
                 
             }
 
+            return result;
+        }
+
+        private List<IExpression> PowBuiltin()
+        {
+            var result = Operands;
             return result;
         }
     }

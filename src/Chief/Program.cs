@@ -25,12 +25,12 @@ namespace ShiftCo.ifmo_ca_lab_3
             expr.Operands = new List<IExpression> { new Value(2), new Expression("Symbol", "x"), pow, new Value(5) };
             expr.Evaluate();*/
             var expr1 = new Expression("Mul");
-            expr1.Operands = new List<IExpression>{ new Expression("Symbol", "x"), new Expression("Symbol", "y"), new Value(2) };
+            expr1.Operands = new List<IExpression>{ new Expression("Symbol", "x"), new Expression("Symbol", "y") };
             expr1.Evaluate();
             var expr2 = new Expression("Mul");
             expr2.Operands = new List<IExpression> { new Expression("Symbol", "y"), new Expression("Symbol", "x") };
             expr2.Evaluate();
-            Console.WriteLine(expr1.IsAlike(expr2));
+            Console.WriteLine(expr1.Equals(expr2));
         }
         #endregion
 

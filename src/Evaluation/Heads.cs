@@ -2,7 +2,6 @@
 {
     public enum Heads
     {
-
         Value,
         Symbol,
         Add,
