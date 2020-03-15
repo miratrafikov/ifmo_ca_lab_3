@@ -35,7 +35,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Talk
             var table = new ConsoleTables.ConsoleTable("Type ID", "Content");
             foreach (Token Token in Tokens)
             {
-                table.AddRow(Token.type, Token.content);
+                table.AddRow(Token.Type, Token.Content);
             }
             table.Write(ConsoleTables.Format.Alternative);
         }

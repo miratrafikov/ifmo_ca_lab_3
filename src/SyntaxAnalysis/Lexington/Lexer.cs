@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Lexington
 {
@@ -13,48 +14,33 @@ namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Lexington
         private static readonly string alphabet = letters + numbers + brackets + comma;
 
         // Список найденных токенов
-        private static List<Token> Tokens = new List<Token>();
+        private static readonly List<Token> Tokens = new List<Token>();
 
         public static List<Token> Tokenize(string str)
         {
-            return new List<Token>();
-        }
-
-        private static bool CharDisallowed(char ch)
-        {
-            switch (LexerState.tokenExpected)
+            while (!string.IsNullOrEmpty(str))
             {
-                case (int)TokenExpectations.Symbol:
-                    if (numbers.Contains(ch))
-                    {
-                        return true;
-                    }
-                    break;
-                case (int)TokenExpectations.Number:
-                    if (letters.Contains(ch))
-                    {
-                        return true;
-                    }
-                    break;
+                var token = GetToken(str);
+                if (!token.Equals(default))
+                {
+                    Tokens.Add(token);
+                    str = str.Substring(token.Content.Length);
+                }
             }
-            return false;
+            return Tokens;
         }
 
-        private static void MakeToken(string str)
+        private static Token GetToken(string str)
         {
-            // Сбор информации и добавление нового токена в коллекцию
-            int contentLength = Convert.ToBoolean(LexerState.tokenExpected) ? LexerState.currPos - LexerState.tokenStartPos : 1;
-            string tokenContent = str.Substring(LexerState.tokenStartPos, contentLength);
-            int tokenType = DetermineTokenType(tokenContent);
-            Tokens.Add(new Token(tokenType, tokenContent));
-
-            // Сброс состояния ожидания
-            LexerState.tokenExpected = (int)TokenExpectations.No;
-        }
-
-        private static int DetermineTokenType(string tokenContent)
-        {
-            return 1;
+            foreach (var (tokenType, tokenDefinition) in Grammar.TokenDefinitions)
+            {
+                var match = (new Regex(tokenDefinition)).Match(str);
+                if (match.Success)
+                {
+                    return new Token(tokenType, match.Value);
+                }
+            }
+            return default;
         }
     }
 }
