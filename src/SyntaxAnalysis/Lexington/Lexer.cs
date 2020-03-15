@@ -20,13 +20,17 @@ namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Lexington
         public static List<Token> Tokenize(string str)
         {
             AlphabetCheck(str);
-            while (!string.IsNullOrEmpty(str))
+            for (int i = 0; i < str.Length; i++)
             {
-                var token = GetToken(str);
+                var token = GetToken(str.Substring(i));
                 if (!token.Equals(default))
                 {
                     Tokens.Add(token);
-                    str = str.Substring(token.Content.Length);
+                    i += token.Content.Length - 1;
+                }
+                else
+                {
+                    throw  new Exception($"Col. #{i}: No suitable token for the suffix \"{str.Substring(i)}\".");
                 }
             }
             return Tokens;
