@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 using ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Lexington;
 using ShiftCo.ifmo_ca_lab_3.Talk;
@@ -20,17 +19,24 @@ namespace ShiftCo.ifmo_ca_lab_3
         #region Код Патоха 🤮
         static void Main()
         {
-            Expression expr = new Expression("Sum");
+            /*Expression expr = new Expression("Sum");
             var pow = new Expression("Sum");
             pow.Operands = new List<IExpression>() { new Expression("Symbol", "a"), new Value(2) };
             expr.Operands = new List<IExpression> { new Value(2), new Expression("Symbol", "x"), pow, new Value(5) };
-            expr.Evaluate();
+            expr.Evaluate();*/
+            var expr1 = new Expression("Sum");
+            expr1.Operands = new List<IExpression>{ new Symbol("x"), new Symbol("y") };
+            expr1.Evaluate();
+            var expr2 = new Expression("Sum");
+            expr2.Operands = new List<IExpression> { new Symbol("y"), new Symbol("x") };
+            expr2.Evaluate();
+            Console.WriteLine(expr1.Equals(expr2));
         }
         #endregion
 
         /*
         #region Код Мирата 😎
-        static string str = "sum(1, sum(54, 5))";
+        static string str = "sum(1, sum(54, -5))";
 
         // Список найденных лексером токенов
         static List<Token> Tokens;
@@ -40,7 +46,7 @@ namespace ShiftCo.ifmo_ca_lab_3
 
         static void Main()
         {
-            
+
             // Приведение строки к нормальному виду
             NormalizeString(ref str);
             try

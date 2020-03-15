@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Lexington;
+
 using ShiftCo.ifmo_ca_lab_3.Evaluation;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
+using ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Lexington;
 
 namespace ShiftCo.ifmo_ca_lab_3.Talk
 {
@@ -33,7 +34,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Talk
             var table = new ConsoleTables.ConsoleTable("Type ID", "Content");
             foreach (Token Token in Tokens)
             {
-                table.AddRow(Token.type, Token.content);
+                table.AddRow(Token.Type, Token.Content);
             }
             table.Write(ConsoleTables.Format.Alternative);
         }

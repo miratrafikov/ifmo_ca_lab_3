@@ -11,51 +11,53 @@ namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Lexington
         private static readonly string numbers = "0123456789";
         private static readonly string brackets = "()";
         private static readonly string comma = ",";
-        private static readonly string alphabet = letters + numbers + brackets + comma;
+        private static readonly string modificators = "-+";
+        private static readonly string alphabet = letters + numbers + brackets + comma + modificators;
 
         // Список найденных токенов
-        private static List<Token> Tokens = new List<Token>();
+        private static readonly List<Token> Tokens = new List<Token>();
 
         public static List<Token> Tokenize(string str)
         {
-            return new List<Token>();
-        }
-
-        private static bool CharDisallowed(char ch)
-        {
-            switch (LexerState.tokenExpected)
+            AlphabetCheck(str);
+            for (int i = 0; i < str.Length; i++)
             {
-                case (int)TokenExpectations.Symbol:
-                    if (numbers.Contains(ch))
-                    {
-                        return true;
-                    }
-                    break;
-                case (int)TokenExpectations.Number:
-                    if (letters.Contains(ch))
-                    {
-                        return true;
-                    }
-                    break;
+                var token = GetToken(str.Substring(i));
+                if (!token.Equals(default))
+                {
+                    Tokens.Add(token);
+                    i += token.Content.Length - 1;
+                }
+                else
+                {
+                    throw  new Exception($"Col. #{i}: No suitable token for the suffix \"{str.Substring(i)}\".");
+                }
             }
-            return false;
+            return Tokens;
         }
 
-        private static void MakeToken(string str)
+        private static void AlphabetCheck(string str)
         {
-            // Сбор информации и добавление нового токена в коллекцию
-            int contentLength = Convert.ToBoolean(LexerState.tokenExpected) ? LexerState.currPos - LexerState.tokenStartPos : 1;
-            string tokenContent = str.Substring(LexerState.tokenStartPos, contentLength);
-            int tokenType = DetermineTokenType(tokenContent);
-            Tokens.Add(new Token(tokenType, tokenContent));
-
-            // Сброс состояния ожидания
-            LexerState.tokenExpected = (int)TokenExpectations.No;
+            for (int i = 0; i < str.Length; i++)
+            {
+                if (!alphabet.Contains(str[i]))
+                {
+                    throw new Exception($"Col. #{i}: Non-alphabetical character \"{str[i]}\".");
+                }
+            }
         }
 
-        private static int DetermineTokenType(string tokenContent)
+        private static Token GetToken(string str)
         {
-            return 1;
+            foreach (var (tokenType, tokenDefinition) in Grammar.TokenDefinitions)
+            {
+                var match = (new Regex(tokenDefinition)).Match(str);
+                if (match.Success)
+                {
+                    return new Token(tokenType, match.Value);
+                }
+            }
+            return default;
         }
     }
 }
