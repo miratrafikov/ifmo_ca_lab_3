@@ -21,7 +21,7 @@ namespace ShiftCo.ifmo_ca_lab_3
         static void Main()
         {
             Expression expr = new Expression("Sum");
-            var pow = new Expression("Pow");
+            var pow = new Expression("Sum");
             pow.Operands = new List<IExpression>() { new Expression("Symbol", "a"), new Value(2) };
             expr.Operands = new List<IExpression> { new Value(2), new Expression("Symbol", "x"), pow, new Value(5) };
             expr.Evaluate();

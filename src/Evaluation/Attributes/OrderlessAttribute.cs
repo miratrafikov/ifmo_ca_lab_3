@@ -10,8 +10,10 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Attributes
 {
     class OrderlessAttribute : IAttribute
     {
-        public List<IExpression> Apply(List<IExpression> operands)
+        public List<IExpression> Apply(Expression expr)
         {
+            if (expr.Head == nameof(Pow)) return expr.Operands;
+            var operands = expr.Operands;
             operands.Sort(new ExpressionComparer());
             return operands;
         }

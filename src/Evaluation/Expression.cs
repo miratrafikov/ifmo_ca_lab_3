@@ -100,16 +100,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
             // apply attributes
             foreach (var attr in Attributes)
             {
-                // kostili naske vse
-                if (Head == nameof(Heads.Pow) && attr is OrderlessAttribute)
-                {
-                    continue;
-                }
-                else
-                {
-                    Operands = attr.Apply(Operands);
-                }
-
+                Operands = attr.Apply(this);
             }
             // TODO: pseudo flat
             //RemovePrimitives();
