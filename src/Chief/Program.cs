@@ -38,7 +38,7 @@ namespace ShiftCo.ifmo_ca_lab_3
         static List<Token> Tokens;
 
         // Объект, сформированный парсером из списка токенов
-        static object RetrievedObject;
+        static IExpression Objects;
 
         static void Main()
         {
@@ -54,10 +54,10 @@ namespace ShiftCo.ifmo_ca_lab_3
                 Speaker.TalkTokens(ref Tokens);
 
                 // Работа парсера
-                //RetrievedObject = Parser.ParseTokenList(Tokens);
+                //Objects = Parser.ParseTokenList(Tokens);
 
                 // Вывод дерева объектов
-                //Speaker.TalkObjectTrees(RetrievedObject, 0);
+                //Speaker.TalkObjectTrees(Objects, 0);
             }
             catch (Exception ex)
             {
