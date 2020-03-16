@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 
 using ShiftCo.ifmo_ca_lab_3.Evaluation;
-using ShiftCo.ifmo_ca_lab_3.Evaluation.Expressions;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
 using ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Lexington;
 
@@ -14,9 +13,9 @@ namespace ShiftCo.ifmo_ca_lab_3.Talk
         public static int TalkObjectTrees(object Node, int layer)
         {
             Console.Write($"{string.Concat(Enumerable.Repeat("-", layer * 2))}{Node.GetType().Name}");
-            if (Node.GetType() == typeof(SumExpression))
+            if (Node.GetType() == typeof(Expression))
             {
-                foreach (IOperand Op in ((Expression)Node).Operands)
+                foreach (IExpression Op in ((Expression)Node).Operands)
                 {
                     Console.WriteLine();
                     layer++;

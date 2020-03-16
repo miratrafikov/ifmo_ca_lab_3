@@ -1,6 +1,6 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace SyntaxAnalysis.Test
+namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Test
 {
     [TestClass]
     public class UnitTest1

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 using ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Lexington;
 using ShiftCo.ifmo_ca_lab_3.Talk;
+using ShiftCo.ifmo_ca_lab_3.Evaluation;
+using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
 
 namespace ShiftCo.ifmo_ca_lab_3
 {
@@ -18,6 +20,13 @@ namespace ShiftCo.ifmo_ca_lab_3
         #region Код Патоха 🤮
         static void Main()
         {
+            var expr1 = new Expression("Mul");
+            expr1.Operands = new List<IExpression>{ new Expression("Symbol", "x"), new Expression("Symbol", "y") };
+            expr1.Evaluate();
+            var expr2 = new Expression("Mul");
+            expr2.Operands = new List<IExpression> { new Expression("Symbol", "y"), new Expression("Symbol", "x") };
+            expr2.Evaluate();
+            Console.WriteLine(expr1.Equals(expr2));
         }
         #endregion
         */

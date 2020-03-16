@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Chief.Test
+namespace ShiftCo.ifmo_ca_lab_3.Chief.Test
 {
     [TestClass]
     public class UnitTest1

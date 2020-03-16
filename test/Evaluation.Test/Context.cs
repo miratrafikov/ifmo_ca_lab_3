@@ -1,12 +1,12 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Evaluation.Test
+namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Test
 {
     [TestClass]
-    public class UnitTest1
+    public class Context
     {
         [TestMethod]
-        public void TestMethod1()
+        public void Custom()
         {
         }
     }

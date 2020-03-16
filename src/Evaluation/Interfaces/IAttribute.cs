@@ -1,8 +1,11 @@
-﻿namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces
 {
     public interface IAttribute
     {
-        public string Key { get; set; }
-        public IOperand Apply(IOperand expr);
+        public List<IExpression> Apply(Expression operands);
     }
 }

@@ -1,13 +1,32 @@
-﻿using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
+﻿using ShiftCo.ifmo_ca_lab_3.Evaluation.Commons;
+using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
 
 namespace ShiftCo.ifmo_ca_lab_3.Evaluation
 {
-    public class Value : IOperand
+    public class Value : IExpression
     {
-        public int Key { get; set; }
         public Value(int val)
         {
+            Head = "Value";
             Key = val;
+        }
+
+        public object Key { get; set; }
+
+        public string Head { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is IExpression)) return false;
+            var comparer = new ExpressionComparer();
+            return comparer.Compare(this, (IExpression)obj) == 0;
+        }
+
+        public void Evaluate() { }
+
+        public bool IsAlike(IExpression iexpr)
+        {
+            return iexpr is Value;
         }
     }
 }
