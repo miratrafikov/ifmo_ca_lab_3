@@ -18,3 +18,8 @@ $$
 
 
 
+Грамматика парсера:
+
+* <Elem> = <Expr> | Num | Sym
+* <Expr> = Sym(<Op>)
+* <Op> = <Elem>,<Op> | <Elem>
