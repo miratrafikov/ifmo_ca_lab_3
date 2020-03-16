@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 
 using ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Lexington;
+using ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Parseltongue;
 using ShiftCo.ifmo_ca_lab_3.Talk;
 using ShiftCo.ifmo_ca_lab_3.Evaluation;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
@@ -54,7 +55,7 @@ namespace ShiftCo.ifmo_ca_lab_3
                 Speaker.TalkTokens(ref Tokens);
 
                 // Работа парсера
-                //Objects = Parser.ParseTokenList(Tokens);
+                Objects = Parser.Parse(Tokens);
 
                 // Вывод дерева объектов
                 //Speaker.TalkObjectTrees(Objects, 0);
