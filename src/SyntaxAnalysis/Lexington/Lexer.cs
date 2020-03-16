@@ -33,6 +33,7 @@ namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Lexington
                     throw  new Exception($"Col. #{i}: No suitable token for the suffix \"{str.Substring(i)}\".");
                 }
             }
+            Tokens.Add(new Token(TokenType.EOF, ""));
             return Tokens;
         }
 

@@ -23,7 +23,10 @@ namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Lexington
             // Соответствие между правилами и определениями токенов
             foreach (TokenType TokenType in Enum.GetValues(typeof(TokenType)))
             {
-                TokenDefinitions.Add(TokenType, Rules[TokenType.ToString()]);
+                if (TokenType != TokenType.EOF)
+                {
+                    TokenDefinitions.Add(TokenType, Rules[TokenType.ToString()]);
+                }
             }
         }
     }
