@@ -4,9 +4,9 @@
     {
         Value,
         Symbol,
-        Add,
         Mul,
         Pow,
+        Add,
         Head,
         Set,
         Delayed

@@ -44,9 +44,9 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
             return comparer.Compare(this, (IExpression)obj) == 0;
         }
 
-        public int Operation(int val1, int val2)
+        public int Operation(string head, int val1, int val2)
         {
-            return Head switch
+            return head switch
             {
                 "Add" => val1 + val2,
                 "Mul" => val1 * val2,
@@ -118,8 +118,8 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
             // TODO: context stuff
 
             // apply built-in definitions            
-            //Operands = ApplyBuiltins();
-
+            Operands = ApplyBuiltins();
+            Operands = Attributes[1].Apply(this);
         }
 
         // Assuming attributes are applied
@@ -194,18 +194,149 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
                     result = Enumerable.Repeat(result.First(), (int)ToValue(result[1]).Key).ToList();
                 }
             }
+            if (Head ==nameof(Heads.Mul))
+            {
+                result = ApplyMulBuiltin();
+            }
             if (Head == nameof(Heads.Add))
             {
-                
+                result = ApplyAddBuiltin();
             }
-
             return result;
         }
 
-        private List<IExpression> PowBuiltin()
+        private List<IExpression> ApplyPowBuiltin()
         {
             var result = Operands;
             return result;
+        }
+
+        private List<IExpression> ApplyAddBuiltin()
+        {
+            var result = new List<IExpression>();
+            foreach (var operand in Operands)
+            {
+                IExpression alikeOperand = default;
+                foreach (var resultOperand in result)
+                {
+                    if (resultOperand.IsAlike(operand))
+                    {
+                        alikeOperand = resultOperand;
+                        break;
+                    }
+                }
+                if (alikeOperand != default)
+                {
+                    result.Add(DoAlikeSimplifying(nameof(Heads.Add), alikeOperand, operand));
+                    result.Remove(alikeOperand);
+                }
+                else
+                {
+                    result.Add(operand);
+                }
+            }
+            return result;
+        }
+
+            private List<IExpression> ApplyMulBuiltin()
+        {
+            var result = new List<IExpression>();
+            foreach (var operand in Operands)
+            {
+                if (operand is Expression && ToExpression(operand).Head == nameof(Heads.Add))
+                {
+                    var add = new Expression(nameof(Heads.Add));
+                    var mul = new Expression(nameof(Heads.Mul));
+                    mul.Operands = result;
+                    foreach (var o in ToExpression(operand).Operands)
+                    {
+                        add.Operands.Add(DoAlikeSimplifying(nameof(Heads.Mul), mul, o));
+                    }
+                    result = add.Operands;
+                }
+                else
+                {
+                    result.Add(operand);
+                    /*var alikeFound = false;
+                    foreach (var resultOperand in result)
+                    {
+                        if (resultOperand.IsAlike(operand))
+                        {
+                            // Alike stuff
+                            alikeFound = true;
+                            break;
+                        }
+                    }
+                    if (!alikeFound)
+                    {
+                        result.Add(operand);
+                    }*/
+                }
+            }
+            return result;
+        }
+
+        // For example xy+xy -> 2xy | xy*xy -> xxyy
+        private IExpression DoAlikeSimplifying(string head,IExpression left, IExpression right)
+        {
+            if (left.Head == nameof(Heads.Value) && right.Head == nameof(Heads.Value))
+            {
+                return new Value(Operation(head, (int)left.Key, (int)right.Key));
+            }
+            // kostil
+            if (!(left is Expression) || !(right is Expression))
+                throw new Exception("No Symbol logic");
+
+            left = AddCoefficient(ToExpression(left));
+            right = AddCoefficient(ToExpression(right));
+            var res = new Expression(nameof(Heads.Mul));
+            switch (head)
+            {
+                case (nameof(Heads.Add)):
+                    res.Operands = new List<IExpression>
+                    {
+                        new Value((int)ToExpression(left).Operands.First().Key +
+                                    (int)ToExpression(right).Operands.First().Key)
+                    };
+                    res.Operands = res.Operands.Concat(ToExpression(left).Operands.Skip(1)).ToList();
+                    return res;
+                case (nameof(Heads.Mul)):
+                    res.Operands = new List<IExpression>
+                    {
+                            new Value((int)ToExpression(left).Operands.First().Key *
+                                        (int)ToExpression(right).Operands.First().Key)
+                    };
+                    res.Operands = res.Operands
+                        .Concat(GetAlikeOperands(ToExpression(left)))
+                        .Concat(GetAlikeOperands(ToExpression(right)))
+                        .ToList();
+                    res.Operands = res.Attributes[1].Apply(res);
+                    return res;
+                case (nameof(Heads.Pow)):
+                    throw new Exception("Unexpected using of Pow head");
+                default:
+                    throw new Exception("Unexpexted head on terms simplifying");
+            }
+        }
+
+        private Expression AddCoefficient(Expression expr)
+        {
+            if (expr.Operands.Count < 1) throw new Exception("No operands");
+            if (expr.Operands.Count > 1 && expr.Head != nameof(Heads.Mul)) throw new Exception("Too many arguments");
+            if (expr.Operands.Count == 1)
+            {
+                var res = new Expression(nameof(Heads.Mul));
+                res.Operands = new List<IExpression>() { new Value(1) };
+                res.Operands.Add(expr);
+                return res;
+            }
+            if (expr.Operands.First().Head != nameof(Heads.Value))
+            {
+                expr.Operands.Add(new Value(1));
+                expr.Operands = expr.Attributes[1].Apply(expr);
+                return expr;
+            }
+            return expr;
         }
     }
 }

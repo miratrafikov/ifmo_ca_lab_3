@@ -26,11 +26,13 @@ namespace ShiftCo.ifmo_ca_lab_3
             expr.Evaluate();*/
             var expr1 = new Expression("Mul");
             expr1.Operands = new List<IExpression>{ new Expression("Symbol", "x"), new Expression("Symbol", "y") };
-            expr1.Evaluate();
             var expr2 = new Expression("Mul");
             expr2.Operands = new List<IExpression> { new Expression("Symbol", "y"), new Expression("Symbol", "x") };
-            expr2.Evaluate();
-            Console.WriteLine(expr1.Equals(expr2));
+
+            var expr = new Expression("Mul");
+            expr.Operands = new List<IExpression> { expr1, expr2 };
+            expr.Evaluate();
+            Talk.Speaker.TalkObjectTrees(expr, 0);
         }
         #endregion
 
