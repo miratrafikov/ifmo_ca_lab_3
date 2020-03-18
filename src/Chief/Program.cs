@@ -19,21 +19,17 @@ namespace ShiftCo.ifmo_ca_lab_3
         #region Код Патоха 🤮
         static void Main()
         {
-            /*Expression expr = new Expression("Sum");
-            var pow = new Expression("Sum");
-            pow.Operands = new List<IExpression>() { new Expression("Symbol", "a"), new Value(2) };
-            expr.Operands = new List<IExpression> { new Value(2), new Expression("Symbol", "x"), pow, new Value(5) };
-            expr.Evaluate();*/
-            var expr1 = new Expression("Mul");
-            expr1.Operands = new List<IExpression>{ new Expression("Symbol", "x"), new Expression("Symbol", "y") };
-            var expr2 = new Expression("Mul");
-            expr2.Operands = new List<IExpression> { new Expression("Symbol", "y"), new Expression("Symbol", "x") };
-
-            var expr = new Expression("Mul");
-            expr.Operands = new List<IExpression> { expr1, expr2 };
-            expr.Evaluate();
-            Talk.Speaker.TalkObjectTrees(expr, 0);
-        }
+            var minusY = new Expression()
+            {
+                Head = "Mul",
+                Operands = new List<IExpression>() { new Value(-1), new Expression("Symbol", "y") }          
+            };
+            var expr1 = new Expression("Add");
+            expr1.Operands = new List<IExpression>{ new Expression("Symbol", "x"), minusY };
+            var expr2 = new Expression("Pow");
+            expr2.Operands = new List<IExpression> { expr1, new Value(2) };
+            expr2.Evaluate();
+          }
         #endregion
 
         /*

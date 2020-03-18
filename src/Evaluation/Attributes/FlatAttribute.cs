@@ -9,6 +9,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Attributes
 {
     class FlatAttribute : IAttribute
     {
+        // Mul(Mul (x, y), 2) -> Mul(2,x,y)
         public List<IExpression> Apply(Expression expr)
         {
             var head = expr.Head;
@@ -20,7 +21,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Attributes
                     operands = operands.Concat(ToExpression(operand).Operands).ToList();
                 } 
                 else
-                {
+                {// Mul(3, Mul(0,0)) Mul(3,0,0))
                     operands.Add(operand);
                 }
             }
