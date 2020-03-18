@@ -27,8 +27,9 @@ namespace ShiftCo.ifmo_ca_lab_3
             var expr1 = new Expression("Add");
             expr1.Operands = new List<IExpression>{ new Expression("Symbol", "x"), minusY };
             var expr2 = new Expression("Pow");
-            expr2.Operands = new List<IExpression> { expr1, new Value(2) };
+            expr2.Operands = new List<IExpression> { expr1, new Value(3) };
             expr2.Evaluate();
+            expr2.ToNormalForm();
           }
         #endregion
 

@@ -128,6 +128,15 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
             RemovePrimitives();
             ApplyBuiltins();
             ApplyAttributes();
+            Operands.RemoveAll(o => o.Head == nameof(Heads.Mul) &&
+                (int)ToExpression(o).Operands.First().Key == 0);
+        }
+
+        // Replace all aaa with Pow(a, 3)
+        public void ToNormalForm()
+        {
+            RemoveSequences();
+            RemoveExtraCoefficients();
         }
 
         // Assuming attributes are applied
@@ -193,6 +202,72 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
                     Operands = null;
                     Attributes = null;
                 }
+            }
+        }
+
+        private void RemoveSequences()
+        {
+            var i = 0;
+            while (i < Operands.Count)
+            {
+                var seqLength = 1;
+                while (i + seqLength < Operands.Count && 
+                    Operands[i].Equals(Operands[i + seqLength]))
+                {
+                    seqLength++;
+                }
+                if (seqLength > 1)
+                {
+                    var operand = Operands[i];
+                    Operands.RemoveRange(i, seqLength);
+                    Operands.Add(new Expression(nameof(Heads.Pow))
+                    {
+                        Operands = new List<IExpression>()
+                        {
+                            operand,
+                            new Value(seqLength)
+                        }
+                    });
+                }
+                i++;
+            }
+            foreach (var e in Operands.OfType<Expression>())
+            {
+                e.RemoveSequences();
+            }
+        }
+
+        private void RemoveExtraCoefficients()
+        {
+            var i = 0;
+            while (i < Operands.Count)
+            {
+                if (Operands[i].Head == nameof(Heads.Mul) &&
+                    ToExpression(Operands[i]).Operands[0].Equals(new Value (1)))
+                {
+                    if (ToExpression(Operands[i]).Operands.Count == 2)
+                    {
+                        var tmp = ToExpression(Operands[i]).Operands[1];
+                        Operands.RemoveAt(i);
+                        Operands.Add(tmp);
+                    }
+                    else
+                    {
+                        var tmp = ToExpression(Operands[i]).Operands.Skip(1);
+                        Operands.Add(new Expression(nameof(Heads.Mul))
+                        {
+                            Operands = tmp.ToList()
+                        });
+                    }
+                }
+                else
+                {
+                    i++;
+                }
+            }
+            foreach (var e in Operands.OfType<Expression>())
+            {
+                e.RemoveExtraCoefficients();
             }
         }
 
