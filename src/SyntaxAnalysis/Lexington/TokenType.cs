@@ -6,6 +6,7 @@
         Number,
         LeftBracket,
         RightBracket,
-        Comma
+        Comma,
+        EOF
     }
 }
