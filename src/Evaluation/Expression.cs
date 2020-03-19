@@ -184,10 +184,12 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
             {
                 Head = Operands.First().Head;
                 Key = Operands.First().Key;
-                if (Operands.First() is Expression)
+                if (ToExpression(Operands.First()) != default && Operands.First() is Expression)
                 {
-                    Operands = ToExpression(Operands.First()).Operands;
-                    Attributes = ToExpression(Operands.First()).Attributes;
+                    if (ToExpression(Operands.First()).Attributes != null)
+                        Attributes = ToExpression(Operands.First()).Attributes;
+                    if (ToExpression(Operands.First()).Operands != null)
+                        Operands = ToExpression(Operands.First()).Operands;
                     var primitives = Operands.Where(o => o is Expression && IsPrimitive(ToExpression(o)));
                     // Remove inner primitives
                     foreach (var primitive in primitives)
@@ -246,7 +248,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
             while (i < Operands.Count)
             {
                 if (Operands[i].Head == nameof(Heads.Mul) &&
-                    ToExpression(Operands[i]).Operands[0].Equals(new Value (1)))
+                    ToExpression(Operands[i]).Operands[0].Equals(new Expression(nameof(Heads.Value)) { Key = 1}))
                 {
                     if (ToExpression(Operands[i]).Operands.Count == 2)
                     {
@@ -415,7 +417,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
                         if (result[i] is Value)
                         {
                             found = true;
-                            result[i].Key = ((int)result[i].Key) * (int)operand.Key;
+                            result[i]= new Value (((int)result[i].Key) * (int)operand.Key);
                         }
                     }
                     if (!found) result.Add(operand);
@@ -446,9 +448,29 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
         // For example xy+xy -> 2xy | xy*xy -> xxyy
         private IExpression DoAlikeSimplifying(string head,IExpression left, IExpression right)
         {
+            // kostili moe vse
+            if (left is null) return right;
+            if (right is null) return left;
             if (left.Head == nameof(Heads.Value) && right.Head == nameof(Heads.Value))
             {
                 return new Value(Operation(head, (int)left.Key, (int)right.Key));
+            }
+            if (left.Head == nameof(Heads.Value))
+            {
+                return new Expression(nameof(Heads.Mul)) { Operands = new List<IExpression>() 
+                {
+                    left, right
+                } };
+            }
+            if (right.Head == nameof(Heads.Value))
+            {
+                return new Expression(nameof(Heads.Mul))
+                {
+                    Operands = new List<IExpression>()
+                    {
+                        right, left
+                    }
+                };
             }
             // kostil
             if (!(left is Expression) || !(right is Expression))

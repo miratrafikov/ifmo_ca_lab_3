@@ -22,12 +22,13 @@ namespace ShiftCo.ifmo_ca_lab_3
                 Head = "Mul",
                 Operands = new List<IExpression>() { new Value(-1), new Expression("Symbol", "y") }          
             };
-            var expr1 = new Expression("Mul");
-            //expr1.Operands = new List<IExpression>{ new Expression("Symbol", "x"), minusY };
-            expr1.Operands = new List<IExpression> { new Value(5), new Value(6) };
-            expr1.Evaluate();
+            var expr1 = new Expression("Add");
+            expr1.Operands = new List<IExpression>{ new Expression("Symbol", "x"), minusY };
+            // (-xy)^3
+            //expr1.Operands = new List<IExpression> { new Value(5), new Value(6) };
+            //expr1.Evaluate();
             var expr2 = new Expression("Pow");
-            expr2.Operands = new List<IExpression> { expr1, new Value(3) };
+            expr2.Operands = new List<IExpression> { expr1, new Value(2) };
             expr2.Evaluate();
             expr2.ToNormalForm();
         }
