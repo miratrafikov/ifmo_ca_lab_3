@@ -158,10 +158,11 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
         {
             // Allways false
             if (iexpr is Value) return iexpr.IsAlike(this);
+            if (Head == nameof(Heads.value) && iexpr.Head == nameof(Heads.value)) return true;
             // Expression ~ symbol
             if (iexpr is Symbol) return iexpr.IsAlike(this);
             // symbol ~ symbol but both are expressions
-            if (iexpr is Expression && iexpr.Head == nameof(Heads.symbol) && Head == iexpr.Head)
+            if (iexpr.Head == nameof(Heads.symbol) && Head == iexpr.Head)
             {
                 return Key.Equals(iexpr.Key);
             }
@@ -172,7 +173,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
                 return AreOperandsAlike(Operands, ToExpression(iexpr).Operands);
             }
             // mul ~ Expression
-            if (Head == nameof(Heads.mul))
+            if (Head == nameof(Heads.mul) || iexpr.Head == nameof(Heads.mul))
             {
                 var l = GetAlikeOperands(this);
                 var r = GetAlikeOperands(ToExpression(iexpr));
@@ -192,6 +193,8 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
 
         public void RemovePrimitives()
         {
+            if (Head == nameof(Heads.value)) return;
+            if (Head == nameof(Heads.symbol)) return;
             if (Operands.Count == 1)
             {
                 Head = Operands.First().Head;
@@ -222,6 +225,8 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
 
         private void RemoveSequences()
         {
+            if (Head == nameof(Heads.value)) return;
+            if (Head == nameof(Heads.symbol)) return;
             if (Operands == null) return;
             var i = 0;
             while (i < Operands.Count)
@@ -255,6 +260,8 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
 
         private void RemoveExtraCoefficients()
         {
+            if (Head == nameof(Heads.value)) return;
+            if (Head == nameof(Heads.symbol)) return;
             if (Operands == null) return;
             var i = 0;
             while (i < Operands.Count)

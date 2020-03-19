@@ -15,21 +15,24 @@ namespace ShiftCo.ifmo_ca_lab_3.Talk
         {
             var head = ((IExpression)element).Head.ToLower();
             string? value;
-            switch (element)
+            switch (((IExpression)element).Head)
             {
-                case Value number:
-                    value = number.Key.ToString();
+                case "value":
+                    value = ((IExpression)element).Key.ToString();
                     Console.WriteLine($"{indent}+- {head.ToLower()} {value}");
                     break;
-                case Expression expression:
-                    value = (head == "symbol") ? expression.Key.ToString() : "";
+                case "symbol":
+                    value = ((IExpression)element).Key.ToString();
                     Console.WriteLine($"{indent}+- {head.ToLower()} {value}");
+                    break;
+                default:
+                    Console.WriteLine($"{indent}+- {head.ToLower()}");
                     indent += last ? "   " : "|  ";
-                    if (expression.Operands != null)
+                    if (((Expression)element).Operands != null)
                     {
-                        for (var i = 0; i < expression.Operands.Count; i++)
+                        for (var i = 0; i < ((Expression)element).Operands.Count; i++)
                         {
-                            PrintElementsTree(expression.Operands[i], indent, i == expression.Operands.Count - 1);
+                            PrintElementsTree(((Expression)element).Operands[i], indent, i == ((Expression)element).Operands.Count - 1);
                         }
                     }
                     break;
