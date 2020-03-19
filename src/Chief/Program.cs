@@ -16,18 +16,24 @@ namespace ShiftCo.ifmo_ca_lab_3
 
         static void Main()
         {
-            var str = "sum(x, 2,3, PoW(y, 15), 5)";
-            NormalizeString(ref str);
-            try
+            Console.WriteLine("Q 2 Xit");
+            string input = "";
+            while (input != "q")
             {
-                _tokens = Lexer.Tokenize(str);
-                Speaker.TalkTokens(ref _tokens);
-                _objects = Parser.Parse(_tokens);
-                Speaker.TalkObjectTrees(_objects, 0);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
+                var str = Console.ReadLine();
+                NormalizeString(ref str);
+                try
+                {
+                    _tokens = Lexer.Tokenize(str);
+                    Speaker.TalkTokens(ref _tokens);
+                    _objects = Parser.Parse(_tokens);
+                    Speaker.TalkObjectTrees(_objects, 0);
+                    Console.WriteLine();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
             }
         }
 

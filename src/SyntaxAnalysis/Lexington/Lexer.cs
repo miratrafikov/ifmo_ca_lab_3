@@ -15,11 +15,12 @@ namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Lexington
         private static readonly string alphabet = letters + numbers + brackets + comma + modificators;
 
         // Список найденных токенов
-        private static readonly List<Token> Tokens = new List<Token>();
+        private static List<Token> Tokens;
 
         public static List<Token> Tokenize(string str)
         {
             AlphabetCheck(str);
+            Tokens = new List<Token>();
             for (int i = 0; i < str.Length; i++)
             {
                 var token = GetToken(str.Substring(i));
