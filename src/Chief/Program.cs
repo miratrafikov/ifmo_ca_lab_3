@@ -11,66 +11,29 @@ namespace ShiftCo.ifmo_ca_lab_3
 {
     class Program
     {
-        // АХТУНГ
-        // Раскаменчивай нужный регион, каменчивай ненужный
-        // Можно свернуть регион и закомментить, но лудше тогда начинать с нижнего камента
-        // Или забить хуй и тупа юзать CTRL+K CTRL+F, чтобы идэйе исправила пошедшие по пизде отступы и проч.
-        // Ващета я это сделал т.к. произвел слияние вместо
-
-        /*
-        #region Код Патоха 🤮
-        static void Main()
-        {
-            var expr1 = new Expression("Mul");
-            expr1.Operands = new List<IExpression>{ new Expression("Symbol", "x"), new Expression("Symbol", "y") };
-            expr1.Evaluate();
-            var expr2 = new Expression("Mul");
-            expr2.Operands = new List<IExpression> { new Expression("Symbol", "y"), new Expression("Symbol", "x") };
-            expr2.Evaluate();
-            Console.WriteLine(expr1.Equals(expr2));
-        }
-        #endregion
-        */
-
-        #region Код Мирата 😎
-        static string str = "sum(1, sum(54, -5))";
-
-        // Список найденных лексером токенов
-        static List<Token> Tokens;
-
-        // Объект, сформированный парсером из списка токенов
-        static IExpression Objects;
+        static List<Token> _tokens;
+        static IExpression _objects;
 
         static void Main()
         {
-
-            // Приведение строки к нормальному виду
+            var str = "sum(x, 2,3, PoW(y, 15), 5)";
             NormalizeString(ref str);
             try
             {
-                // Работа лексера
-                Tokens = Lexer.Tokenize(str);
-
-                // Вывод списка токенов
-                Speaker.TalkTokens(ref Tokens);
-
-                // Работа парсера
-                Objects = Parser.Parse(Tokens);
-
-                // Вывод дерева объектов
-                //Speaker.TalkObjectTrees(Objects, 0);
+                _tokens = Lexer.Tokenize(str);
+                Speaker.TalkTokens(ref _tokens);
+                _objects = Parser.Parse(_tokens);
+                Speaker.TalkObjectTrees(_objects, 0);
             }
             catch (Exception ex)
             {
-                // Вывод информации об ошибке
                 Console.WriteLine(ex.Message);
             }
         }
 
         private static void NormalizeString(ref string str)
         {
-            str = str.Replace(" ", String.Empty).ToLower();
+            str = str.Replace(" ", string.Empty).ToLower();
         }
-        #endregion
     }
 }

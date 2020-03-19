@@ -7,32 +7,32 @@ namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Parseltongue
 {
     static class Grammar
     {
-        static Dictionary<NonTerminal, List<List<Object>>> RuleNT = new Dictionary<NonTerminal, List<List<object>>>();
+        public static Dictionary<NonTerminal, List<List<object>>> Rules = new Dictionary<NonTerminal, List<List<object>>>();
 
         static Grammar()
         {
-            RuleNT.Add(NonTerminal.Root, new List<List<object>>
+            Rules.Add(NonTerminal.Root, new List<List<object>>
             {
                 new List<object>{NonTerminal.Element, Terminal.EOF}
             });
-            RuleNT.Add(NonTerminal.Element, new List<List<object>>
+            Rules.Add(NonTerminal.Element, new List<List<object>>
             {
                 new List<object>{NonTerminal.Expression},
                 new List<object>{Terminal.Symbol},
                 new List<object>{Terminal.Number}
             });
-            RuleNT.Add(NonTerminal.Expression, new List<List<object>>
+            Rules.Add(NonTerminal.Expression, new List<List<object>>
             {
-                new List<object>{Terminal.Symbol, Terminal.LeftBracket, NonTerminal.Operand, Terminal.RightBracket}
+                new List<object>{Terminal.Symbol, Terminal.LeftBracket, NonTerminal.Operands, Terminal.RightBracket}
             });
-            RuleNT.Add(NonTerminal.Operand, new List<List<object>>
+            Rules.Add(NonTerminal.Operands, new List<List<object>>
             {
-                new List<object>{NonTerminal.Element, NonTerminal.NextOperand}
+                new List<object>{NonTerminal.Element, NonTerminal.Continuation}
             });
-            RuleNT.Add(NonTerminal.NextOperand, new List<List<object>>
+            Rules.Add(NonTerminal.Continuation, new List<List<object>>
             {
-                new List<object>{Terminal.Comma, NonTerminal.Operand},
-                new List<object>{NonTerminal.Idle}
+                new List<object>{Terminal.Comma, NonTerminal.Operands},
+                new List<object>{}
             });
             
             

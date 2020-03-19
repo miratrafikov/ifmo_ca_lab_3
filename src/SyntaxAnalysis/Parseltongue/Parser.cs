@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ShiftCo.ifmo_ca_lab_3.Evaluation;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
 using ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Lexington;
 
@@ -10,82 +11,130 @@ namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Parseltongue
     public static class Parser
     {
         private static List<Token> _tokens;
+        private static Token _token;
+        private static int _tokensIterator;
+        private static Stack<int> _tokensIteratorStack;
 
         public static IExpression Parse(List<Token> tokens)
         {
-            int i = 0;
-            _tokens = tokens;
-            NT_Root(ref i);
-            return default;
-        }
-
-        private static bool NT_Root(ref int i)
-        {
-            if (!NT_Element(ref i)) return false;
-            if (!T_EOF(ref i)) return false;
-            return true;
-        }
-
-        private static bool NT_Element(ref int i)
-        {
-            if (!NT_Expression(ref i) && !T_Symbol(ref i) && !T_Number(ref i)) return false;
-            return true;
-        }
-
-        private static bool NT_Expression(ref int i)
-        {
-            if (!T_Symbol(ref i)) return false;
-            if (!T_LeftBracket(ref i)) return false;
-            if (!NT_Operand(ref i)) return false;
-            if (!T_RightBracket(ref i)) return false;
-            return true;
-        }
-
-        private static bool NT_Operand(ref int i)
-        {
-            if (!NT_Element(ref i)) return false;
-            if (T_Comma(ref i))
+            Prepare(tokens);
+            var result = GetSymbol(NonTerminal.Root);
+            if (result.success)
             {
-                if (!NT_Operand(ref i)) return false;
+                return ((List<IExpression>)result.value)[0];
+            }
+            else
+            {
+                throw new Exception("Parse error: No suitable parse tree.");
+            }
+        }
+
+        private static void Prepare(List<Token> tokens)
+        {
+            _tokens = tokens;
+            _tokensIterator = 0;
+            _tokensIteratorStack = new Stack<int>();
+        }
+
+        private static Result GetSymbol(object symbol)
+        {
+            Result result;
+            if (symbol is Terminal)
+            {
+                NextToken();
+                result = GetTerminal((Terminal)symbol);
+            }
+            else
+            {
+                result = GetNonTerminal((NonTerminal)symbol);
+            }
+            if (!result.success || !(symbol is NonTerminal.Expression))
+            {
+                return result;
+            }
+            return new Result(true, BuildExpression((List<IExpression>)result.value));
+        }
+
+        private static Result GetTerminal(Terminal requestedSymbol)
+        {
+            if (_token.Type != requestedSymbol)
+            {
+                return new Result(false);
             }
 
-            return true;
+            switch (requestedSymbol)
+            {
+                case Terminal.Symbol:
+                    return new Result(true, new Symbol(_token.Content));
+                case Terminal.Number:
+                    return new Result(true, new Value(Convert.ToInt32(_token.Content)));
+                default:
+                    return new Result(true);
+            }
         }
 
-        private static bool T_EOF(ref int i)
+        private static Result GetNonTerminal(NonTerminal requestedSymbol)
         {
-            if (_tokens[i].Type == TokenType.EOF) return true;
-            return false;
+            var productions = Grammar.Rules[requestedSymbol];
+            foreach (var production in productions)
+            {
+                SavePosition();
+                var productionMatches = true;
+                var correspondingObjects = new List<IExpression>();
+                foreach (var symbol in production)
+                {
+                    var result = GetSymbol(symbol);
+                    if (!result.success)
+                    {
+                        productionMatches = false;
+                        break;
+                    }
+                    if (result.value != null)
+                    {
+                        if (result.value is List<IExpression>)
+                        {
+                            correspondingObjects.AddRange((List<IExpression>)result.value);
+                        }
+                        else
+                        {
+                            correspondingObjects.Add((IExpression)result.value);
+                        }
+                    }
+                }
+                if (productionMatches)
+                {
+                    return new Result(true, correspondingObjects);
+                }
+                RestorePosition();
+            }
+            return new Result(false);
         }
 
-        private static bool T_Number(ref int i)
+        private static Expression BuildExpression(List<IExpression> objectsList)
         {
-            if (_tokens[i].Type != TokenType.Number) return false;
-            return true;
+            var head = objectsList[0].Head;
+            var operands = objectsList.GetRange(1, objectsList.Count - 1);
+            return new Expression(head)
+            {
+                Operands = operands
+            };
         }
 
-        private static bool T_Symbol(ref int i)
+        private static void SavePosition()
         {
-            if (_tokens[i].Type != TokenType.Symbol) return false;
-            return true;
+            _tokensIteratorStack.Push(_tokensIterator);
         }
 
-        private static bool T_LeftBracket(ref int i)
+        private static void RestorePosition()
         {
-            if (_tokens[i].Type != TokenType.LeftBracket) return false;
-            return true;
+            _tokensIterator = _tokensIteratorStack.Pop();
+            _token = _tokens[_tokensIterator];
         }
 
-        private static bool T_RightBracket(ref int i)
+        private static void NextToken()
         {
-            if (_tokens[i].Type != TokenType.RightBracket) return false;
-            return true;
-        }
-
-        private static bool T_Comma(ref int i)
-        {
-            if (_tokens[i].Type != TokenType.Comma) return false;
-            return true;
+            _token = _tokens[_tokensIterator];
+            _tokensIterator++;
         }
     }
 }

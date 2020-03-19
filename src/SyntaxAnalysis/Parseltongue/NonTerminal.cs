@@ -5,8 +5,7 @@
         Root,
         Element,
         Expression,
-        Operand,
-        NextOperand,
-        Idle
+        Operands,
+        Continuation
     }
 }
