@@ -18,3 +18,10 @@ $$
 
 
 
+Грамматика парсера:
+
+* <Root> = <Elem>EOF
+* <Elem> = <Expr> | Num | Sym
+* <Expr> = Sym(<Op>)
+* <Op> = <Elem><NextOp>
+* <NextOp> = ,<Op> | $
