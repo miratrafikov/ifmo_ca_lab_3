@@ -16,49 +16,24 @@ namespace ShiftCo.ifmo_ca_lab_3
 
         static void Main()
         {
-            /*
-            var minusY = new Expression()
+            Console.WriteLine("Q 2 Xit");
+            string input = "";
+            while (input != "q")
             {
-                Head = "Mul",
-                Operands = new List<IExpression>() { new Value(-1), new Expression("Symbol", "y") }          
-            };
-            var expr1 = new Expression("Add");
-            expr1.Operands = new List<IExpression>{ new Expression("Symbol", "x"), minusY };
-            var expr2 = new Expression("Pow");
-            expr2.Operands = new List<IExpression> { expr1, new Value(3) };
-            expr2.Evaluate();
-            expr2.ToNormalForm();
-          }
-        #endregion
-
-        /*
-        #region Код Мирата 😎
-        static string str = "sum(1, sum(54, -5))";
-
-        // Список найденных лексером токенов
-        static List<Token> Tokens;
-
-        // Объект, сформированный парсером из списка токенов
-        static object RetrievedObject;
-
-        static void Main()
-        {
-
-            // Приведение строки к нормальному виду
-            */
-            var str = "sum(x, 2,3, PoW(y, 15), 5)";
-
-            NormalizeString(ref str);
-            try
-            {
-                _tokens = Lexer.Tokenize(str);
-                Speaker.TalkTokens(ref _tokens);
-                _objects = Parser.Parse(_tokens);
-                Speaker.TalkObjectTrees(_objects, 0);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
+                var str = Console.ReadLine();
+                NormalizeString(ref str);
+                try
+                {
+                    _tokens = Lexer.Tokenize(str);
+                    Speaker.TalkTokens(ref _tokens);
+                    _objects = Parser.Parse(_tokens);
+                    Speaker.TalkObjectTrees(_objects, 0);
+                    Console.WriteLine();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
             }
         }
 
