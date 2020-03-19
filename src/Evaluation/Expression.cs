@@ -10,6 +10,16 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
 {
     public class Expression : IExpression
     {
+        private static Dictionary<Heads, string> BasicExpressions = new Dictionary<Heads, string>();
+
+        static Expression()
+        {
+            foreach (Heads head in Enum.GetValues(typeof(Heads)))
+            {
+                BasicExpressions.Add(head, head.ToString().ToLower());
+            }
+        }
+
         public Expression()
         {
             Operands = new List<IExpression>();
@@ -46,7 +56,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
         public string Head { get; set; }
 
         public object Key { get; set; }
-        
+
         public override bool Equals(object obj)
         {
             if (!(obj is IExpression)) return false;
@@ -58,9 +68,9 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
         {
             return head switch
             {
-                "Add" => val1 + val2,
-                "Mul" => val1 * val2,
-                "Pow" => val1 ^ val2,
+                "add" => val1 + val2,
+                "mul" => val1 * val2,
+                "pow" => val1 ^ val2,
                 _ => default,
             };
         }
@@ -75,30 +85,30 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
             // TODO: look for the head name in the context, replace if needed
             switch (Head)
             {
-                case nameof(Heads.Set):
+                case nameof(Heads.set):
                     // TODO: set stuff
                     break;
-                case nameof(Heads.Delayed):
+                case nameof(Heads.delayed):
                     // TODO: delayed stuff
                     return;
-                case nameof(Heads.Head):
+                case nameof(Heads.head):
                     Key = Head;
                     return;
-                case nameof(Heads.Value):
+                case nameof(Heads.value):
                     return;
-                case nameof(Heads.Symbol):
+                case nameof(Heads.symbol):
                     return;
-                case nameof(Heads.Pow):
+                case nameof(Heads.pow):
                     for (int i = 1; i < Operands.Count; i++)
                     {
-                        if (Operands[i].Head != nameof(Heads.Value))
+                        if (Operands[i].Head != nameof(Heads.value))
                         {
-                            throw new Exception("Symbol \"Pow\" can contain only integer exponent");
+                            throw new Exception("symbol \"pow\" can contain only integer exponent");
                         }
                     }
                     break;
                 default:
-                    // Add, Mul, default symbols
+                    // add, mul, default symbols
                     break;
             }
             // evaluate each element
@@ -106,12 +116,12 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
             {
                 switch (operand.Head)
                 {
-                    case nameof(Heads.Head):
-                        throw new Exception("\"Head\" expression can not be used as inner expression");
-                    case nameof(Heads.Set):
-                        throw new Exception("\"Set\" expression can not be used as inner expression");
-                    case nameof(Heads.Delayed):
-                        throw new Exception("\"Delayed\" expression can not be used as inner expression");
+                    case nameof(Heads.head):
+                        throw new Exception("\"head\" expression can not be used as inner expression");
+                    case nameof(Heads.set):
+                        throw new Exception("\"set\" expression can not be used as inner expression");
+                    case nameof(Heads.delayed):
+                        throw new Exception("\"delayed\" expression can not be used as inner expression");
                     default:
                         operand.Evaluate();
                         break;
@@ -128,14 +138,16 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
             RemovePrimitives();
             ApplyBuiltins();
             ApplyAttributes();
-            //Operands.RemoveAll(o => o.Head == nameof(Heads.Mul) &&
+            ToNormalForm();
+            //Operands.RemoveAll(o => o.head == nameof(Heads.mul) &&
               //  (int)ToExpression(o).Operands.First().Key == 0);
         }
 
-        // Replace all aaa with Pow(a, 3)
+        // Replace all aaa with pow(a, 3)
         public void ToNormalForm()
         {
             RemoveSequences();
+            ApplyAttributes();
             RemoveExtraCoefficients();
         }
 
@@ -146,25 +158,25 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
         {
             // Allways false
             if (iexpr is Value) return iexpr.IsAlike(this);
-            // Expression ~ Symbol
+            // Expression ~ symbol
             if (iexpr is Symbol) return iexpr.IsAlike(this);
-            // Symbol ~ Symbol but both are expressions
-            if (iexpr is Expression && iexpr.Head == nameof(Heads.Symbol) && Head == iexpr.Head)
+            // symbol ~ symbol but both are expressions
+            if (iexpr is Expression && iexpr.Head == nameof(Heads.symbol) && Head == iexpr.Head)
             {
                 return Key.Equals(iexpr.Key);
             }
-            // Add ~ Add | Pow ~ Pow
-            if (iexpr.Head == Head && 
-                (Head == nameof(Heads.Add) || Head == nameof(Heads.Pow)))
+            // add ~ add | pow ~ pow
+            if (iexpr.Head == Head &&
+                (Head == nameof(Heads.add) || Head == nameof(Heads.pow)))
             {
                 return AreOperandsAlike(Operands, ToExpression(iexpr).Operands);
             }
-            // Mul ~ Expression
-            if (Head == nameof(Heads.Mul))
+            // mul ~ Expression
+            if (Head == nameof(Heads.mul))
             {
                 var l = GetAlikeOperands(this);
                 var r = GetAlikeOperands(ToExpression(iexpr));
-                return AreOperandsAlike(l ,r);
+                return AreOperandsAlike(l, r);
             }
             return false;
         }
@@ -215,7 +227,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
             while (i < Operands.Count)
             {
                 var seqLength = 1;
-                while (i + seqLength < Operands.Count && 
+                while (i + seqLength < Operands.Count &&
                     Operands[i].Equals(Operands[i + seqLength]))
                 {
                     seqLength++;
@@ -224,7 +236,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
                 {
                     var operand = Operands[i];
                     Operands.RemoveRange(i, seqLength);
-                    Operands.Add(new Expression(nameof(Heads.Pow))
+                    Operands.Add(new Expression(nameof(Heads.pow))
                     {
                         Operands = new List<IExpression>()
                         {
@@ -247,8 +259,8 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
             var i = 0;
             while (i < Operands.Count)
             {
-                if (Operands[i].Head == nameof(Heads.Mul) &&
-                    ToExpression(Operands[i]).Operands[0].Equals(new Expression(nameof(Heads.Value)) { Key = 1}))
+                if (Operands[i].Head == nameof(Heads.mul) &&
+                    ToExpression(Operands[i]).Operands[0].Equals(new Expression(nameof(Heads.value)) { Key = 1}))
                 {
                     if (ToExpression(Operands[i]).Operands.Count == 2)
                     {
@@ -259,7 +271,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
                     else
                     {
                         var tmp = ToExpression(Operands[i]).Operands.Skip(1);
-                        Operands.Add(new Expression(nameof(Heads.Mul))
+                        Operands.Add(new Expression(nameof(Heads.mul))
                         {
                             Operands = tmp.ToList()
                         });
@@ -276,7 +288,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
             }
         }
 
-        // Returns list of operands except by coefficient aka Value
+        // Returns list of operands except by coefficient aka value
         private List<IExpression> GetAlikeOperands(Expression expr)
         {
             var operands = new List<IExpression>();
@@ -311,21 +323,21 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
         private void ApplyBuiltins()
         {
             var result = new List<IExpression>();
-            if (Head == nameof(Heads.Pow))
+            if (Head == nameof(Heads.pow))
             {
                 result = ApplyPowBuiltin();
                 Operands = result;
                 RemovePrimitives();
                 ApplyAttributes();
             }
-            if (Head ==nameof(Heads.Mul))
+            if (Head == nameof(Heads.mul))
             {
                 result = ApplyMulBuiltin();
                 Operands = result;
                 RemovePrimitives();
                 ApplyAttributes();
             }
-            if (Head == nameof(Heads.Add))
+            if (Head == nameof(Heads.add))
             {
                 result = ApplyAddBuiltin();
                 Operands = result;
@@ -337,8 +349,8 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
         private List<IExpression> ApplyPowBuiltin()
         {
             var result = Operands;
-            var exponent = Operands.Skip(1).Where( o => o.Head == nameof(Heads.Value)).Aggregate(1, (a, b) => a * (int)b.Key);
-            if (Operands.First().Head == nameof(Heads.Value))
+            var exponent = Operands.Skip(1).Where( o => o.Head == nameof(Heads.value)).Aggregate(1, (a, b) => a * (int)b.Key);
+            if (Operands.First().Head == nameof(Heads.value))
             {
                 var b = (int)Operands.First().Key;
                 return new List<IExpression>
@@ -346,13 +358,13 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
                     new Value((int)Math.Pow((double)b, (double)exponent))
                 };
             }
-            result.RemoveAll(o => o.Head == nameof(Heads.Value));
+            result.RemoveAll(o => o.Head == nameof(Heads.value));
             result.Add(new Value(exponent));
-            // Kind of Pow(base, exponent)
-            // Foe example Pow(x, 2)
+            // Kind of pow(base, exponent)
+            // Foe example pow(x, 2)
             if (result.Count > 1)
             {
-                Head = nameof(Heads.Mul);
+                Head = nameof(Heads.mul);
                 result = Enumerable.Repeat(result.First(), (int)ToValue(result[1]).Key).ToList();
             }
             return result;
@@ -374,7 +386,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
                 }
                 if (alikeOperand != default)
                 {
-                    result.Add(DoAlikeSimplifying(nameof(Heads.Add), alikeOperand, operand));
+                    result.Add(DoAlikeSimplifying(nameof(Heads.add), alikeOperand, operand));
                     result.Remove(alikeOperand);
                 }
                 else
@@ -390,13 +402,13 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
             var result = new List<IExpression>();
             foreach (var operand in Operands)
             {
-                if (operand.Head != nameof(Heads.Add) && operand.Head != nameof(Heads.Symbol) && operand.Head != nameof(Heads.Value))
+                if (operand.Head != nameof(Heads.add) && operand.Head != nameof(Heads.symbol) && operand.Head != nameof(Heads.value))
                     throw new Exception("Alert!");
-                if (result.Count == 1 && result.First().Head == nameof(Heads.Add))
+                if (result.Count == 1 && result.First().Head == nameof(Heads.add))
                 {
-                    if (operand.Head == nameof(Heads.Add))
+                    if (operand.Head == nameof(Heads.add))
                     {
-                        var tmp = new Expression(nameof(Heads.Add));
+                        var tmp = new Expression(nameof(Heads.add));
                         foreach (var o in ToExpression(operand).Operands)
                         {
                             tmp.Operands.Add(Multiply(ToExpression(result.First()), ToExpression(o)));
@@ -409,7 +421,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
                         result = new List<IExpression>() { Multiply(ToExpression(result.First()), ToExpression(operand)) };
                     }
                 }
-                else if (result.Count > 0 && operand.Head == nameof(Heads.Value))
+                else if (result.Count > 0 && operand.Head == nameof(Heads.value))
                 {
                     var found = false;
                     for (int i = 0; i < result.Count; i ++)
@@ -430,41 +442,41 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
             return result;
         }
 
-        // Returns result of production of Add Expression and IExpression
+        // Returns result of production of add Expression and IExpression
         private Expression Multiply(Expression expr, Expression l)
         {
-            var res = new Expression(nameof(Heads.Add));
+            var res = new Expression(nameof(Heads.add));
             /*if (expr.Operands.Count == 0)
             {
-                res.Operands.Add(DoAlikeSimplifying(nameof(Heads.Mul), l, expr));
+                res.Operands.add(DoAlikeSimplifying(nameof(Heads.mul), l, expr));
             }*/
             foreach (var o in expr.Operands)
             {
-                res.Operands.Add(DoAlikeSimplifying(nameof(Heads.Mul), l, o));
+                res.Operands.Add(DoAlikeSimplifying(nameof(Heads.mul), l, o));
             }
             return res;
         }
 
         // For example xy+xy -> 2xy | xy*xy -> xxyy
-        private IExpression DoAlikeSimplifying(string head,IExpression left, IExpression right)
+        private IExpression DoAlikeSimplifying(string head, IExpression left, IExpression right)
         {
             // kostili moe vse
             if (left is null) return right;
             if (right is null) return left;
-            if (left.Head == nameof(Heads.Value) && right.Head == nameof(Heads.Value))
+            if (left.Head == nameof(Heads.value) && right.Head == nameof(Heads.value))
             {
                 return new Value(Operation(head, (int)left.Key, (int)right.Key));
             }
-            if (left.Head == nameof(Heads.Value))
+            if (left.Head == nameof(Heads.value))
             {
-                return new Expression(nameof(Heads.Mul)) { Operands = new List<IExpression>() 
+                return new Expression(nameof(Heads.mul)) { Operands = new List<IExpression>() 
                 {
                     left, right
                 } };
             }
-            if (right.Head == nameof(Heads.Value))
+            if (right.Head == nameof(Heads.value))
             {
-                return new Expression(nameof(Heads.Mul))
+                return new Expression(nameof(Heads.mul))
                 {
                     Operands = new List<IExpression>()
                     {
@@ -474,14 +486,14 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
             }
             // kostil
             if (!(left is Expression) || !(right is Expression))
-                throw new Exception("No Symbol logic");
+                throw new Exception("No symbol logic");
 
             left = AddCoefficient(ToExpression(left));
             right = AddCoefficient(ToExpression(right));
-            var res = new Expression(nameof(Heads.Mul));
+            var res = new Expression(nameof(Heads.mul));
             switch (head)
             {
-                case (nameof(Heads.Add)):
+                case (nameof(Heads.add)):
                     res.Operands = new List<IExpression>
                     {
                         new Value((int)ToExpression(left).Operands.First().Key +
@@ -489,7 +501,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
                     };
                     res.Operands = res.Operands.Concat(ToExpression(left).Operands.Skip(1)).ToList();
                     return res;
-                case (nameof(Heads.Mul)):
+                case (nameof(Heads.mul)):
                     res.Operands = new List<IExpression>
                     {
                             new Value((int)ToExpression(left).Operands.First().Key *
@@ -501,8 +513,8 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
                         .ToList();
                     res.Operands = res.Attributes[1].Apply(res);
                     return res;
-                case (nameof(Heads.Pow)):
-                    throw new Exception("Unexpected using of Pow head");
+                case (nameof(Heads.pow)):
+                    throw new Exception("Unexpected using of pow head");
                 default:
                     throw new Exception("Unexpexted head on terms simplifying");
             }
@@ -511,23 +523,23 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
         private Expression AddCoefficient(Expression expr)
         {
             //if (expr.Operands.Count < 1) throw new Exception("No operands");
-            if (expr.Head == nameof(Heads.Mul) && expr.Operands.Count == 1 && expr.Operands.First().Equals(new Value(1)))
+            if (expr.Head == nameof(Heads.mul) && expr.Operands.Count == 1 && expr.Operands.First().Equals(new Value(1)))
                 return expr;
             if (expr.Operands.Count < 1)
             {
-                var res = new Expression("Mul");
+                var res = new Expression("mul");
                 res.Operands = new List<IExpression>() { new Value(1), expr };
                 return res;
             }
-            if (expr.Operands.Count > 1 && (expr.Head != nameof(Heads.Mul))) throw new Exception("Too many arguments");
+            if (expr.Operands.Count > 1 && (expr.Head != nameof(Heads.mul))) throw new Exception("Too many arguments");
             if (expr.Operands.Count == 1)
             {
-                var res = new Expression(nameof(Heads.Mul));
+                var res = new Expression(nameof(Heads.mul));
                 res.Operands = new List<IExpression>() { new Value(1) };
                 res.Operands.Add(expr);
                 return res;
             }
-            if (expr.Operands.First().Head != nameof(Heads.Value))
+            if (expr.Operands.First().Head != nameof(Heads.value))
             {
                 expr.Operands.Add(new Value(1));
                 expr.Operands = expr.Attributes[1].Apply(expr);

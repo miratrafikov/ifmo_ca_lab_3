@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using ShiftCo.ifmo_ca_lab_3.Evaluation;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
 using ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Lexington;
-
 using Terminal = ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Lexington.TokenType;
 
 namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Parseltongue
@@ -21,6 +20,7 @@ namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Parseltongue
             var result = GetSymbol(NonTerminal.Root);
             if (result.success)
             {
+                // TODO
                 return ((List<IExpression>)result.value)[0];
             }
             else
@@ -65,7 +65,7 @@ namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Parseltongue
             switch (requestedSymbol)
             {
                 case Terminal.Symbol:
-                    return new Result(true, new Symbol(_token.Content));
+                    return new Result(true, new Expression("symbol", _token.Content));
                 case Terminal.Number:
                     return new Result(true, new Value(Convert.ToInt32(_token.Content)));
                 default:
@@ -89,35 +89,36 @@ namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Parseltongue
                         productionMatches = false;
                         break;
                     }
-                    if (result.value != null)
+
+                    switch (result.value)
                     {
-                        if (result.value is List<IExpression>)
-                        {
-                            correspondingObjects.AddRange((List<IExpression>)result.value);
-                        }
-                        else
-                        {
+                        case null:
+                            continue;
+                        case List<IExpression> list:
+                            correspondingObjects.AddRange(list);
+                            break;
+                        default:
                             correspondingObjects.Add((IExpression)result.value);
-                        }
+                            break;
                     }
                 }
+
                 if (productionMatches)
                 {
                     return new Result(true, correspondingObjects);
                 }
+
                 RestorePosition();
             }
+
             return new Result(false);
         }
 
         private static Expression BuildExpression(List<IExpression> objectsList)
         {
-            var head = objectsList[0].Head;
+            var head = (string)objectsList[0].Key;
             var operands = objectsList.GetRange(1, objectsList.Count - 1);
-            return new Expression(head)
-            {
-                Operands = operands
-            };
+            return new Expression(head) { Operands = operands };
         }
 
         private static void SavePosition()

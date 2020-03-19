@@ -21,7 +21,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Commons
                 return -1;
             }
             // If both elemements are Values return value according to the arithmetical order
-            if (left.Head == nameof(Heads.Value) && right.Head == nameof(Heads.Value))
+            if (left.Head == nameof(Heads.value) && right.Head == nameof(Heads.value))
             {
                 return (int)left.Key - (int)right.Key;
             }
@@ -30,7 +30,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Commons
             {
                 return string.Compare(left.Key.ToString(), right.Key.ToString());
             }
-            // No operands means that Expression is Symbol
+            // No operands means that Expression is symbol
             if (ToExpression(left).Operands.Count == 0 && ToExpression(right).Operands.Count == 0)
             {
                 return string.Compare(left.Key.ToString(), right.Key.ToString());

@@ -12,7 +12,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Attributes
     {
         public List<IExpression> Apply(Expression expr)
         {
-            if (expr.Head == nameof(Pow)) return expr.Operands;
+            if (expr.Head == nameof(pow)) return expr.Operands;
             var operands = expr.Operands;
             if (operands != null) 
                 operands.Sort(new ExpressionComparer());

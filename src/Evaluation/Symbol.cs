@@ -11,7 +11,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
     {
         public Symbol(string key)
         {
-            Head = "Symbol";
+            Head = "symbol";
             Key = key;
         }
 
@@ -31,10 +31,10 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
         public bool IsAlike(IExpression iexpr)
         {
             if (iexpr is Symbol) return Key.Equals(iexpr.Key);
-            if (iexpr is Expression && ToExpression(iexpr).Head == nameof(Heads.Mul))
+            if (iexpr is Expression && ToExpression(iexpr).Head == nameof(Heads.mul))
             {
                 if (ToExpression(iexpr).Operands.Count == 2 &&
-                    ToExpression(iexpr).Operands.First().Head == nameof(Heads.Value))
+                    ToExpression(iexpr).Operands.First().Head == nameof(Heads.value))
                     return IsAlike(ToExpression(iexpr).Operands[1]);
             }
             if (iexpr is Expression)

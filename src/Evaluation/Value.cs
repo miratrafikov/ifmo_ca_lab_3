@@ -7,7 +7,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
     {
         public Value(int val)
         {
-            Head = "Value";
+            Head = "value";
             Key = val;
         }
 

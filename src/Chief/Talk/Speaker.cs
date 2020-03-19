@@ -1,42 +1,49 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 using ShiftCo.ifmo_ca_lab_3.Evaluation;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
 using ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Lexington;
 
+using ConsoleTables;
+
 namespace ShiftCo.ifmo_ca_lab_3.Talk
 {
-    static class Speaker
+    internal static class Speaker
     {
-        public static int TalkObjectTrees(object Node, int layer)
+        public static void PrintElementsTree(object element, string indent = "", bool last = true)
         {
-            Console.Write($"{string.Concat(Enumerable.Repeat("-", layer * 2))}{Node.GetType().Name}");
-            if (Node.GetType() == typeof(Expression))
+            var head = ((IExpression)element).Head.ToLower();
+            string? value;
+            switch (element)
             {
-                foreach (IExpression Op in ((Expression)Node).Operands)
-                {
-                    Console.WriteLine();
-                    layer++;
-                    layer = TalkObjectTrees(Op, layer);
-                }
+                case Value number:
+                    value = number.Key.ToString();
+                    Console.WriteLine($"{indent}+- {head.ToLower()} {value}");
+                    break;
+                case Expression expression:
+                    value = (head == "symbol") ? expression.Key.ToString() : "";
+                    Console.WriteLine($"{indent}+- {head.ToLower()} {value}");
+                    indent += last ? "   " : "|  ";
+                    if (expression.Operands != null)
+                    {
+                        for (var i = 0; i < expression.Operands.Count; i++)
+                        {
+                            PrintElementsTree(expression.Operands[i], indent, i == expression.Operands.Count - 1);
+                        }
+                    }
+                    break;
             }
-            if (Node.GetType() == typeof(Value))
-            {
-                Console.Write($" {((Value)Node).Key}");
-            }
-            return --layer;
         }
 
-        public static void TalkTokens(ref List<Token> Tokens)
+        public static void TalkTokens(ref List<Token> tokens)
         {
-            var table = new ConsoleTables.ConsoleTable("Type ID", "Content");
-            foreach (Token Token in Tokens)
+            var table = new ConsoleTable("Type ID", "Content");
+            foreach (var Token in tokens)
             {
                 table.AddRow(Token.Type, Token.Content);
             }
-            table.Write(ConsoleTables.Format.Alternative);
+            table.Write(Format.Alternative);
         }
     }
 }
