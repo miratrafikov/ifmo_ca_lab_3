@@ -14,7 +14,8 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Attributes
         {
             if (expr.Head == nameof(Pow)) return expr.Operands;
             var operands = expr.Operands;
-            operands.Sort(new ExpressionComparer());
+            if (operands != null) 
+                operands.Sort(new ExpressionComparer());
             return operands;
         }
     }

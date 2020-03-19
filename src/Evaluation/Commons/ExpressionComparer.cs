@@ -21,7 +21,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Commons
                 return -1;
             }
             // If both elemements are Values return value according to the arithmetical order
-            if (left is Value && right is Value)
+            if (left.Head == nameof(Heads.Value) && right.Head == nameof(Heads.Value))
             {
                 return (int)left.Key - (int)right.Key;
             }
