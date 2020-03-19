@@ -128,8 +128,8 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
             RemovePrimitives();
             ApplyBuiltins();
             ApplyAttributes();
-            Operands.RemoveAll(o => o.Head == nameof(Heads.Mul) &&
-                (int)ToExpression(o).Operands.First().Key == 0);
+            //Operands.RemoveAll(o => o.Head == nameof(Heads.Mul) &&
+              //  (int)ToExpression(o).Operands.First().Key == 0);
         }
 
         // Replace all aaa with Pow(a, 3)
@@ -171,6 +171,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
 
         public void ApplyAttributes()
         {
+            if (Attributes == null) return;
             foreach (var attr in Attributes)
             {
                 Operands = attr.Apply(this);
@@ -183,10 +184,12 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
             {
                 Head = Operands.First().Head;
                 Key = Operands.First().Key;
-                if (Operands.First() is Expression)
+                if (ToExpression(Operands.First()) != default && Operands.First() is Expression)
                 {
-                    Operands = ToExpression(Operands.First()).Operands;
-                    Attributes = ToExpression(Operands.First()).Attributes;
+                    if (ToExpression(Operands.First()).Attributes != null)
+                        Attributes = ToExpression(Operands.First()).Attributes;
+                    if (ToExpression(Operands.First()).Operands != null)
+                        Operands = ToExpression(Operands.First()).Operands;
                     var primitives = Operands.Where(o => o is Expression && IsPrimitive(ToExpression(o)));
                     // Remove inner primitives
                     foreach (var primitive in primitives)
@@ -207,6 +210,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
 
         private void RemoveSequences()
         {
+            if (Operands == null) return;
             var i = 0;
             while (i < Operands.Count)
             {
@@ -239,11 +243,12 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
 
         private void RemoveExtraCoefficients()
         {
+            if (Operands == null) return;
             var i = 0;
             while (i < Operands.Count)
             {
                 if (Operands[i].Head == nameof(Heads.Mul) &&
-                    ToExpression(Operands[i]).Operands[0].Equals(new Value (1)))
+                    ToExpression(Operands[i]).Operands[0].Equals(new Expression(nameof(Heads.Value)) { Key = 1}))
                 {
                     if (ToExpression(Operands[i]).Operands.Count == 2)
                     {
@@ -332,8 +337,16 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
         private List<IExpression> ApplyPowBuiltin()
         {
             var result = Operands;
-            var exponent = Operands.OfType<Value>().Aggregate(1, (a, b) => a * (int)b.Key);
-            result.RemoveAll(o => o is Value);
+            var exponent = Operands.Skip(1).Where( o => o.Head == nameof(Heads.Value)).Aggregate(1, (a, b) => a * (int)b.Key);
+            if (Operands.First().Head == nameof(Heads.Value))
+            {
+                var b = (int)Operands.First().Key;
+                return new List<IExpression>
+                {
+                    new Value((int)Math.Pow((double)b, (double)exponent))
+                };
+            }
+            result.RemoveAll(o => o.Head == nameof(Heads.Value));
             result.Add(new Value(exponent));
             // Kind of Pow(base, exponent)
             // Foe example Pow(x, 2)
@@ -386,15 +399,28 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
                         var tmp = new Expression(nameof(Heads.Add));
                         foreach (var o in ToExpression(operand).Operands)
                         {
-                            tmp.Operands.Add( Multiply(ToExpression(result.First()), ToExpression(o)) );
+                            tmp.Operands.Add(Multiply(ToExpression(result.First()), ToExpression(o)));
                         }
                         tmp.Operands = tmp.Attributes[0].Apply(tmp);
                         result[0] = tmp;
-                    } 
+                    }
                     else
                     {
                         result = new List<IExpression>() { Multiply(ToExpression(result.First()), ToExpression(operand)) };
                     }
+                }
+                else if (result.Count > 0 && operand.Head == nameof(Heads.Value))
+                {
+                    var found = false;
+                    for (int i = 0; i < result.Count; i ++)
+                    {
+                        if (result[i] is Value)
+                        {
+                            found = true;
+                            result[i]= new Value (((int)result[i].Key) * (int)operand.Key);
+                        }
+                    }
+                    if (!found) result.Add(operand);
                 }
                 else
                 {
@@ -422,9 +448,29 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
         // For example xy+xy -> 2xy | xy*xy -> xxyy
         private IExpression DoAlikeSimplifying(string head,IExpression left, IExpression right)
         {
+            // kostili moe vse
+            if (left is null) return right;
+            if (right is null) return left;
             if (left.Head == nameof(Heads.Value) && right.Head == nameof(Heads.Value))
             {
                 return new Value(Operation(head, (int)left.Key, (int)right.Key));
+            }
+            if (left.Head == nameof(Heads.Value))
+            {
+                return new Expression(nameof(Heads.Mul)) { Operands = new List<IExpression>() 
+                {
+                    left, right
+                } };
+            }
+            if (right.Head == nameof(Heads.Value))
+            {
+                return new Expression(nameof(Heads.Mul))
+                {
+                    Operands = new List<IExpression>()
+                    {
+                        right, left
+                    }
+                };
             }
             // kostil
             if (!(left is Expression) || !(right is Expression))
