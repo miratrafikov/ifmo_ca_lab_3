@@ -10,6 +10,16 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
 {
     public class Expression : IExpression
     {
+        public override int GetHashCode()
+        {
+            int hashCode = Head.GetHashCode() + Operands.Count * 69;
+            foreach (var operand in Operands)
+            {
+                hashCode += operand.GetHashCode();
+            }
+            return hashCode;
+        }
+
         private static Dictionary<Heads, string> BasicExpressions = new Dictionary<Heads, string>();
 
         static Expression()
@@ -87,9 +97,11 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
             {
                 case nameof(Heads.set):
                     // TODO: set stuff
+                    Context.AddEntry(Operands[0],Operands[1]);
                     break;
                 case nameof(Heads.delayed):
                     // TODO: delayed stuff
+                    Context.AddEntry(Operands[0], Operands[1]);
                     return;
                 case nameof(Heads.head):
                     Key = Head;
@@ -133,6 +145,11 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
 
             // apply given definitions
             // TODO: context stuff
+
+            for (var i = 0; i < Operands.Count; i++)
+            {
+                Operands[i] = Context.GetSubstitute(Operands[i]);
+            }
 
             // apply built-in definitions
             RemovePrimitives();
@@ -298,6 +315,8 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
         // Returns list of operands except by coefficient aka value
         private List<IExpression> GetAlikeOperands(Expression expr)
         {
+            // TODO:
+            //if (expr.Operands.Count == 0) return new List<IExpression>() { expr };
             var operands = new List<IExpression>();
             if (expr.Operands.First() is Value)
             {

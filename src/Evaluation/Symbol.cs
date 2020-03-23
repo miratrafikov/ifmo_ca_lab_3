@@ -26,6 +26,11 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
             return comparer.Compare(this, (IExpression)obj) == 0;
         }
 
+        public override int GetHashCode()
+        {
+            return Key.GetHashCode();
+        }
+
         public void Evaluate() { }
 
         public bool IsAlike(IExpression iexpr)
