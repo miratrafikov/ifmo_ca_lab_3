@@ -1,6 +1,8 @@
 ﻿using System.Linq;
+
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Tony.AInterfaces;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Tony.Commons;
+
 using static ShiftCo.ifmo_ca_lab_3.Evaluation.Tony.Commons.Converter;
 
 namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Tony

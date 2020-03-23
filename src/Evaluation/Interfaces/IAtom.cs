@@ -1,4 +1,4 @@
-﻿namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Mirat.Interfaces
+﻿namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces
 {
     internal interface IAtom<T> : IElement
     {

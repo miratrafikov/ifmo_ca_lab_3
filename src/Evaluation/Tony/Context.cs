@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Tony.AInterfaces;
 
 namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Tony

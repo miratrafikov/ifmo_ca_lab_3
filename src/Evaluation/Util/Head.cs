@@ -1,4 +1,4 @@
-﻿namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Mirat.Util
+﻿namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Util
 {
     public enum Head
     {

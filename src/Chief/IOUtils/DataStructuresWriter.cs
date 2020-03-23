@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+
 using ConsoleTables;
+
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Tony;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Tony.AInterfaces;
 using ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Lexington;

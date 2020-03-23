@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using ShiftCo.ifmo_ca_lab_3.Evaluation.Mirat.Interfaces;
+using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
 
-namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Mirat.Types
+namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Types
 {
     public class Expression : IElement
     {

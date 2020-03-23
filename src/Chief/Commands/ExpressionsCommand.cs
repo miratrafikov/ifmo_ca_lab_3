@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
+
 using CliFx;
 using CliFx.Attributes;
+
 using ShiftCo.ifmo_ca_lab_3.Chief.IOUtils;
 
 namespace ShiftCo.ifmo_ca_lab_3.Chief.Commands
@@ -14,9 +14,9 @@ namespace ShiftCo.ifmo_ca_lab_3.Chief.Commands
         private readonly Tuple<string, string>[] expressions =
         {
             new Tuple<string, string>("Sum", "(element)+"),
-            new Tuple<string, string>("Mul", "(element)+"), 
-            new Tuple<string, string>("Pow", "(element)(number)+"), 
-            new Tuple<string, string>("Set", "(symbol|expression)(element)"), 
+            new Tuple<string, string>("Mul", "(element)+"),
+            new Tuple<string, string>("Pow", "(element)(number)+"),
+            new Tuple<string, string>("Set", "(symbol|expression)(element)"),
             new Tuple<string, string>("Head", "(element)")
         };
 

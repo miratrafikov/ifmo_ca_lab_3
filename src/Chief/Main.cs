@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Tony.AInterfaces;
 using ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Lexington;
 using ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Parseltongue;

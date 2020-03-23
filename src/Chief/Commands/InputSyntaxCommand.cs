@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
+
 using CliFx;
 using CliFx.Attributes;
+
 using ShiftCo.ifmo_ca_lab_3.Chief.IOUtils;
 
 namespace ShiftCo.ifmo_ca_lab_3.Chief.Commands
@@ -13,14 +13,14 @@ namespace ShiftCo.ifmo_ca_lab_3.Chief.Commands
     {
         private readonly Tuple<string, string>[] examples =
             {
-                new Tuple<string, string>("Func(x)", 
+                new Tuple<string, string>("Func(x)",
                     "Expression with head \"Func\" and one symbolic argument."),
                 new Tuple<string, string>("Func(Eee(0,0), x)",
                     "Example of nested expressions."),
-                new Tuple<string, string>("Func", 
+                new Tuple<string, string>("Func",
                     "Considered a plain symbol."),
-                new Tuple<string, string>("100", 
-                    "A number is a number."), 
+                new Tuple<string, string>("100",
+                    "A number is a number."),
             };
 
         public ValueTask ExecuteAsync(IConsole console)

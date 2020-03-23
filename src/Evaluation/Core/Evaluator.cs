@@ -1,7 +1,7 @@
-﻿using ShiftCo.ifmo_ca_lab_3.Evaluation.Mirat.Interfaces;
-using ShiftCo.ifmo_ca_lab_3.Evaluation.Mirat.Types;
+﻿using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
+using ShiftCo.ifmo_ca_lab_3.Evaluation.Types;
 
-namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Mirat.Core
+namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 {
     public static class Evaluator
     {
