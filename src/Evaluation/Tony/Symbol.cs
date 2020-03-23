@@ -1,11 +1,9 @@
-﻿using ShiftCo.ifmo_ca_lab_3.Evaluation.Commons;
-using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using static ShiftCo.ifmo_ca_lab_3.Evaluation.Commons.Converter;
+﻿using System.Linq;
+using ShiftCo.ifmo_ca_lab_3.Evaluation.Tony.AInterfaces;
+using ShiftCo.ifmo_ca_lab_3.Evaluation.Tony.Commons;
+using static ShiftCo.ifmo_ca_lab_3.Evaluation.Tony.Commons.Converter;
 
-namespace ShiftCo.ifmo_ca_lab_3.Evaluation
+namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Tony
 {
     public class Symbol : IExpression
     {

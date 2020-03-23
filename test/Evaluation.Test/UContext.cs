@@ -1,9 +1,8 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ShiftCo.ifmo_ca_lab_3.Evaluation;
+using ShiftCo.ifmo_ca_lab_3.Evaluation.Tony;
 
-namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Test
+namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
 {
     [TestClass]
     public class UContext

@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Linq;
-using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
-using static ShiftCo.ifmo_ca_lab_3.Evaluation.Commons.Converter;
+using ShiftCo.ifmo_ca_lab_3.Evaluation.Tony.AInterfaces;
+using static ShiftCo.ifmo_ca_lab_3.Evaluation.Tony.Commons.Converter;
 
-namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Attributes
+namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Tony.Attributes
 {
     class FlatAttribute : IAttribute
     {

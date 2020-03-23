@@ -1,11 +1,10 @@
-﻿using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using static ShiftCo.ifmo_ca_lab_3.Evaluation.Heads;
-using static ShiftCo.ifmo_ca_lab_3.Evaluation.Commons.Converter;
+using ShiftCo.ifmo_ca_lab_3.Evaluation.Tony.AInterfaces;
+using static ShiftCo.ifmo_ca_lab_3.Evaluation.Tony.Commons.Converter;
 
-namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Commons
+namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Tony.Commons
 {
     class ExpressionComparer : Comparer<IExpression>
     {

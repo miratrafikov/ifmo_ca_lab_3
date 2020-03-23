@@ -1,12 +1,12 @@
-﻿using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
-using System;
-using System.Linq;
+﻿using System;
 using System.Collections.Generic;
-using ShiftCo.ifmo_ca_lab_3.Evaluation.Attributes;
-using static ShiftCo.ifmo_ca_lab_3.Evaluation.Commons.Converter;
-using ShiftCo.ifmo_ca_lab_3.Evaluation.Commons;
+using System.Linq;
+using ShiftCo.ifmo_ca_lab_3.Evaluation.Tony.AInterfaces;
+using ShiftCo.ifmo_ca_lab_3.Evaluation.Tony.Attributes;
+using ShiftCo.ifmo_ca_lab_3.Evaluation.Tony.Commons;
+using static ShiftCo.ifmo_ca_lab_3.Evaluation.Tony.Commons.Converter;
 
-namespace ShiftCo.ifmo_ca_lab_3.Evaluation
+namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Tony
 {
     public class Expression : IExpression
     {
@@ -140,7 +140,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
             ApplyAttributes();
             ToNormalForm();
             //Operands.RemoveAll(o => o.head == nameof(Heads.mul) &&
-              //  (int)ToExpression(o).Operands.First().Key == 0);
+            //  (int)ToExpression(o).Operands.First().Key == 0);
         }
 
         // Replace all aaa with pow(a, 3)
@@ -260,7 +260,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
             while (i < Operands.Count)
             {
                 if (Operands[i].Head == nameof(Heads.mul) &&
-                    ToExpression(Operands[i]).Operands[0].Equals(new Expression(nameof(Heads.value)) { Key = 1}))
+                    ToExpression(Operands[i]).Operands[0].Equals(new Expression(nameof(Heads.value)) { Key = 1 }))
                 {
                     if (ToExpression(Operands[i]).Operands.Count == 2)
                     {
@@ -349,7 +349,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
         private List<IExpression> ApplyPowBuiltin()
         {
             var result = Operands;
-            var exponent = Operands.Skip(1).Where( o => o.Head == nameof(Heads.value)).Aggregate(1, (a, b) => a * (int)b.Key);
+            var exponent = Operands.Skip(1).Where(o => o.Head == nameof(Heads.value)).Aggregate(1, (a, b) => a * (int)b.Key);
             if (Operands.First().Head == nameof(Heads.value))
             {
                 var b = (int)Operands.First().Key;
@@ -424,12 +424,12 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
                 else if (result.Count > 0 && operand.Head == nameof(Heads.value))
                 {
                     var found = false;
-                    for (int i = 0; i < result.Count; i ++)
+                    for (int i = 0; i < result.Count; i++)
                     {
                         if (result[i] is Value)
                         {
                             found = true;
-                            result[i]= new Value (((int)result[i].Key) * (int)operand.Key);
+                            result[i] = new Value(((int)result[i].Key) * (int)operand.Key);
                         }
                     }
                     if (!found) result.Add(operand);
@@ -469,10 +469,13 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation
             }
             if (left.Head == nameof(Heads.value))
             {
-                return new Expression(nameof(Heads.mul)) { Operands = new List<IExpression>() 
+                return new Expression(nameof(Heads.mul))
+                {
+                    Operands = new List<IExpression>()
                 {
                     left, right
-                } };
+                }
+                };
             }
             if (right.Head == nameof(Heads.value))
             {

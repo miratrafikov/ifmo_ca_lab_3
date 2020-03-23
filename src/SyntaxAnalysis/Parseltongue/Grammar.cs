@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+
 using Terminal = ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Lexington.TokenType;
 
 namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Parseltongue
