@@ -29,18 +29,31 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
             var matches = PatternMatcher.Matches(ref rule, expr);
             Assert.AreEqual(true, matches);
         }
+
         [TestMethod]
         public void Test2()
         {
             var expr = new Expression(Head.Sum, new List<IElement>()
             {
-                 new Integer(2),
-                 new Integer(3)
+                new Symbol("x"),
+                new Expression(Head.Mul, new List<IElement>()
+                {
+                    new Integer(3),
+                    new Symbol("x")
+                })
             });
-            IElement rule = new Expression(Head.Pattern, new List<IElement>()
+            var times = new Expression(Head.Mul, new List<IElement>()
             {
-                new ElementPattern("a"),
-                new NullableSequencePattern("b")
+                new IntegerPattern("d"),
+                new ElementPattern("x")
+            });
+            IElement rule = new Expression(Head.Sum, new List<IElement>()
+            {
+                new NullableSequencePattern("a"),
+                new ElementPattern("x"),
+                new NullableSequencePattern("c"),
+                times,
+                new NullableSequencePattern("e")
             });
             var matches = PatternMatcher.Matches(ref rule, expr);
             Assert.AreEqual(true, matches);

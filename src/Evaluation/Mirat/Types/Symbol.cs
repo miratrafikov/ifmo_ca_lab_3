@@ -1,5 +1,6 @@
 ﻿using ShiftCo.ifmo_ca_lab_3.Evaluation.Mirat.Interfaces;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Mirat.Util;
+using System.Linq;
 
 namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Mirat.Types
 {
