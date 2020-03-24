@@ -2,6 +2,6 @@
 {
     public interface IElement
     {
-        public string Head { get; set; }
+        public Head Head { get; set; }
     }
 }
