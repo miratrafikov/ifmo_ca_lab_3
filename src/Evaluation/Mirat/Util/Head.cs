@@ -7,6 +7,7 @@
         Expression,
         Sum,
         Mul,
-        Pow
+        Pow,
+        Pattern
     }
 }
