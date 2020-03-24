@@ -10,6 +10,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Types
             Head = Head.Integer;
             Value = value;
         }
+
         public Head Head { get; set; }
         public int Value { get; set; }
 

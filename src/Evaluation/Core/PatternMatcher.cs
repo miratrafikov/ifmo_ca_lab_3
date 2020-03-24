@@ -11,7 +11,6 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 {
     public class PatternMatcher
     {
-
         private static Dictionary<string, IPattern> Patterns;
 
         public static bool Matches(ref IElement pattern, IElement obj)
@@ -62,7 +61,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                         ((Expression)pattern).Operands[j] = tempPattern;
                         j++;
                     }
-                    // If does not matches but previous 
+                    // If does not matches but previous
                     else if (j > 0 && p.Operands[j - 1] is NullableSequencePattern)
                     {
                         ((NullableSequencePattern)((Expression)pattern).Operands[j - 1]).Operands.Add(o.Operands[i]);
@@ -77,7 +76,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                     ((Expression)pattern).Operands[j] is NullableSequencePattern) j++;
                 if (j == ((Expression)pattern).Operands.Count)
                 {
-                    // TODO: 
+                    // TODO:
                     Patterns = new Dictionary<string, IPattern>();
                     return ArePatternsSame(pattern);
                 }

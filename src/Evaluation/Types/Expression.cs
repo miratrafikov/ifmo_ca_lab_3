@@ -8,7 +8,6 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Types
 {
     public class Expression : IElement
     {
-
         #region Constructors
 
         public Expression()
@@ -43,7 +42,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Types
             };
         }
 
-        #endregion
+        #endregion Constructors
 
         public List<IElement> Operands;
         public Head Head { get; set; }

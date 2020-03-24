@@ -4,7 +4,7 @@ using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
 
 namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Util
 {
-    class ElementsList : List<IElement>
+    internal class ElementsList : List<IElement>
     {
         public IElement GetHead()
         {

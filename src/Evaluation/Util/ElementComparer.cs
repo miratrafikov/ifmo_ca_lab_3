@@ -6,7 +6,7 @@ using ShiftCo.ifmo_ca_lab_3.Evaluation.Types;
 
 namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Util
 {
-    class ElementComparer : Comparer<IElement>
+    internal class ElementComparer : Comparer<IElement>
     {
         public override int Compare(IElement left, IElement right)
         {
