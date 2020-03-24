@@ -6,7 +6,7 @@ using ShiftCo.ifmo_ca_lab_3.Evaluation.Mirat.Types;
 
 namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Mirat.Util
 {
-    class Comparer : Comparer<IElement>
+    class ElementComparer : Comparer<IElement>
     {
         public override int Compare(IElement left, IElement right)
         {

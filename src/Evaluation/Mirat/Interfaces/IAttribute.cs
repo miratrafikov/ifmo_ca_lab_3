@@ -4,6 +4,6 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Mirat.Interfaces
 {
     public interface IAttribute
     {
-        public Symbol Name { get; set; }
+        public Expression Apply(Expression expr);
     }
 }

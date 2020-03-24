@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using ShiftCo.ifmo_ca_lab_3.Evaluation.Mirat.Apributes;
+using ShiftCo.ifmo_ca_lab_3.Evaluation.Mirat.Attributes;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Mirat.Interfaces;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Mirat.Util;
 
@@ -15,8 +15,8 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Mirat.Types
             Operands = new List<IElement>();
             Apributes = new List<IAttribute>() 
             { 
-                new FlatApribute(), 
-                new OrderlessApribute() 
+                new FlatAttribute(), 
+                new OrderlessAttribute() 
             };
         }
 
@@ -26,8 +26,8 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Mirat.Types
             Operands = new List<IElement>();
             Apributes = new List<IAttribute>()
             {
-                new FlatApribute(),
-                new OrderlessApribute()
+                new FlatAttribute(),
+                new OrderlessAttribute()
             };
         }
 
@@ -37,8 +37,8 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Mirat.Types
             Operands = operands;
             Apributes = new List<IAttribute>()
             {
-                new FlatApribute(),
-                new OrderlessApribute()
+                new FlatAttribute(),
+                new OrderlessAttribute()
             };
         }
 

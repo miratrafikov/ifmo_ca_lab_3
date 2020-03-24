@@ -73,6 +73,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Mirat.Core
                     ((Expression)pattern).Operands[j] is NullableSequencePattern) j++;
                 if (j == ((Expression)pattern).Operands.Count)
                 {
+                    // TODO: 
                     return true;
                 }
                 else
@@ -81,6 +82,6 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Mirat.Core
                 }
             }
             throw new Exception("Unexpected type of pattern and/or object");
-        }
+            }
     }
 }
