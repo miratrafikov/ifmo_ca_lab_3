@@ -10,6 +10,9 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Mirat.Core
 {
     public class PatternMatcher
     {
+
+        private static Dictionary<string, IPattern> Patterns;
+
         public static bool Matches(ref IElement pattern, IElement obj)
         {
             if (pattern == null || obj == null)
@@ -74,7 +77,8 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Mirat.Core
                 if (j == ((Expression)pattern).Operands.Count)
                 {
                     // TODO: 
-                    return true;
+                    Patterns = new Dictionary<string, IPattern>();
+                    return ArePatternsSame(pattern);
                 }
                 else
                 {
@@ -82,6 +86,34 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Mirat.Core
                 }
             }
             throw new Exception("Unexpected type of pattern and/or object");
+        }
+
+        private static bool ArePatternsSame(IElement element)
+        {
+            if (element is IPattern p)
+            {
+                if (Patterns.ContainsKey(p.Name.Value))
+                {
+                    return (Equals(p, Patterns[p.Name.Value]));
+                }
+                else
+                {
+                    Patterns.Add(p.Name.Value, p);
+                    return true;
+                }
             }
+            else if (element is Expression expr)
+            {
+                foreach (var o in expr.Operands)
+                {
+                    if (!ArePatternsSame(o)) return false;
+                }
+                return true;
+            }
+            else
+            {
+                return true;
+            }
+        }
     }
 }
