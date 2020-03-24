@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Patterns;
@@ -94,7 +95,26 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             {
                 if (Patterns.ContainsKey(p.Name.Value))
                 {
-                    return (Equals(p, Patterns[p.Name.Value]));
+                    var comparer = new ElementComparer();
+                    var dp = Patterns[p.Name.Value];
+                    if (p is NullableSequencePattern l && dp is NullableSequencePattern r)
+                    {
+                        if (l.Operands.Count != r.Operands.Count) return false;
+                        foreach (var o in l.Operands.Zip(r.Operands))
+                        {
+                            if (comparer.Compare(o.First, o.Second) != 0) return false;
+                        }
+                        return true;
+                    }
+                    else if (p is ElementPattern && dp is ElementPattern)
+                    {
+                        return comparer.Compare(((ElementPattern)p).Element, ((ElementPattern)dp).Element) == 0;
+                    }
+                    else if (p is IntegerPattern && dp is IntegerPattern)
+                    {
+                        return (((IntegerPattern)p).Element.Value - ((IntegerPattern)dp).Element.Value == 0);
+                    }
+                    return false;
                 }
                 else
                 {
