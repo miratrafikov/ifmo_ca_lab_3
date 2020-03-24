@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using ShiftCo.ifmo_ca_lab_3.Evaluation.Mirat.Interfaces;
-using ShiftCo.ifmo_ca_lab_3.Evaluation.Mirat.Patterns;
-using ShiftCo.ifmo_ca_lab_3.Evaluation.Mirat.Types;
-using ShiftCo.ifmo_ca_lab_3.Evaluation.Mirat.Util;
+using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
+using ShiftCo.ifmo_ca_lab_3.Evaluation.Patterns;
+using ShiftCo.ifmo_ca_lab_3.Evaluation.Types;
+using ShiftCo.ifmo_ca_lab_3.Evaluation.Util;
 
-namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Mirat.Core
+namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 {
     class PatternMatcher
     {
@@ -44,7 +44,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Mirat.Core
                 int j = 0;
                 for (int i = 0; i < o.Operands.Count; i++)
                 {
-                    while ()
+                    //while ()
                 }
             }
 

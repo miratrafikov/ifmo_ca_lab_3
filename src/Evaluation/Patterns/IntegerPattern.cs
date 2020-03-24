@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using ShiftCo.ifmo_ca_lab_3.Evaluation.Mirat.Interfaces;
-using ShiftCo.ifmo_ca_lab_3.Evaluation.Mirat.Types;
-using ShiftCo.ifmo_ca_lab_3.Evaluation.Mirat.Util;
+using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
+using ShiftCo.ifmo_ca_lab_3.Evaluation.Types;
+using ShiftCo.ifmo_ca_lab_3.Evaluation.Util;
 
-namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Mirat.Patterns
+namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Patterns
 {
     class IntegerPattern : IPattern
     {
