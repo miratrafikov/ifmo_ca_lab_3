@@ -1,6 +1,9 @@
-﻿namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Mirat.Interfaces
+﻿using ShiftCo.ifmo_ca_lab_3.Evaluation.Mirat.Types;
+
+namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Mirat.Interfaces
 {
-    interface IAttribute
+    public interface IAttribute
     {
+        public Symbol Name { get; set; }
     }
 }

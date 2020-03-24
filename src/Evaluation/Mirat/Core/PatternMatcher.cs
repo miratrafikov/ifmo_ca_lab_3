@@ -8,10 +8,15 @@ using ShiftCo.ifmo_ca_lab_3.Evaluation.Mirat.Util;
 
 namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Mirat.Core
 {
-    class PatternMatcher
+    public class PatternMatcher
     {
         public static bool Matches(ref IElement pattern, IElement obj)
         {
+            if (pattern == null || obj == null)
+            {
+                return false;
+            }
+
             // Pattern is either Atom or Expression
             if (obj.Head != pattern.Head && pattern.Head != Head.Pattern)
             {
@@ -39,15 +44,42 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Mirat.Core
                 return true;
             }
 
-            if (pattern is Expression exp && obj is Expression o)
+            if (pattern is Expression p && obj is Expression o)
             {
                 int j = 0;
                 for (int i = 0; i < o.Operands.Count; i++)
                 {
-                    while ()
+                    // Skip all nullable sequences in pattern
+                    while (j < p.Operands.Count && p.Operands[j] is NullableSequencePattern) j++;
+                    IElement tempPattern = null;
+                    if (j < p.Operands.Count) tempPattern = p.Operands[j];
+                    if (Matches(ref tempPattern, o.Operands[i]))
+                    {
+                        ((Expression)pattern).Operands[j] = tempPattern;
+                        j++;
+                    }
+                    // If does not matches but previous 
+                    else if (j > 0 && p.Operands[j - 1] is NullableSequencePattern)
+                    {
+                        ((NullableSequencePattern)((Expression)pattern).Operands[j - 1]).Operands.Add(o.Operands[i]);
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+
+                while (j < ((Expression)pattern).Operands.Count &&
+                    ((Expression)pattern).Operands[j] is NullableSequencePattern) j++;
+                if (j == ((Expression)pattern).Operands.Count)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
                 }
             }
-
             throw new Exception("Unexpected type of pattern and/or object");
         }
     }

@@ -7,12 +7,13 @@ using ShiftCo.ifmo_ca_lab_3.Evaluation.Mirat.Util;
 
 namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Mirat.Patterns
 {
-    class NullableSequencePattern : IPattern
+    public class NullableSequencePattern : IPattern
     {
         public NullableSequencePattern(string name)
         {
             Head = Head.Pattern;
             Name = name;
+            Operands = new List<IElement>();
         }
 
         public Head Head { get; set; }
