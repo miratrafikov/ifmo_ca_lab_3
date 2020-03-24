@@ -1,6 +1,9 @@
-﻿namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces
+﻿using ShiftCo.ifmo_ca_lab_3.Evaluation.Types;
+
+namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces
 {
-    interface IAttribute
+    public interface IAttribute
     {
+        public Expression Apply(Expression expr);
     }
 }
