@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Patterns;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Types;
+
 using static ShiftCo.ifmo_ca_lab_3.Evaluation.Core.PatternMatcher;
 
 namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
@@ -10,7 +12,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
     public static class Context
     {
         private static Dictionary<string, IPattern> Patterns = new Dictionary<string, IPattern>();
-        private static List<(IElement,IElement)> _context = new List<(IElement, IElement)>();
+        private static List<(IElement, IElement)> _context = new List<(IElement, IElement)>();
 
         public static void AddRule(IElement lhs, IElement rhs)
         {
@@ -43,8 +45,8 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             Patterns = new Dictionary<string, IPattern>();
             PatternsSetUp(lhs);
             // Hardcode
-            if (lhs is Expression expr && 
-                expr.Operands.Count == 5 && 
+            if (lhs is Expression expr &&
+                expr.Operands.Count == 5 &&
                 expr.Operands[0] is NullableSequencePattern seq1 &&
                 expr.Operands[1] is IntegerPattern int1 &&
                 expr.Operands[2] is NullableSequencePattern seq2 &&
@@ -57,12 +59,15 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                     case Util.Head.Sum:
                         val = new Integer(int1.Element.Value + int2.Element.Value);
                         break;
+
                     case Util.Head.Mul:
                         val = new Integer(int1.Element.Value * int2.Element.Value);
                         break;
+
                     case Util.Head.Pow:
                         val = new Integer((int)Math.Pow(int1.Element.Value, int2.Element.Value));
                         break;
+
                     default:
                         val = null;
                         break;
@@ -88,12 +93,14 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                         Patterns.Add(p.Name.Value, p);
                     }
                     break;
+
                 case Expression e:
-                    foreach (var o in e.Operands) 
+                    foreach (var o in e.Operands)
                     {
                         PatternsSetUp(o);
                     }
                     break;
+
                 default:
                     break;
             }
@@ -109,11 +116,13 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                 case IntegerPattern integer:
                     pattern = Patterns[integer.Name.Value];
                     return ((IntegerPattern)pattern).Element;
+
                 case ElementPattern element:
                     pattern = Patterns[element.Name.Value];
                     return ((ElementPattern)pattern).Element;
+
                 case Expression exp:
-                    for (int i =0; i < exp.Operands.Count; i++)
+                    for (int i = 0; i < exp.Operands.Count; i++)
                     {
                         if (exp.Operands[i] is NullableSequencePattern seq)
                         {
@@ -127,14 +136,15 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                                 exp.Operands.InsertRange(i, ((NullableSequencePattern)pattern).Operands);
                             }
                         }
-                        else 
+                        else
                         {
                             exp.Operands[i] = ApplyPatterns(exp.Operands[i]);
                         }
                     }
-                    exp.Operands.RemoveAll(o => o is NullableSequencePattern n && 
+                    exp.Operands.RemoveAll(o => o is NullableSequencePattern n &&
                                                 n.Operands.Count == 0);
                     return exp;
+
                 default:
                     return rhs;
             }
