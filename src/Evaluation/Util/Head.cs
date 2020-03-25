@@ -10,6 +10,7 @@
         Pow,
         Set,
         Delayed,
-        Pattern
+        Pattern,
+        If
     }
 }

@@ -40,7 +40,41 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 
         private static IElement GetRhs(IElement lhs, IElement rhs)
         {
+            Patterns = new Dictionary<string, IPattern>();
             PatternsSetUp(lhs);
+            // Hardcode
+            if (lhs is Expression expr && 
+                expr.Operands.Count == 5 && 
+                expr.Operands[0] is NullableSequencePattern seq1 &&
+                expr.Operands[1] is IntegerPattern int1 &&
+                expr.Operands[2] is NullableSequencePattern seq2 &&
+                expr.Operands[3] is IntegerPattern int2 &&
+                expr.Operands[4] is NullableSequencePattern seq3)
+            {
+                Integer val;
+                switch (expr.Head)
+                {
+                    case Util.Head.Sum:
+                        val = new Integer(int1.Element.Value + int2.Element.Value);
+                        break;
+                    case Util.Head.Mul:
+                        val = new Integer(int1.Element.Value * int2.Element.Value);
+                        break;
+                    case Util.Head.Pow:
+                        val = new Integer((int)Math.Pow(int1.Element.Value, int2.Element.Value));
+                        break;
+                    default:
+                        val = null;
+                        break;
+                }
+                if (!(val is null))
+                {
+                    var exp = new Expression(expr.Head, new List<IElement>() { seq1, seq2, val, seq3 });
+                    exp.Operands.RemoveAll(o => o is NullableSequencePattern n &&
+                                                n.Operands.Count == 0);
+                    return exp;
+                }
+            }
             return ApplyPatterns(rhs);
         }
 

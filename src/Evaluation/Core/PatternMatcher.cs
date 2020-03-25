@@ -76,7 +76,6 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                     ((Expression)lhs).Operands[j] is NullableSequencePattern) j++;
                 if (j == ((Expression)lhs).Operands.Count)
                 {
-                    // TODO:
                     Patterns = new Dictionary<string, IPattern>();
                     return ArePatternsSame(lhs);
                 }

@@ -46,5 +46,30 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
             var alteredExpr = Context.GetElement(expr);
             Assert.AreEqual(alteredExpr, expr);
         }
+
+        [TestMethod]
+        public void Test3()
+        {
+            var add = new Expression(Head.Mul, new List<IElement>()
+            {
+                new Integer(2),
+                new Integer(3)
+            });
+            var lhs = new Expression(Head.Mul, new List<IElement>()
+            {
+                new NullableSequencePattern("a"),
+                new IntegerPattern("x"),
+                new NullableSequencePattern("b"),
+                new IntegerPattern("y"),
+                new NullableSequencePattern("c")
+            });
+            var rhs = new Expression(Head.Sum, new List<IElement>
+            {
+                new Integer(default)
+            });
+            Context.AddRule(lhs, rhs);
+            var e = Context.GetElement(add);
+            Assert.AreEqual(add, new Integer(4));
+        }
     }
 }
