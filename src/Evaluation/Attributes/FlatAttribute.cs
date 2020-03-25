@@ -14,9 +14,20 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Attributes
             var operands = new List<IElement>();
             foreach (var operand in expr.Operands)
             {
-                if (operand.Head == head)
+                if (operand is Expression e)
                 {
-                    operands = operands.Concat(((Expression)operand).Operands).ToList();
+                    if (e.Operands.Count == 1)
+                    {
+                        operands.Add(e.Operands.First());
+                    }
+                    if (e.Head == head)
+                    {
+                        operands = operands.Concat(((Expression)operand).Operands).ToList();
+                    }
+                    else
+                    {
+                        operands.Add(operand);
+                    }
                 }
                 else
                 {
