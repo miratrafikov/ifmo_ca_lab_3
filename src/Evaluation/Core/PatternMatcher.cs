@@ -12,41 +12,41 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
     {
         private static Dictionary<string, IPattern> Patterns;
 
-        public static bool Matches(ref IElement pattern, IElement obj)
+        public static bool Matches(ref IElement lhs, IElement obj)
         {
-            if (pattern == null || obj == null)
+            if (lhs == null || obj == null)
             {
                 return false;
             }
 
             // Pattern is either Atom or Expression
-            if (obj.Head != pattern.Head && pattern.Head != Head.Pattern)
+            if (obj.Head != lhs.Head && lhs.Head != Head.Pattern)
             {
                 return false;
             }
 
             // No pattern kinds required
             // Example: Symbol x and Symbol x
-            if (ReferenceEquals(pattern, obj))
+            if (ReferenceEquals(lhs, obj))
             {
                 return true;
             }
 
             // Pattern is kind of '_Integer'
-            if (obj is Integer integer && pattern is IntegerPattern)
+            if (obj is Integer integer && lhs is IntegerPattern)
             {
-                ((IntegerPattern)pattern).Element = integer;
+                ((IntegerPattern)lhs).Element = integer;
                 return true;
             }
 
             // Pattern is kind of '_'
-            if (pattern is ElementPattern)
+            if (lhs is ElementPattern)
             {
-                ((ElementPattern)pattern).Element = obj;
+                ((ElementPattern)lhs).Element = obj;
                 return true;
             }
 
-            if (pattern is Expression p && obj is Expression o)
+            if (lhs is Expression p && obj is Expression o)
             {
                 int j = 0;
                 for (int i = 0; i < o.Operands.Count; i++)
@@ -57,13 +57,13 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                     if (j < p.Operands.Count) tempPattern = p.Operands[j];
                     if (Matches(ref tempPattern, o.Operands[i]))
                     {
-                        ((Expression)pattern).Operands[j] = tempPattern;
+                        ((Expression)lhs).Operands[j] = tempPattern;
                         j++;
                     }
                     // If does not matches but previous
                     else if (j > 0 && p.Operands[j - 1] is NullableSequencePattern)
                     {
-                        ((NullableSequencePattern)((Expression)pattern).Operands[j - 1]).Operands.Add(o.Operands[i]);
+                        ((NullableSequencePattern)((Expression)lhs).Operands[j - 1]).Operands.Add(o.Operands[i]);
                     }
                     else
                     {
@@ -71,13 +71,13 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                     }
                 }
 
-                while (j < ((Expression)pattern).Operands.Count &&
-                    ((Expression)pattern).Operands[j] is NullableSequencePattern) j++;
-                if (j == ((Expression)pattern).Operands.Count)
+                while (j < ((Expression)lhs).Operands.Count &&
+                    ((Expression)lhs).Operands[j] is NullableSequencePattern) j++;
+                if (j == ((Expression)lhs).Operands.Count)
                 {
                     // TODO:
                     Patterns = new Dictionary<string, IPattern>();
-                    return ArePatternsSame(pattern);
+                    return ArePatternsSame(lhs);
                 }
                 else
                 {

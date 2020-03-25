@@ -45,6 +45,6 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Types
 
         public List<IElement> Operands;
         public Head Head { get; set; }
-        public List<IAttribute> Apributes { get; set; }
+        public List<IAttribute> Attributes { get; set; }
     }
 }
