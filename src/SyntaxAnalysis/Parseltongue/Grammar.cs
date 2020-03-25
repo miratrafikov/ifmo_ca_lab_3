@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Collections.Generic;
+
 using Terminal = ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Lexington.TokenType;
 
 namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Parseltongue
@@ -34,8 +33,6 @@ namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Parseltongue
                 new List<object>{Terminal.Comma, NonTerminal.Operands},
                 new List<object>{}
             });
-            
-            
         }
     }
 }

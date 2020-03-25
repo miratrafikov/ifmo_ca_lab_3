@@ -1,21 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Linq;
-using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
-using static ShiftCo.ifmo_ca_lab_3.Evaluation.Heads;
-using ShiftCo.ifmo_ca_lab_3.Evaluation.Commons;
+﻿using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
+using ShiftCo.ifmo_ca_lab_3.Evaluation.Types;
+using ShiftCo.ifmo_ca_lab_3.Evaluation.Util;
 
 namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Attributes
 {
-    class OrderlessAttribute : IAttribute
+    public class OrderlessAttribute : IAttribute
     {
-        public List<IExpression> Apply(Expression expr)
+        public Expression Apply(Expression expr)
         {
-            if (expr.Head == nameof(Pow)) return expr.Operands;
+            if (expr.Head == Head.Pow) return expr;
             var operands = expr.Operands;
-            operands.Sort(new ExpressionComparer());
-            return operands;
+            if (operands != null)
+                operands.Sort(new ElementComparer());
+            return new Expression(expr.Head, operands);
         }
     }
 }
