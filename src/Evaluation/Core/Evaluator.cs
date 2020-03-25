@@ -24,7 +24,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                     //Evaluate(e.Head);
 
                     // apply attributes
-                    foreach (var attribute in e.Apributes)
+                    foreach (var attribute in e.Attributes)
                     {
                         var expr = attribute.Apply(e);
                     }

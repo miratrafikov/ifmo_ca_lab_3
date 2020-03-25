@@ -7,7 +7,7 @@ using static ShiftCo.ifmo_ca_lab_3.Evaluation.Core.PatternMatcher;
 
 namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 {
-    internal static class Context
+    public static class Context
     {
         private static Dictionary<string, IPattern> Patterns = new Dictionary<string, IPattern>();
         private static List<(IElement,IElement)> _context = new List<(IElement, IElement)>();
@@ -88,13 +88,18 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                             {
                                 throw new Exception("Pattern types does not matches");
                             }
-                            exp.Operands.InsertRange(i, ((NullableSequencePattern)pattern).Operands);
+                            if (((NullableSequencePattern)pattern).Operands.Count > 0)
+                            {
+                                exp.Operands.InsertRange(i, ((NullableSequencePattern)pattern).Operands);
+                            }
                         }
                         else 
                         {
                             exp.Operands[i] = ApplyPatterns(exp.Operands[i]);
                         }
                     }
+                    exp.Operands.RemoveAll(o => o is NullableSequencePattern n && 
+                                                n.Operands.Count == 0);
                     return exp;
                 default:
                     return rhs;
