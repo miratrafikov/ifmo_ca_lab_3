@@ -1,4 +1,5 @@
 ﻿using System;
+
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Types;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Util;
@@ -16,9 +17,11 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             {
                 case Integer i:
                     return i;
+
                 case Symbol s:
                     // lookup in context
                     return s;
+
                 case Expression e:
                     // evaluate head
                     //Evaluate(e.Head);
@@ -37,6 +40,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 
                     // apply rules
                     return e;
+
                 default:
                     return element;
             }
@@ -52,7 +56,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                 post = Evaluate(pre);
                 iteration++;
             }
-            if (iteration == MaxIterationsAmount) throw new Exception("Amount of iterations exceeded"); 
+            if (iteration == MaxIterationsAmount) throw new Exception("Amount of iterations exceeded");
             return post;
         }
     }
