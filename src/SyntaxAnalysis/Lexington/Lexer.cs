@@ -15,11 +15,12 @@ namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Lexington
         private static readonly string alphabet = letters + numbers + brackets + comma + modificators;
 
         // Список найденных токенов
-        private static readonly List<Token> Tokens = new List<Token>();
+        private static List<Token> Tokens;
 
         public static List<Token> Tokenize(string str)
         {
             AlphabetCheck(str);
+            Tokens = new List<Token>();
             for (int i = 0; i < str.Length; i++)
             {
                 var token = GetToken(str.Substring(i));
@@ -30,9 +31,10 @@ namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Lexington
                 }
                 else
                 {
-                    throw  new Exception($"Col. #{i}: No suitable token for the suffix \"{str.Substring(i)}\".");
+                    throw new Exception($"Col. #{i}: No suitable token for the suffix \"{str.Substring(i)}\".");
                 }
             }
+            Tokens.Add(new Token(TokenType.EOF, ""));
             return Tokens;
         }
 

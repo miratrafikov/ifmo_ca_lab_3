@@ -1,0 +1,138 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" GroupingSetting="Access" MembersFormat="FullSignature">
+  <Class Name="ShiftCo.ifmo_ca_lab_3.Evaluation.Attributes.FlatAttribute" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="8.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Attributes\FlatAttribute.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="ShiftCo.ifmo_ca_lab_3.Evaluation.Attributes.OrderlessAttribute" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="8.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Attributes\OrderlessAttribute.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="ShiftCo.ifmo_ca_lab_3.Evaluation.Core.Context" Collapsed="true">
+    <Position X="5.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\Context.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ShiftCo.ifmo_ca_lab_3.Evaluation.Core.Evaluator" Collapsed="true">
+    <Position X="5.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\Evaluator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ShiftCo.ifmo_ca_lab_3.Evaluation.Core.PatternMatcher" Collapsed="true">
+    <Position X="10.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAACAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Core\PatternMatcher.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ShiftCo.ifmo_ca_lab_3.Evaluation.Patterns.ElementPattern" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="8.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAIAAAAgAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Patterns\ElementPattern.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="ShiftCo.ifmo_ca_lab_3.Evaluation.Patterns.IntegerPattern" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="5.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAIAAAAgAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Patterns\IntegerPattern.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="ShiftCo.ifmo_ca_lab_3.Evaluation.Patterns.NullableSequencePattern" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="7" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAIAAAAAAAAQAAAACAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Patterns\NullableSequencePattern.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="ShiftCo.ifmo_ca_lab_3.Evaluation.Types.Expression" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="7" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAIAAAAAAAAAgAAACAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Types\Expression.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="ShiftCo.ifmo_ca_lab_3.Evaluation.Types.Integer" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="10.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAIAAAAAAAAEAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Types\Integer.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="ShiftCo.ifmo_ca_lab_3.Evaluation.Types.Symbol" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="5.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAABgAAAAAAA=</HashCode>
+      <FileName>Types\Symbol.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="ShiftCo.ifmo_ca_lab_3.Evaluation.Util.ElementComparer" Collapsed="true">
+    <Position X="7" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAA=</HashCode>
+      <FileName>Util\ElementComparer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ShiftCo.ifmo_ca_lab_3.Evaluation.Util.ElementsList" Collapsed="true">
+    <Position X="10.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAA=</HashCode>
+      <FileName>Util\ElementsList.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces.IAtom&lt;T&gt;" Collapsed="true">
+    <Position X="0.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Interfaces\IAtom.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces.IAttribute" Collapsed="true">
+    <Position X="5.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Interfaces\IAttribute.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces.IElement" Collapsed="true">
+    <Position X="1.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Interfaces\IElement.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces.IPattern" Collapsed="true">
+    <Position X="2.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Interfaces\IPattern.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="ShiftCo.ifmo_ca_lab_3.Evaluation.Util.Head" Collapsed="true">
+    <Position X="5.25" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAAAAAAAAAAAAAAQAACAAgAQAAAAAAAACAQ=</HashCode>
+      <FileName>Util\Head.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

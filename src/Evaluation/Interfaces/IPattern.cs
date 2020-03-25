@@ -2,8 +2,8 @@
 
 namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces
 {
-    public interface IAttribute
+    internal interface IPattern : IElement
     {
-        public Expression Apply(Expression expr);
+        public Symbol Name { get; set; }
     }
 }

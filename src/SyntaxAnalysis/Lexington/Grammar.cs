@@ -19,11 +19,14 @@ namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Lexington
             Rules.Add("Letter", $"^a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t|u|v|w|x|y|z");
             Rules.Add("Number", $"^[-+]?({Rules["Digit"]})+");
             Rules.Add("Symbol", $"^({Rules["Letter"]})({Rules["Letter"]}|{Rules["Digit"]})*");
-            
+
             // Соответствие между правилами и определениями токенов
             foreach (TokenType TokenType in Enum.GetValues(typeof(TokenType)))
             {
-                TokenDefinitions.Add(TokenType, Rules[TokenType.ToString()]);
+                if (TokenType != TokenType.EOF)
+                {
+                    TokenDefinitions.Add(TokenType, Rules[TokenType.ToString()]);
+                }
             }
         }
     }

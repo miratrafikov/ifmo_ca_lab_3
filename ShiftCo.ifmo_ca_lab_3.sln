@@ -9,11 +9,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Evaluation", "src\Evaluatio
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SyntaxAnalysis", "src\SyntaxAnalysis\SyntaxAnalysis.csproj", "{E06731CD-BF83-4EEE-9B33-16D6DA5A9C36}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chief.Test", "test\Chief.Test\Chief.Test.csproj", "{F2A1431C-5955-4796-A0DC-9E5617B8C7A3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chief.Test", "test\Chief.Test\Chief.Test.csproj", "{F2A1431C-5955-4796-A0DC-9E5617B8C7A3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Evaluation.Test", "test\Evaluation.Test\Evaluation.Test.csproj", "{22BEA59C-4913-4AD8-A1B2-07026C78E4B7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Evaluation.Test", "test\Evaluation.Test\Evaluation.Test.csproj", "{22BEA59C-4913-4AD8-A1B2-07026C78E4B7}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C6CFFADC-9CD3-4473-95D0-2866C20A0A85} = {C6CFFADC-9CD3-4473-95D0-2866C20A0A85}
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyntaxAnalysis.Test", "test\SyntaxAnalysis.Test\SyntaxAnalysis.Test.csproj", "{F7870153-C76B-4537-9D67-F364D3ED3C7F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SyntaxAnalysis.Test", "test\SyntaxAnalysis.Test\SyntaxAnalysis.Test.csproj", "{F7870153-C76B-4537-9D67-F364D3ED3C7F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

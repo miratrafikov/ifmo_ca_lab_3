@@ -1,116 +1,143 @@
-﻿namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Parseltongue
+﻿using System;
+using System.Collections.Generic;
+
+using ShiftCo.ifmo_ca_lab_3.Evaluation;
+using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
+using ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Lexington;
+
+using Terminal = ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Lexington.TokenType;
+
+namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Parseltongue
 {
-    /*
-    static class Parser
+    public static class Parser
     {
-        // Список токенов и его итератор
-        static List<Token> Tokens;
-        static int itToken = 0;
+        private static List<Token> _tokens;
+        private static Token _token;
+        private static int _tokensIterator;
+        private static Stack<int> _tokensIteratorStack;
 
-        public static object ParseTokenList(List<Token> Tokens)
+        public static IExpression Parse(List<Token> tokens)
         {
-            Parser.Tokens = Tokens;
-            return ParseToken();
+            Prepare(tokens);
+            var result = GetSymbol(NonTerminal.Root);
+            if (result.success)
+            {
+                // TODO
+                return ((List<IExpression>)result.value)[0];
+            }
+            else
+            {
+                throw new Exception("Parse error: No suitable parse tree.");
+            }
         }
 
-        private static object ParseToken()
+        private static void Prepare(List<Token> tokens)
         {
-            if (Tokens[itToken].type == (int)TokenType.Number)
+            _tokens = tokens;
+            _tokensIterator = 0;
+            _tokensIteratorStack = new Stack<int>();
+        }
+
+        private static Result GetSymbol(object symbol)
+        {
+            Result result;
+            if (symbol is Terminal)
             {
-                object result = ParseNumber();
-                itToken++;
+                NextToken();
+                result = GetTerminal((Terminal)symbol);
+            }
+            else
+            {
+                result = GetNonTerminal((NonTerminal)symbol);
+            }
+            if (!result.success || !(symbol is NonTerminal.Expression))
+            {
                 return result;
             }
-            if (Tokens[itToken].type == (int)TokenType.Variable)
-            {
-                object result = ParseVariable();
-                itToken++;
-                return result;
-            }
-            if (Tokens[itToken].type == (int)TokenType.Sum || Tokens[itToken].type == (int)TokenType.Mul ||
-                Tokens[itToken].type == (int)TokenType.Pow)
-            {
-                object result = ParseExpression();
-                itToken++;
-                return result;
-            }
-            throw new Exception("Token error");
+            return new Result(true, BuildExpression((List<IExpression>)result.value));
         }
 
-        private static Value ParseNumber()
+        private static Result GetTerminal(Terminal requestedSymbol)
         {
-            return new Value(Convert.ToInt32(Tokens[itToken].content));
-        }
-
-        private static Symbol ParseVariable()
-        {
-            return new Symbol(Tokens[itToken].content);
-        }
-
-        private static Expression ParseExpression()
-        {
-            switch (Tokens[itToken].type)
+            if (_token.Type != requestedSymbol)
             {
-                case (int)TokenType.Sum:
-                    return ParseSumExpression();
-                case (int)TokenType.Mul:
-                    return ParseMulExpression();
-                case (int)TokenType.Pow:
-                    return ParsePowExpression();
+                return new Result(false);
             }
-            return new SumExpression();
+
+            switch (requestedSymbol)
+            {
+                case Terminal.Symbol:
+                    return new Result(true, new Expression("symbol", _token.Content));
+                case Terminal.Number:
+                    return new Result(true, new Value(Convert.ToInt32(_token.Content)));
+                default:
+                    return new Result(true);
+            }
         }
 
-        private static Expression ParseSumExpression()
+        private static Result GetNonTerminal(NonTerminal requestedSymbol)
         {
-            List<IOperand> Operands = new List<IOperand>();
-            itToken++;
-            if (Tokens[itToken].type != (int)TokenType.LeftBracket)
+            var productions = Grammar.Rules[requestedSymbol];
+            foreach (var production in productions)
             {
-                throw new Exception($"Expected bracket token, token #{itToken}");
-            }
-            while (true)
-            {
-                itToken++;
-                if (Tokens[itToken].type != (int)TokenType.Number && Tokens[itToken].type != (int)TokenType.Variable &&
-                    Tokens[itToken].type != (int)TokenType.Sum && Tokens[itToken].type != (int)TokenType.Mul &&
-                    Tokens[itToken].type != (int)TokenType.Pow)
+                SavePosition();
+                var productionMatches = true;
+                var correspondingObjects = new List<IExpression>();
+                foreach (var symbol in production)
                 {
-                    throw new Exception($"Expected number, variable or expression token, token #{itToken}");
-                }
-                switch (Tokens[itToken].type)
-                {
-                    case (int)TokenType.Number:
-                        Operands.Add(ParseNumber());
+                    var result = GetSymbol(symbol);
+                    if (!result.success)
+                    {
+                        productionMatches = false;
                         break;
-                    case (int)TokenType.Variable:
-                        Operands.Add(ParseVariable());
-                        break;
-                    default:
-                        Operands.Add(ParseExpression());
-                        break;
+                    }
+
+                    switch (result.value)
+                    {
+                        case null:
+                            continue;
+                        case List<IExpression> list:
+                            correspondingObjects.AddRange(list);
+                            break;
+                        default:
+                            correspondingObjects.Add((IExpression)result.value);
+                            break;
+                    }
                 }
-                itToken++;
-                if (Tokens[itToken].type == (int)TokenType.RightBracket)
+
+                if (productionMatches)
                 {
-                    break;
+                    return new Result(true, correspondingObjects);
                 }
-                if (Tokens[itToken].type != (int)TokenType.Comma)
-                {
-                    throw new Exception($"Expected comma token, token #{itToken}");
-                }
+
+                RestorePosition();
             }
-            return new SumExpression(Operands);
+
+            return new Result(false);
         }
 
-        private static Expression ParseMulExpression()
+        private static Expression BuildExpression(List<IExpression> objectsList)
         {
-            return new SumExpression();
+            var head = (string)objectsList[0].Key;
+            var operands = objectsList.GetRange(1, objectsList.Count - 1);
+            return new Expression(head) { Operands = operands };
         }
-        private static Expression ParsePowExpression()
+
+        private static void SavePosition()
         {
-            return new SumExpression();
+            _tokensIteratorStack.Push(_tokensIterator);
+        }
+
+        private static void RestorePosition()
+        {
+            _tokensIterator = _tokensIteratorStack.Pop();
+            _token = _tokens[_tokensIterator];
+        }
+
+        private static void NextToken()
+        {
+            _token = _tokens[_tokensIterator];
+            _tokensIterator++;
         }
     }
-    */
 }
