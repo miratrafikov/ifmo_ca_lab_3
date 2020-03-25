@@ -10,6 +10,10 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Util
     {
         public override int Compare(IElement left, IElement right)
         {
+            // To avoid exceptions
+            if (right is null) return 1;
+            if (left is null) return -1;
+
             // Compare Heads first
             if (left.Head > right.Head)
             {

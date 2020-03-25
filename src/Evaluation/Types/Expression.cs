@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Attributes;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Util;
