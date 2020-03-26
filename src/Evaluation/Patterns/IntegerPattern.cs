@@ -15,5 +15,10 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Patterns
         public string Head { get; set; }
         public Symbol Name { get; set; }
         public Integer Element { get; set; }
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
+        }
     }
 }

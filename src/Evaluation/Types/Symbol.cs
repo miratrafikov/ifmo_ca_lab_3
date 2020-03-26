@@ -21,5 +21,10 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Types
 
         public static bool operator !=(Symbol left, Symbol right) =>
             string.Compare(left.Value, right.Value) != 0;
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Patterns;
@@ -30,21 +31,55 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 
         public static IElement GetElement(IElement element)
         {
+            ClearPatterns();
             foreach (var rule in _context)
             {
                 var (lhs, rhs) = rule;
-                if (Matches(ref lhs, element))
+                var clone = lhs.Clone();
+                var matcher = new PatternMatcher();
+                var matchresult = matcher.Matches((IElement)clone, element);
+                if (!(matchresult is null))
                 {
-                    return GetRhs(lhs, rhs);
+                    return GetRhs(matchresult, rhs);
                 }
             }
             return element;
         }
 
+        private static void ClearPatterns()
+        {
+            foreach (var rule in _context)
+            {
+                var (lhs, rhs) = rule;
+                lhs = ClearPatterns(lhs);
+            }
+        }
+
+        private static IElement ClearPatterns(IElement lhs)
+        {
+            switch (lhs)
+            {
+                case IntegerPattern integer:
+                    return new IntegerPattern(integer.Name.Value);
+                case ElementPattern element:
+                    return new ElementPattern(element.Name.Value);
+                case NullableSequencePattern seq:
+                    return new NullableSequencePattern(seq.Name.Value);
+                case Expression exp:
+                    var operands = new List<IElement>();
+                    foreach (var o in exp.Operands)
+                    {
+                        operands.Add(ClearPatterns(o));
+                    }
+                    exp.Operands = operands;
+                    return exp;
+                default:
+                    return lhs;
+            }
+        }
+
         private static IElement GetRhs(IElement lhs, IElement rhs)
         {
-            Patterns = new Dictionary<string, IPattern>();
-            PatternsSetUp(lhs);
             // Hardcode
             if (lhs is Expression expr &&
                 expr.Operands.Count == 5 &&
@@ -75,12 +110,19 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                 }
                 if (!(val is null))
                 {
-                    var exp = new Expression(expr.Head, new List<IElement>() { seq1, seq2, val, seq3 });
+                    var operands = seq1.Operands;
+                    operands = operands.Concat(seq2.Operands).ToList();
+                    operands.Add(val);
+                    operands = operands.Concat(seq3.Operands).ToList();
+                    var exp = new Expression(expr.Head, operands); ;
                     exp.Operands.RemoveAll(o => o is NullableSequencePattern n &&
                                                 n.Operands.Count == 0);
                     return exp;
                 }
             }
+
+            Patterns = new Dictionary<string, IPattern>();
+            PatternsSetUp(lhs);
             return ApplyPatterns(rhs);
         }
 

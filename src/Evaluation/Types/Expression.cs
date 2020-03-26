@@ -47,5 +47,10 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Types
         public List<IElement> Operands;
         public string Head { get; set; }
         public List<IAttribute> Attributes { get; set; }
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
+        }
     }
 }

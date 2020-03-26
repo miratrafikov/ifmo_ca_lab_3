@@ -12,40 +12,40 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 {
     public class PatternMatcher
     {
-        private static Dictionary<string, IPattern> Patterns;
+        private Dictionary<string, IPattern> Patterns = new Dictionary<string, IPattern>();
 
-        public static bool Matches(ref IElement lhs, IElement obj)
+        public IElement Matches(IElement lhs, IElement obj)
         {
             if (lhs == null || obj == null)
             {
-                return false;
+                return null;
             }
 
             // Pattern is either Atom or Expression
             if (obj.Head != lhs.Head && lhs.Head != nameof(pattern))
             {
-                return false;
+                return null;
             }
 
             // No pattern kinds required
             // Example: Symbol x and Symbol x
             if (ReferenceEquals(lhs, obj))
             {
-                return true;
+                return lhs;
             }
 
             // Pattern is kind of '_Integer'
             if (obj is Integer integer && lhs is IntegerPattern)
             {
                 ((IntegerPattern)lhs).Element = integer;
-                return true;
+                return lhs;
             }
 
             // Pattern is kind of '_'
             if (lhs is ElementPattern)
             {
                 ((ElementPattern)lhs).Element = obj;
-                return true;
+                return lhs;
             }
 
             if (lhs is Expression p && obj is Expression o)
@@ -57,7 +57,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                     while (j < p.Operands.Count && p.Operands[j] is NullableSequencePattern) j++;
                     IElement tempPattern = null;
                     if (j < p.Operands.Count) tempPattern = p.Operands[j];
-                    if (Matches(ref tempPattern, o.Operands[i]))
+                    if (!(Matches(tempPattern, o.Operands[i]) is null))
                     {
                         ((Expression)lhs).Operands[j] = tempPattern;
                         j++;
@@ -69,7 +69,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                     }
                     else
                     {
-                        return false;
+                        return null;
                     }
                 }
 
@@ -78,18 +78,18 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                 if (j == ((Expression)lhs).Operands.Count)
                 {
                     Patterns = new Dictionary<string, IPattern>();
-                    return ArePatternsSame(lhs);
+                    if (ArePatternsSame(lhs)) return lhs;
                 }
                 else
                 {
-                    return false;
+                    return null;
                 }
             }
             throw new Exception("Unexpected type of pattern and/or object");
         }
 
         // To see if all patterns with name 'x' are contains the same data.
-        private static bool ArePatternsSame(IElement element)
+        private bool ArePatternsSame(IElement element)
         {
             if (element is IPattern p)
             {

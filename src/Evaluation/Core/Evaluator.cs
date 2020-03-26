@@ -1,8 +1,9 @@
 ﻿using System;
-
+using ShiftCo.ifmo_ca_lab_3.Evaluation.Attributes;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Types;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Util;
+using static ShiftCo.ifmo_ca_lab_3.Evaluation.Util.Head;
 
 namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 {
@@ -13,6 +14,10 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 
         private static IElement Evaluate(IElement element)
         {
+            if (element is Expression expr && expr.Attributes.Contains(new HoldAttribute()))
+            {
+                return element;
+            }
             switch (element)
             {
                 case Integer i:
@@ -20,26 +25,42 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 
                 case Symbol s:
                     // lookup in context
-                    return s;
+                    return Context.GetElement(s);
 
                 case Expression e:
                     // evaluate head
-                    //Evaluate(e.Head);
+                    //var head = new Symbol(nameof(e.Head));
+                    //var newHead = Context.GetElement(head);
+                    //if (newHead is Symbol nhead)
+                    //{
+                    //    e.Head = nhead.Value;
+                    //}
 
                     // apply attributes
-                    foreach (var attribute in e.Attributes)
+                    if (e.Head != nameof(set) && e.Head != nameof(delayed))
                     {
-                        var expr = attribute.Apply(e);
+                        var tmp = e;
+                        foreach (var attribute in e.Attributes)
+                        {
+                            tmp = attribute.Apply(tmp);
+                        }
+                        e = tmp;
                     }
 
                     // evaluate each child
-                    foreach (IElement ie in e.Operands)
+                    // TODO: Hold logic
+                    for ( int i = 0; i < e.Operands.Count; i++)
                     {
-                        Evaluate(ie);
+                        e.Operands[i] = Evaluate(e.Operands[i]);
                     }
 
+                    if (e.Head == nameof(set) || e.Head == nameof(delayed))
+                    {
+                        Context.AddRule(e.Operands[0], e.Operands[1]);
+                    } 
+
                     // apply rules
-                    return e;
+                    return Context.GetElement(e);
 
                 default:
                     return element;
@@ -49,10 +70,11 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
         public static IElement Run(IElement element)
         {
             var iteration = 0;
-            var pre = element;
-            IElement post = null;
+            var post = element;
+            IElement pre = null;
             while (Comparer.Compare(pre, post) != 0 && iteration <= MaxIterationsAmount)
             {
+                pre = post;
                 post = Evaluate(pre);
                 iteration++;
             }
