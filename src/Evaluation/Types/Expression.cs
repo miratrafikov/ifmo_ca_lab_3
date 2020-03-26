@@ -13,7 +13,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Types
         public Expression()
         {
             Operands = new List<IElement>();
-            Apributes = new List<IAttribute>()
+            Attributes = new List<IAttribute>()
             {
                 new FlatAttribute(),
                 new OrderlessAttribute()
@@ -24,7 +24,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Types
         {
             Head = head;
             Operands = new List<IElement>();
-            Apributes = new List<IAttribute>()
+            Attributes = new List<IAttribute>()
             {
                 new FlatAttribute(),
                 new OrderlessAttribute()
@@ -35,7 +35,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Types
         {
             Head = head;
             Operands = operands;
-            Apributes = new List<IAttribute>()
+            Attributes = new List<IAttribute>()
             {
                 new FlatAttribute(),
                 new OrderlessAttribute()
@@ -46,6 +46,6 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Types
 
         public List<IElement> Operands;
         public Head Head { get; set; }
-        public List<IAttribute> Apributes { get; set; }
+        public List<IAttribute> Attributes { get; set; }
     }
 }

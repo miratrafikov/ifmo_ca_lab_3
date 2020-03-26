@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using ShiftCo.ifmo_ca_lab_3.Evaluation;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
+using ShiftCo.ifmo_ca_lab_3.Evaluation.Patterns;
+using ShiftCo.ifmo_ca_lab_3.Evaluation.Types;
+using ShiftCo.ifmo_ca_lab_3.Evaluation.Util;
 using ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Lexington;
 
 using Terminal = ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Lexington.TokenType;
@@ -16,14 +18,14 @@ namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Parseltongue
         private static int _tokensIterator;
         private static Stack<int> _tokensIteratorStack;
 
-        public static IExpression Parse(List<Token> tokens)
+        public static IElement Parse(List<Token> tokens)
         {
             Prepare(tokens);
             var result = GetSymbol(NonTerminal.Root);
             if (result.success)
             {
                 // TODO
-                return ((List<IExpression>)result.value)[0];
+                return ((List<IElement>)result.value)[0];
             }
             else
             {
@@ -50,11 +52,20 @@ namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Parseltongue
             {
                 result = GetNonTerminal((NonTerminal)symbol);
             }
-            if (!result.success || !(symbol is NonTerminal.Expression))
+            if (!result.success)
             {
                 return result;
             }
-            return new Result(true, BuildExpression((List<IExpression>)result.value));
+            switch (symbol)
+            {
+                case NonTerminal.Expression:
+                    return new Result(true, BuildExpression((List<IElement>)result.value));
+                case NonTerminal.Pattern:
+                    return new Result(true, BuildPattern((List<IElement>)result.value));
+                default:
+                    return result;
+            }
+
         }
 
         private static Result GetTerminal(Terminal requestedSymbol)
@@ -67,9 +78,11 @@ namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Parseltongue
             switch (requestedSymbol)
             {
                 case Terminal.Symbol:
-                    return new Result(true, new Expression("symbol", _token.Content));
+                    return new Result(true, new Symbol(_token.Content));
                 case Terminal.Number:
-                    return new Result(true, new Value(Convert.ToInt32(_token.Content)));
+                    return new Result(true, new Integer(Convert.ToInt32(_token.Content)));
+                case Terminal.Underscores:
+                    return new Result(true, new Symbol(_token.Content)); // TODO
                 default:
                     return new Result(true);
             }
@@ -82,7 +95,7 @@ namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Parseltongue
             {
                 SavePosition();
                 var productionMatches = true;
-                var correspondingObjects = new List<IExpression>();
+                var correspondingObjects = new List<IElement>();
                 foreach (var symbol in production)
                 {
                     var result = GetSymbol(symbol);
@@ -96,11 +109,11 @@ namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Parseltongue
                     {
                         case null:
                             continue;
-                        case List<IExpression> list:
+                        case List<IElement> list:
                             correspondingObjects.AddRange(list);
                             break;
                         default:
-                            correspondingObjects.Add((IExpression)result.value);
+                            correspondingObjects.Add((IElement)result.value);
                             break;
                     }
                 }
@@ -116,11 +129,45 @@ namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Parseltongue
             return new Result(false);
         }
 
-        private static Expression BuildExpression(List<IExpression> objectsList)
+        private static Expression BuildExpression(List<IElement> objectsList)
         {
-            var head = (string)objectsList[0].Key;
             var operands = objectsList.GetRange(1, objectsList.Count - 1);
-            return new Expression(head) { Operands = operands };
+            // TODO
+            switch (objectsList[0].ToString())
+            {
+                case "sum":
+                    return new Expression(Head.Sum) { Operands = operands };
+                case "mul":
+                    return new Expression(Head.Mul) { Operands = operands };
+                case "pow":
+                    return new Expression(Head.Pow) { Operands = operands };
+                case "set":
+                    return new Expression(Head.Set) { Operands = operands };
+                case "delayed":
+                    return new Expression(Head.Delayed) { Operands = operands };
+                default:
+                    return new Expression(Head.Expression) { Operands = operands };
+            }
+        }
+
+        private static IPattern BuildPattern(List<IElement> objects)
+        {
+            string patternName = ((Symbol)objects[0]).Value;
+            string typeName = objects.Count == 2 ? "" : ((Symbol)objects[2]).Value;
+            int underscores = ((Symbol)objects[1]).Value.Length;
+            switch (underscores, typeName)
+            {
+                case (1, ""):
+                    return new ElementPattern(patternName);
+                case (1, "symbol"):
+                    return new ElementPattern(patternName);
+                case (1, "integer"):
+                    return new IntegerPattern(patternName);
+                case (2, ""):
+                    return new NullableSequencePattern(patternName);
+                default:
+                    throw new Exception("TODO");
+            }
         }
 
         private static void SavePosition()

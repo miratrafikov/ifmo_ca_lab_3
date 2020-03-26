@@ -8,6 +8,9 @@
         Sum,
         Mul,
         Pow,
-        Pattern
+        Set,
+        Delayed,
+        Pattern,
+        If
     }
 }
