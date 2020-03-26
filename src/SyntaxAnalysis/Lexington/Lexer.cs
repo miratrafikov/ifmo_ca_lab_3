@@ -12,7 +12,8 @@ namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Lexington
         private static readonly string brackets = "()";
         private static readonly string comma = ",";
         private static readonly string modificators = "-+";
-        private static readonly string alphabet = letters + numbers + brackets + comma + modificators;
+        private static readonly string underline = "_";
+        private static readonly string alphabet = letters + numbers + brackets + comma + modificators + underline;
 
         // Список найденных токенов
         private static List<Token> Tokens;
