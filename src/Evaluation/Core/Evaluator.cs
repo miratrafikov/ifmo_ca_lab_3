@@ -29,12 +29,12 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 
                 case Expression e:
                     // evaluate head
-                    //var head = new Symbol(nameof(e.Head));
-                    //var newHead = Context.GetElement(head);
-                    //if (newHead is Symbol nhead)
-                    //{
-                    //    e.Head = nhead.Value;
-                    //}
+                    var head = new Symbol(e.Head);
+                    var newHead = Context.GetElement(head);
+                    if (newHead is Symbol nhead)
+                    {
+                        e.Head = nhead.Value;
+                    }
 
                     // apply attributes
                     if (e.Head != nameof(set) && e.Head != nameof(delayed))
