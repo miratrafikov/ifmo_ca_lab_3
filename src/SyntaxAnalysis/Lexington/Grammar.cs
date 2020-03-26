@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using static ShiftCo.ifmo_ca_lab_3.Evaluation.Util.EnumUtilizer;
+
 namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Lexington
 {
     static class Grammar
@@ -22,11 +24,11 @@ namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Lexington
             _rules.Add("Symbol", $"^({_rules["Letter"]})({_rules["Letter"]}|{_rules["Digit"]})*");
 
             // Соответствие между правилами и определениями токенов
-            foreach (TokenType TokenType in Enum.GetValues(typeof(TokenType)))
+            foreach (TokenType tokenType in Enum.GetValues(typeof(TokenType)))
             {
-                if (TokenType != TokenType.EOF)
+                if (tokenType != TokenType.EOF)
                 {
-                    TokenDefinitions.Add(TokenType, _rules[TokenType.ToString()]);
+                    TokenDefinitions.Add(tokenType, _rules[UniformEnumToString(tokenType, Capitalization.AsListed)]);
                 }
             }
         }
