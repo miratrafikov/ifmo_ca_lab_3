@@ -20,7 +20,7 @@ namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysisTest
             var tokens = Lexer.Tokenize("a_integer");
             var tree = Parser.Parse(tokens);
             Assert.IsTrue(tree is IPattern);
-            tokens = Lexer.Tokenize("as12__");
+            tokens = Lexer.Tokenize("as12___");
             tree = Parser.Parse(tokens);
             Assert.IsTrue(tree is NullableSequencePattern);
         }

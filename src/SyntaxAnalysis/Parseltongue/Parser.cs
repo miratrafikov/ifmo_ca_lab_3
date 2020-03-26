@@ -148,7 +148,7 @@ namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Parseltongue
                     return new ElementPattern(patternName);
                 case (1, "integer"):
                     return new IntegerPattern(patternName);
-                case (2, ""):
+                case (3, ""):
                     return new NullableSequencePattern(patternName);
                 default:
                     throw new Exception("TODO");
