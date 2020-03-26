@@ -7,6 +7,7 @@
         LeftBracket,
         RightBracket,
         Comma,
+        Underscores,
         EOF
     }
 }

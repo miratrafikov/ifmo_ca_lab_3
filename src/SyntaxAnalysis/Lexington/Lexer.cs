@@ -12,7 +12,8 @@ namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Lexington
         private static readonly string brackets = "()";
         private static readonly string comma = ",";
         private static readonly string modificators = "-+";
-        private static readonly string alphabet = letters + numbers + brackets + comma + modificators;
+        private static readonly string underline = "_";
+        private static readonly string alphabet = letters + numbers + brackets + comma + modificators + underline;
 
         // Список найденных токенов
         private static List<Token> Tokens;
@@ -24,14 +25,14 @@ namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Lexington
             for (int i = 0; i < str.Length; i++)
             {
                 var token = GetToken(str.Substring(i));
-                if (!token.Equals(default))
+                if (token.Content != null)
                 {
                     Tokens.Add(token);
                     i += token.Content.Length - 1;
                 }
                 else
                 {
-                    throw new Exception($"Col. #{i}: No suitable token for the suffix \"{str.Substring(i)}\".");
+                    throw new Exception($"Col. #{i}: No suitable token for the prefix \"{str.Substring(i)}\".");
                 }
             }
             Tokens.Add(new Token(TokenType.EOF, ""));

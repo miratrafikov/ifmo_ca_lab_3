@@ -16,9 +16,15 @@ namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Parseltongue
             });
             Rules.Add(NonTerminal.Element, new List<List<object>>
             {
+                new List<object>{Terminal.Number},
+                new List<object>{NonTerminal.Pattern},
                 new List<object>{NonTerminal.Expression},
-                new List<object>{Terminal.Symbol},
-                new List<object>{Terminal.Number}
+                new List<object>{Terminal.Symbol}
+            });
+            Rules.Add(NonTerminal.Pattern, new List<List<object>>
+            {
+                new List<object>{Terminal.Symbol, Terminal.Underscores, Terminal.Symbol},
+                new List<object>{Terminal.Symbol, Terminal.Underscores}
             });
             Rules.Add(NonTerminal.Expression, new List<List<object>>
             {
