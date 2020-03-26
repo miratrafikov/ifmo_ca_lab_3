@@ -2,15 +2,14 @@
 {
     public enum Head
     {
-        Symbol,
-        Integer,
-        Expression,
-        Sum,
-        Mul,
-        Pow,
-        Set,
-        Delayed,
-        Pattern,
-        If
+        symbol,
+        integer,
+        expression,
+        sum,
+        mul,
+        pow,
+        set,
+        delayed,
+        pattern,
     }
 }

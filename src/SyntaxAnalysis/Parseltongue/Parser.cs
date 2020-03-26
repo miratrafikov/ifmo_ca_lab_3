@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Patterns;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Types;
-using ShiftCo.ifmo_ca_lab_3.Evaluation.Util;
+using static ShiftCo.ifmo_ca_lab_3.Evaluation.Util.Head;
 using ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Lexington;
 
 using Terminal = ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Lexington.TokenType;
@@ -132,22 +132,7 @@ namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Parseltongue
         private static Expression BuildExpression(List<IElement> objectsList)
         {
             var operands = objectsList.GetRange(1, objectsList.Count - 1);
-            // TODO
-            switch (objectsList[0].ToString())
-            {
-                case "sum":
-                    return new Expression(Head.Sum) { Operands = operands };
-                case "mul":
-                    return new Expression(Head.Mul) { Operands = operands };
-                case "pow":
-                    return new Expression(Head.Pow) { Operands = operands };
-                case "set":
-                    return new Expression(Head.Set) { Operands = operands };
-                case "delayed":
-                    return new Expression(Head.Delayed) { Operands = operands };
-                default:
-                    return new Expression(Head.Expression) { Operands = operands };
-            }
+            return new Expression(objectsList[0].ToString()) { Operands = operands };
         }
 
         private static IPattern BuildPattern(List<IElement> objects)

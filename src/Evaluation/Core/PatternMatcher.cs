@@ -6,6 +6,7 @@ using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Patterns;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Types;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Util;
+using static ShiftCo.ifmo_ca_lab_3.Evaluation.Util.Head;
 
 namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 {
@@ -21,7 +22,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             }
 
             // Pattern is either Atom or Expression
-            if (obj.Head != lhs.Head && lhs.Head != Head.Pattern)
+            if (obj.Head != lhs.Head && lhs.Head != nameof(pattern))
             {
                 return false;
             }

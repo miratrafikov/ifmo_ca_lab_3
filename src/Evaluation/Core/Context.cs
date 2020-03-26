@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Patterns;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Types;
+using static ShiftCo.ifmo_ca_lab_3.Evaluation.Util.Head;
 
 using static ShiftCo.ifmo_ca_lab_3.Evaluation.Core.PatternMatcher;
 
@@ -56,15 +57,15 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                 Integer val;
                 switch (expr.Head)
                 {
-                    case Util.Head.Sum:
+                    case nameof(sum):
                         val = new Integer(int1.Element.Value + int2.Element.Value);
                         break;
 
-                    case Util.Head.Mul:
+                    case nameof(mul):
                         val = new Integer(int1.Element.Value * int2.Element.Value);
                         break;
 
-                    case Util.Head.Pow:
+                    case nameof(pow):
                         val = new Integer((int)Math.Pow(int1.Element.Value, int2.Element.Value));
                         break;
 
