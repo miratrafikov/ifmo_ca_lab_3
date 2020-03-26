@@ -1,6 +1,6 @@
 ﻿namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Util
 {
-    public enum Head
+    public enum HeadsPrecedence
     {
         Symbol,
         Integer,
@@ -8,9 +8,7 @@
         Sum,
         Mul,
         Pow,
-        Set,
-        Delayed,
         Pattern,
-        If
+        CustomExpression
     }
 }

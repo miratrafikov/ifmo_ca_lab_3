@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
+using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces.Markers;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Patterns;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Types;
 
@@ -11,28 +12,20 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 {
     public static class Context
     {
-        private static Dictionary<string, IPattern> Patterns = new Dictionary<string, IPattern>();
-        private static List<(IElement, IElement)> _context = new List<(IElement, IElement)>();
+        private static Dictionary<string, IPattern> _patterns = new Dictionary<string, IPattern>();
+        private static List<(IElement, IElement)> _entries = new List<(IElement, IElement)>();
 
-        public static void AddRule(IElement lhs, IElement rhs)
+        public static void AddEntry(IElement lhs, IElement rhs)
         {
-            _context.Add((lhs, rhs));
+            _entries.Add((lhs, rhs));
         }
 
-        public static void AddRules(List<(IElement, IElement)> rules)
+        public static IElement GetSubstitute(IElement element)
         {
-            foreach (var rule in rules)
-            {
-                _context.Add((rule.Item1, rule.Item2));
-            }
-        }
-
-        public static IElement GetElement(IElement element)
-        {
-            foreach (var rule in _context)
+            foreach (var rule in _entries)
             {
                 var (lhs, rhs) = rule;
-                if (Matches(ref lhs, element))
+                if (TryMatch(element, lhs).IsSuccess)
                 {
                     return GetRhs(lhs, rhs);
                 }
@@ -42,7 +35,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 
         private static IElement GetRhs(IElement lhs, IElement rhs)
         {
-            Patterns = new Dictionary<string, IPattern>();
+            _patterns = new Dictionary<string, IPattern>();
             PatternsSetUp(lhs);
             // Hardcode
             if (lhs is Expression expr &&
@@ -56,15 +49,15 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                 Integer val;
                 switch (expr.Head)
                 {
-                    case Util.Head.Sum:
+                    case "Sum":
                         val = new Integer(int1.Element.Value + int2.Element.Value);
                         break;
 
-                    case Util.Head.Mul:
+                    case "Mul":
                         val = new Integer(int1.Element.Value * int2.Element.Value);
                         break;
 
-                    case Util.Head.Pow:
+                    case "Pow":
                         val = new Integer((int)Math.Pow(int1.Element.Value, int2.Element.Value));
                         break;
 
@@ -76,7 +69,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                 {
                     var exp = new Expression(expr.Head, new List<IElement>() { seq1, seq2, val, seq3 });
                     exp.Operands.RemoveAll(o => o is NullableSequencePattern n &&
-                                                n.Operands.Count == 0);
+                                                n.StoredElements.Count == 0);
                     return exp;
                 }
             }
@@ -88,9 +81,9 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             switch (lhs)
             {
                 case IPattern p:
-                    if (!Patterns.ContainsKey(p.Name.Value))
+                    if (!_patterns.ContainsKey(p.Name.Value))
                     {
-                        Patterns.Add(p.Name.Value, p);
+                        _patterns.Add(p.Name.Value, p);
                     }
                     break;
 
@@ -111,14 +104,14 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             IPattern pattern = null;
             switch (rhs)
             {
-                case IPattern p when p.GetType() != Patterns[p.Name.Value].GetType():
+                case IPattern p when p.GetType() != _patterns[p.Name.Value].GetType():
                     throw new Exception("Pattern types does not matches");
                 case IntegerPattern integer:
-                    pattern = Patterns[integer.Name.Value];
+                    pattern = _patterns[integer.Name.Value];
                     return ((IntegerPattern)pattern).Element;
 
                 case ElementPattern element:
-                    pattern = Patterns[element.Name.Value];
+                    pattern = _patterns[element.Name.Value];
                     return ((ElementPattern)pattern).Element;
 
                 case Expression exp:
@@ -126,14 +119,14 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                     {
                         if (exp.Operands[i] is NullableSequencePattern seq)
                         {
-                            pattern = Patterns[seq.Name.Value];
+                            pattern = _patterns[seq.Name.Value];
                             if (!(pattern is NullableSequencePattern))
                             {
                                 throw new Exception("Pattern types does not matches");
                             }
-                            if (((NullableSequencePattern)pattern).Operands.Count > 0)
+                            if (((NullableSequencePattern)pattern).StoredElements.Count > 0)
                             {
-                                exp.Operands.InsertRange(i, ((NullableSequencePattern)pattern).Operands);
+                                exp.Operands.InsertRange(i, ((NullableSequencePattern)pattern).StoredElements);
                             }
                         }
                         else
@@ -142,7 +135,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                         }
                     }
                     exp.Operands.RemoveAll(o => o is NullableSequencePattern n &&
-                                                n.Operands.Count == 0);
+                                                n.StoredElements.Count == 0);
                     return exp;
 
                 default:

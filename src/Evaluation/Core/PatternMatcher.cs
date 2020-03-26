@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
+using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces.Markers;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Patterns;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Types;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Util;
@@ -13,126 +14,166 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
     {
         private static Dictionary<string, IPattern> Patterns;
 
-        public static bool Matches(ref IElement lhs, IElement obj)
+        public static MatchingResult TryMatch(IElement obj, IElement lhs)
         {
-            if (lhs == null || obj == null)
+            var retrievedVariables = new Dictionary<string, List<IElement>>();
+
+            // Null
+            if (obj == null || lhs == null)
             {
-                return false;
+                return new MatchingResult(false);
             }
 
-            // Pattern is either Atom or Expression
-            if (obj.Head != lhs.Head && lhs.Head != Head.Pattern)
+            // Simply equal
+            if (ReferenceEquals(obj, lhs))
             {
-                return false;
+                return new MatchingResult(true);
             }
 
-            // No pattern kinds required
-            // Example: Symbol x and Symbol x
-            if (ReferenceEquals(lhs, obj))
+            // Not even a pattern!
+            if (lhs.Head != "Pattern" && obj.Head != lhs.Head)
             {
-                return true;
+                return new MatchingResult(false);
             }
 
-            // Pattern is kind of '_Integer'
-            if (obj is Integer integer && lhs is IntegerPattern)
+            // General pattern
+            if (lhs is ElementPattern lhsAsElement)
             {
-                ((IntegerPattern)lhs).Element = integer;
-                return true;
+                retrievedVariables.Add(lhsAsElement.Name, new List<IElement> { obj });
+                return new MatchingResult(true, retrievedVariables);
             }
 
-            // Pattern is kind of '_'
-            if (lhs is ElementPattern)
+            // Integer
+            if (lhs is IntegerPattern lhsAsInteger && obj is Integer integer)
             {
-                ((ElementPattern)lhs).Element = obj;
-                return true;
+                retrievedVariables.Add(lhsAsInteger.Name, new List<IElement> { obj });
+                return new MatchingResult(true, retrievedVariables);
             }
 
-            if (lhs is Expression p && obj is Expression o)
+            // Expression, epic
+            if (!(lhs is Expression lhsAsExpression) || !(obj is Expression objAsExpression))
             {
-                int j = 0;
-                for (int i = 0; i < o.Operands.Count; i++)
+                throw new Exception("Wrong pattern, boyo.");
+            }
+            // Привести в начальное состояние
+            var lhsIterator = 0;
+            IPattern lhsChild = null, lhsChildPrev = null;
+            NextPattern(ref lhsChild, ref lhsChildPrev, ref lhsIterator, lhsAsExpression);
+            // Для каждого операнда в объекте...
+            for (var objIterator = 0; objIterator < objAsExpression.Operands.Count; objIterator++)
+            {
+                // Если больше паттернов нет...
+                if (lhsIterator == lhsAsExpression.Operands.Count)
                 {
-                    // Skip all nullable sequences in pattern
-                    while (j < p.Operands.Count && p.Operands[j] is NullableSequencePattern) j++;
-                    IElement tempPattern = null;
-                    if (j < p.Operands.Count) tempPattern = p.Operands[j];
-                    if (Matches(ref tempPattern, o.Operands[i]))
+                    return new MatchingResult(false);
+                }
+                // Получить объект
+                var objChild = objAsExpression.Operands[objIterator];
+                // Получить текущий паттерн
+                NextPattern(ref lhsChild, ref lhsChildPrev, lhsIterator, lhsAsExpression);
+                // Попробовать их заматчить...
+                var matchResult = TryMatch(objChild, (IElement)lhsChild);
+                // И если получилось, то...
+                if (matchResult.IsSuccess)
+                {
+                    // Дополнить список переменных...
+                    retrievedVariables.Concat(matchResult.RetrievedVariables);
+                    // И указывать на следующий паттерн...
+                    lhsIterator++;
+                }
+                // А если нет, то...
+                else
+                {
+                    // Если предыдущий паттерн — нулосек, то...
+                    if (lhsIterator > 0 && lhsAsExpression.Operands[lhsIterator - 1] is NullableSequencePattern)
                     {
-                        ((Expression)lhs).Operands[j] = tempPattern;
-                        j++;
+                        // Добавить объект в список под имя нулосека...
+                        var previousVariable = (IPattern)lhsAsExpression.Operands[lhsIterator - 1];
+                        retrievedVariables.Add(previousVariable.Name, new List<IElement> { objChild });
                     }
-                    // If does not matches but previous
-                    else if (j > 0 && p.Operands[j - 1] is NullableSequencePattern)
-                    {
-                        ((NullableSequencePattern)((Expression)lhs).Operands[j - 1]).Operands.Add(o.Operands[i]);
-                    }
+                    // А если и то не вышло, то фиаско.
                     else
                     {
-                        return false;
+                        return new MatchingResult(false);
                     }
                 }
-
-                while (j < ((Expression)lhs).Operands.Count &&
-                    ((Expression)lhs).Operands[j] is NullableSequencePattern) j++;
-                if (j == ((Expression)lhs).Operands.Count)
-                {
-                    Patterns = new Dictionary<string, IPattern>();
-                    return ArePatternsSame(lhs);
-                }
-                else
-                {
-                    return false;
-                }
             }
-            throw new Exception("Unexpected type of pattern and/or object");
+
+            // У объекта закончились детишки? Пробуем напропускать нулосеки паттерна!
+            while (lhsIterator < lhsAsExpression.Operands.Count &&
+                lhsAsExpression.Operands[lhsIterator] is NullableSequencePattern)
+            {
+                lhsIterator++;
+            }
+            if (lhsIterator == lhsAsExpression.Operands.Count)
+            {
+                // TODO
+            }
+            return new MatchingResult(false);
         }
 
-        // To see if all patterns with name 'x' are contains the same data.
-        private static bool ArePatternsSame(IElement element)
+        private static int SkipNullables(Expression lhs)
         {
-            if (element is IPattern p)
+            var patternsSkipped = 0;
+            while (lhs.Operands[patternsSkipped] is NullableSequencePattern && patternsSkipped < lhs.Operands.Count)
             {
-                if (Patterns.ContainsKey(p.Name.Value))
-                {
-                    var comparer = new ElementComparer();
-                    var dp = Patterns[p.Name.Value];
-                    if (p is NullableSequencePattern l && dp is NullableSequencePattern r)
-                    {
-                        if (l.Operands.Count != r.Operands.Count) return false;
-                        foreach (var o in l.Operands.Zip(r.Operands))
-                        {
-                            if (comparer.Compare(o.First, o.Second) != 0) return false;
-                        }
-                        return true;
-                    }
-                    else if (p is ElementPattern && dp is ElementPattern)
-                    {
-                        return comparer.Compare(((ElementPattern)p).Element, ((ElementPattern)dp).Element) == 0;
-                    }
-                    else if (p is IntegerPattern && dp is IntegerPattern)
-                    {
-                        return (((IntegerPattern)p).Element.Value - ((IntegerPattern)dp).Element.Value == 0);
-                    }
-                    return false;
-                }
-                else
-                {
-                    Patterns.Add(p.Name.Value, p);
-                    return true;
-                }
+                patternsSkipped++;
             }
-            else if (element is Expression expr)
-            {
-                foreach (var o in expr.Operands)
-                {
-                    if (!ArePatternsSame(o)) return false;
-                }
-                return true;
-            }
-            else
-            {
-                return true;
-            }
+            return patternsSkipped;
         }
+
+        private static void NextPattern(ref IPattern lhsChild, ref IPattern lhsChildPrev, ref int lhsIterator, Expression lhsAsExpression)
+        {
+            lhsChildPrev = lhsChild;
+            lhsChild = (IPattern)lhsAsExpression.Operands[lhsIterator];
+            lhsIterator++;
+        }
+
+        //private static bool ArePatternsSame(IElement element)
+        //{
+        //    if (element is IPattern p)
+        //    {
+        //        if (Patterns.ContainsKey(p.Name))
+        //        {
+        //            var comparer = new ElementComparer();
+        //            var dp = Patterns[p.Name];
+        //            if (p is NullableSequencePattern l && dp is NullableSequencePattern r)
+        //            {
+        //                if (l.StoredElements.Count != r.StoredElements.Count) return false;
+        //                foreach (var o in l.StoredElements.Zip(r.StoredElements))
+        //                {
+        //                    if (comparer.Compare(o.First, o.Second) != 0) return false;
+        //                }
+        //                return true;
+        //            }
+        //            else if (p is ElementPattern && dp is ElementPattern)
+        //            {
+        //                return comparer.Compare(((ElementPattern)p).Element, ((ElementPattern)dp).Element) == 0;
+        //            }
+        //            else if (p is IntegerPattern && dp is IntegerPattern)
+        //            {
+        //                return (((IntegerPattern)p).Element.Value - ((IntegerPattern)dp).Element.Value == 0);
+        //            }
+        //            return false;
+        //        }
+        //        else
+        //        {
+        //            Patterns.Add(p.Name, p);
+        //            return true;
+        //        }
+        //    }
+        //    else if (element is Expression expr)
+        //    {
+        //        foreach (var o in expr.Operands)
+        //        {
+        //            if (!ArePatternsSame(o)) return false;
+        //        }
+        //        return true;
+        //    }
+        //    else
+        //    {
+        //        return true;
+        //    }
+        //}
     }
 }

@@ -2,6 +2,7 @@
 using System.Linq;
 
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
+using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces.Markers;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Types;
 
 namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Attributes

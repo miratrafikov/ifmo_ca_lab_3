@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
-using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
+using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces.Markers;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Types;
 
 namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Util
@@ -10,47 +11,73 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Util
     {
         public override int Compare(IElement left, IElement right)
         {
-            // To avoid exceptions
-            if (right is null) return 1;
-            if (left is null) return -1;
+            // Null check
+            if (right is null) return (int)GreaterElement.Left;
+            if (left is null) return (int)GreaterElement.Right;
 
-            // Compare Heads first
-            if (left.Head > right.Head)
+            // 1. Heads
+            var greaterElement = CompareHeadPrecedences(left, right);
+            if (greaterElement != GreaterElement.Equal)
             {
-                return 1;
+                return (int)greaterElement;
             }
-            if (left.Head < right.Head)
+
+            // 2.1. As Integers
+            if (left is Integer leftAsInteger && right is Integer rightAsInteger)
             {
-                return -1;
+                return leftAsInteger.Value - rightAsInteger.Value;
             }
-            // If both elemements are Integers return value according to the arithmetical order
-            if (left is Integer li && right is Integer ri)
+
+            // 2.2. As Symbols
+            if (left is Symbol leftAsSymbol && right is Symbol rightAsSymbol)
             {
-                return li.Value - ri.Value;
+                return string.Compare(leftAsSymbol.Value, rightAsSymbol.Value);
             }
-            // If both elements are Symbols return the result of string comparing
-            if (left is Symbol ls && right is Symbol rs)
+
+            // 2.3. As Expressions
+            if (left is Expression leftAsExpression && right is Expression rightAsExpression)
             {
-                return string.Compare(ls.Value, rs.Value);
-            }
-            // Expression with lesser operands is less than the other one
-            if (left is Expression le && right is Expression re && le.Operands.Count != re.Operands.Count)
-            {
-                return le.Operands.Count - re.Operands.Count;
-            }
-            // Compare each operand
-            var zipedOperands = ((Expression)left).Operands.Zip(((Expression)right).Operands,
-                (l, r) => new { Left = l, Right = r });
-            foreach (var operand in zipedOperands)
-            {
-                var compare = Compare(operand.Left, operand.Right);
-                if (compare != 0)
+                // 2.3.1. Operands count
+                if (leftAsExpression.Operands.Count != rightAsExpression.Operands.Count)
                 {
-                    return compare;
+                    return leftAsExpression.Operands.Count - rightAsExpression.Operands.Count;
+                }
+
+                // 2.3.2. Operands comparison
+                var operandPair = leftAsExpression.Operands.Zip(rightAsExpression.Operands, (l, r) => new { Left = l, Right = r });
+                foreach (var operand in operandPair)
+                {
+                    var compare = Compare(operand.Left, operand.Right);
+                    if (compare != (int)GreaterElement.Equal)
+                    {
+                        return compare;
+                    }
                 }
             }
-            // No difference found
-            return default;
+
+            return (int)GreaterElement.Equal;
+        }
+
+        private GreaterElement CompareHeadPrecedences(IElement left, IElement right)
+        {
+            var leftPrecedence = (HeadsPrecedence)Enum.Parse(typeof(HeadsPrecedence), left.Head);
+            var rightPrecedence = (HeadsPrecedence)Enum.Parse(typeof(HeadsPrecedence), right.Head);
+            if (leftPrecedence < rightPrecedence)
+            {
+                return GreaterElement.Left;
+            }
+            if (rightPrecedence > leftPrecedence)
+            {
+                return GreaterElement.Right;
+            }
+            return GreaterElement.Equal;
+        }
+
+        private enum GreaterElement
+        {
+            Left = -1,
+            Right = -1,
+            Equal = 0
         }
     }
 }

@@ -4,6 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Core;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
+using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces.Markers;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Patterns;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Types;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Util;
@@ -14,48 +15,48 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
     public class PatternMatchingTest
     {
         [TestMethod]
-        public void Test1()
+        public void Matches_Sum_True()
         {
-            var expr = new Expression(Head.Sum, new List<IElement>()
+            var testExpression = new Expression("Sum", new List<IElement>()
             {
-                 new Integer(2),
-                 new Integer(3)
+                 new Integer(215),
+                 new Integer(39)
             });
-            IElement rule = new Expression(Head.Pattern, new List<IElement>()
+            IElement testRule = new Expression("Pattern", new List<IElement>()
             {
                 new IntegerPattern("a"),
                 new NullableSequencePattern("b")
             });
-            var matches = PatternMatcher.Matches(ref rule, expr);
+            var matches = PatternMatcher.TryMatch(testExpression, testRule);
             Assert.AreEqual(true, matches);
         }
 
         [TestMethod]
-        public void Test2()
+        public void Matches_SumComposite_True()
         {
-            var expr = new Expression(Head.Sum, new List<IElement>()
+            var testExpression = new Expression("Sum", new List<IElement>()
             {
                 new Symbol("x"),
-                new Expression(Head.Mul, new List<IElement>()
+                new Expression("Mul", new List<IElement>()
                 {
                     new Integer(3),
                     new Symbol("x")
                 })
             });
-            var times = new Expression(Head.Mul, new List<IElement>()
+            var timesRule = new Expression("Mul", new List<IElement>()
             {
                 new IntegerPattern("d"),
                 new ElementPattern("x")
             });
-            IElement rule = new Expression(Head.Sum, new List<IElement>()
+            IElement testRule = new Expression("Sum", new List<IElement>()
             {
                 new NullableSequencePattern("a"),
                 new ElementPattern("x"),
                 new NullableSequencePattern("c"),
-                times,
+                timesRule,
                 new NullableSequencePattern("e")
             });
-            var matches = PatternMatcher.Matches(ref rule, expr);
+            var matches = PatternMatcher.TryMatch(testExpression, testRule);
             Assert.AreEqual(true, matches);
         }
     }

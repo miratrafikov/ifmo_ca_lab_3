@@ -4,6 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Core;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
+using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces.Markers;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Patterns;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Types;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Util;
@@ -16,7 +17,7 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
         [TestMethod]
         public void Test1()
         {
-            var lhs = new Expression(Head.Sum, new List<IElement>()
+            IElement lhs = new Expression("Sum", new List<IElement>()
             {
                 new NullableSequencePattern("a"),
                 new ElementPattern("x"),
@@ -24,38 +25,38 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
                 new ElementPattern("x"),
                 new NullableSequencePattern("c")
             });
-            var times = new Expression(Head.Mul, new List<IElement>()
+            var times = new Expression("Mul", new List<IElement>()
             {
                 new Integer(2),
                 new ElementPattern("x")
             });
-            var rhs = new Expression(Head.Sum, new List<IElement>()
+            var rhs = new Expression("Sum", new List<IElement>()
             {
                 new NullableSequencePattern("a"),
                 new NullableSequencePattern("b"),
                 times,
                 new NullableSequencePattern("c"),
             });
-            Context.AddRule(lhs, rhs);
+            Context.AddEntry(lhs, rhs);
 
-            var expr = new Expression(Head.Sum, new List<IElement>()
+            var expr = new Expression("Sum", new List<IElement>()
             {
                 new Symbol("x"),
                 new Symbol("x")
             });
-            var alteredExpr = Context.GetElement(expr);
+            var alteredExpr = Context.GetSubstitute(expr);
             Assert.AreEqual(alteredExpr, expr);
         }
 
         [TestMethod]
         public void Test3()
         {
-            var add = new Expression(Head.Mul, new List<IElement>()
+            var add = new Expression("Mul", new List<IElement>()
             {
                 new Integer(2),
                 new Integer(3)
             });
-            var lhs = new Expression(Head.Mul, new List<IElement>()
+            var lhs = new Expression("Mul", new List<IElement>()
             {
                 new NullableSequencePattern("a"),
                 new IntegerPattern("x"),
@@ -63,12 +64,12 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
                 new IntegerPattern("y"),
                 new NullableSequencePattern("c")
             });
-            var rhs = new Expression(Head.Sum, new List<IElement>
+            var rhs = new Expression("Sum", new List<IElement>
             {
                 new Integer(default)
             });
-            Context.AddRule(lhs, rhs);
-            var e = Context.GetElement(add);
+            Context.AddEntry(lhs, rhs);
+            var e = Context.GetSubstitute(add);
             Assert.AreEqual(add, new Integer(4));
         }
     }

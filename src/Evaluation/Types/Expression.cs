@@ -2,50 +2,25 @@
 
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Attributes;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
-using ShiftCo.ifmo_ca_lab_3.Evaluation.Util;
+using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces.Markers;
 
 namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Types
 {
     public class Expression : IElement
     {
-        #region Constructors
+        public string Head { get; }
+        public List<IElement> Operands { get; set; }
+        public List<IAttribute> Attributes { get; }
 
-        public Expression()
-        {
-            Operands = new List<IElement>();
-            Attributes = new List<IAttribute>()
-            {
-                new FlatAttribute(),
-                new OrderlessAttribute()
-            };
-        }
-
-        public Expression(Head head)
-        {
-            Head = head;
-            Operands = new List<IElement>();
-            Attributes = new List<IAttribute>()
-            {
-                new FlatAttribute(),
-                new OrderlessAttribute()
-            };
-        }
-
-        public Expression(Head head, List<IElement> operands)
+        public Expression(string head, List<IElement> operands, List<IAttribute> attributes = null)
         {
             Head = head;
             Operands = operands;
-            Attributes = new List<IAttribute>()
+            Attributes = attributes ?? new List<IAttribute>()
             {
                 new FlatAttribute(),
                 new OrderlessAttribute()
             };
         }
-
-        #endregion Constructors
-
-        public List<IElement> Operands;
-        public Head Head { get; set; }
-        public List<IAttribute> Attributes { get; set; }
     }
 }

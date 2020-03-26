@@ -1,25 +1,43 @@
-﻿using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
-using ShiftCo.ifmo_ca_lab_3.Evaluation.Util;
+﻿using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces.Markers;
 
 namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Types
 {
-    public class Integer : IAtom<int>
+    public class Integer : IElement, IAtom
     {
+        public string Head { get; }
+        public int Value { get; set; }
+
         public Integer(int value)
         {
-            Head = Head.Integer;
+            Head = "Integer";
             Value = value;
         }
 
-        public Head Head { get; set; }
-        public int Value { get; set; }
+        public override int GetHashCode()
+        {
+            var hashCode = Head.GetHashCode();
+            hashCode += 23 * Value.GetHashCode();
+            return hashCode;
+        }
 
-        public static implicit operator Integer(int value) => new Integer(value);
+        public override bool Equals(object obj)
+        {
+            return (obj is Integer && ((Integer)obj).Value == Value);
+        }
 
-        public static bool operator ==(Integer left, Integer right) =>
-            left.Value - right.Value == 0;
+        public override string ToString()
+        {
+            return Value.ToString();
+        }
 
-        public static bool operator !=(Integer left, Integer right) =>
-            left.Value - right.Value != 0;
+        public static bool operator ==(Integer left, Integer right)
+        {
+            return (left.Value == right.Value);
+        }
+
+        public static bool operator !=(Integer left, Integer right)
+        {
+            return (left.Value != right.Value);
+        }
     }
 }
