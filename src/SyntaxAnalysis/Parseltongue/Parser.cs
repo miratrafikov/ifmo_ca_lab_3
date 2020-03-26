@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
+using ShiftCo.ifmo_ca_lab_3.Evaluation.Patterns;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Types;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Util;
 using ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Lexington;
@@ -51,11 +52,20 @@ namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Parseltongue
             {
                 result = GetNonTerminal((NonTerminal)symbol);
             }
-            if (!result.success || !(symbol is NonTerminal.Expression))
+            if (!result.success)
             {
                 return result;
             }
-            return new Result(true, BuildExpression((List<IElement>)result.value));
+            switch (symbol)
+            {
+                case NonTerminal.Expression:
+                    return new Result(true, BuildExpression((List<IElement>)result.value));
+                case NonTerminal.Pattern:
+                    return new Result(true, BuildPattern((List<IElement>)result.value));
+                default:
+                    return result;
+            }
+
         }
 
         private static Result GetTerminal(Terminal requestedSymbol)
@@ -71,6 +81,8 @@ namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Parseltongue
                     return new Result(true, new Symbol(_token.Content));
                 case Terminal.Number:
                     return new Result(true, new Integer(Convert.ToInt32(_token.Content)));
+                case Terminal.Underscores:
+                    return new Result(true, new Symbol(_token.Content)); // TODO
                 default:
                     return new Result(true);
             }
@@ -130,11 +142,31 @@ namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Parseltongue
                 case "pow":
                     return new Expression(Head.Pow) { Operands = operands };
                 case "set":
-                    return new Expression(Head.Sum) { Operands = operands };
+                    return new Expression(Head.Set) { Operands = operands };
                 case "delayed":
-                    return new Expression(Head.Sum) { Operands = operands };
+                    return new Expression(Head.Delayed) { Operands = operands };
                 default:
                     return new Expression(Head.Expression) { Operands = operands };
+            }
+        }
+
+        private static IPattern BuildPattern(List<IElement> objects)
+        {
+            string patternName = ((Symbol)objects[0]).Value;
+            string typeName = objects.Count == 2 ? "" : ((Symbol)objects[2]).Value;
+            int underscores = ((Symbol)objects[1]).Value.Length;
+            switch (underscores, typeName)
+            {
+                case (1, ""):
+                    return new ElementPattern(patternName);
+                case (1, "symbol"):
+                    return new ElementPattern(patternName);
+                case (1, "integer"):
+                    return new IntegerPattern(patternName);
+                case (2, ""):
+                    return new NullableSequencePattern(patternName);
+                default:
+                    throw new Exception("TODO");
             }
         }
 

@@ -4,6 +4,7 @@
     {
         Root,
         Element,
+        Pattern,
         Expression,
         Operands,
         Continuation
