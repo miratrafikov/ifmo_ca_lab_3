@@ -36,12 +36,10 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             foreach (var rule in _context)
             {
                 var (lhs, rhs) = rule;
-                var clone = lhs.Clone();
-                var matcher = new PatternMatcher();
-                var matchresult = matcher.Matches((IElement)clone, element);
-                if (!(matchresult is null))
+                var matchResult = Matches(lhs, element);
+                if (!(matchResult is null))
                 {
-                    return GetRhs(matchresult, rhs);
+                    return GetRhs(matchResult, rhs);
                 }
             }
             return element;
@@ -165,6 +163,8 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             IPattern pattern = null;
             switch (rhs)
             {
+                case IPattern p when !Patterns.ContainsKey(p.Name.Value):
+                    return rhs;
                 case IPattern p when p.GetType() != Patterns[p.Name.Value].GetType():
                     throw new Exception("Pattern types does not matches");
                 case IntegerPattern integer:

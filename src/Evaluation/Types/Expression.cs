@@ -42,6 +42,20 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Types
             };
         }
 
+        public Expression(string head, params IElement[] operands)
+        {
+            Head = head;
+            foreach (var operand in operands)
+            {
+                Operands.Add(operand);
+            }
+            Attributes = new List<IAttribute>()
+            {
+                new FlatAttribute(),
+                new OrderlessAttribute()
+            };
+        }
+
         #endregion Constructors
 
         public List<IElement> Operands;

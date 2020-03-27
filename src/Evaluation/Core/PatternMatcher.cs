@@ -12,9 +12,9 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 {
     public class PatternMatcher
     {
-        private Dictionary<string, IPattern> Patterns = new Dictionary<string, IPattern>();
+        private static Dictionary<string, IPattern> Patterns = new Dictionary<string, IPattern>();
 
-        public IElement Matches(IElement lhs, IElement obj)
+        public static IElement Matches(IElement lhs, IElement obj)
         {
             if (lhs == null || obj == null)
             {
@@ -89,7 +89,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
         }
 
         // To see if all patterns with name 'x' are contains the same data.
-        private bool ArePatternsSame(IElement element)
+        private static bool ArePatternsSame(IElement element)
         {
             if (element is IPattern p)
             {

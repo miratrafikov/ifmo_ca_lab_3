@@ -26,7 +26,7 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
                 new IntegerPattern("a"),
                 new NullableSequencePattern("b")
             });
-            var matches = (new PatternMatcher()).Matches(rule, expr);
+            var matches = PatternMatcher.Matches(rule, expr);
             Assert.AreEqual(true, matches);
         }
 
@@ -55,7 +55,7 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
                 times,
                 new NullableSequencePattern("e")
             });
-            var matches = (new PatternMatcher()).Matches(rule, expr);
+            var matches = PatternMatcher.Matches(rule, expr);
             Assert.AreEqual(true, matches);
         }
     }
