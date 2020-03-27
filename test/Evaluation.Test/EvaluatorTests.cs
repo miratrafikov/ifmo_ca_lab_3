@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Core;
@@ -39,6 +40,17 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
             }));
             var res = Evaluator.Run(add);
 
+        }
+
+        [TestMethod]
+        public void Test2()
+        {
+            var expr = new Expression(nameof(sum), new List<IElement>()
+            {
+                new Symbol("x"),
+                new Symbol("x")
+            });
+            var alteredExpr = Evaluator.Run(expr);
         }
     }
 }

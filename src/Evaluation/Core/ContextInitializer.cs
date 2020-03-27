@@ -8,9 +8,9 @@ using static ShiftCo.ifmo_ca_lab_3.Evaluation.Util.Head;
 
 namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 {
-    class ContextInitializer
+    public class ContextInitializer
     {
-        public List<(IElement, IElement)> GetInitialContext()
+        public static List<(IElement, IElement)> GetInitialContext()
         {
             var context = new List<(IElement, IElement)>();
             context = context.Concat(PowBuiltins())
@@ -20,7 +20,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             return context;
         }
 
-        private List<(IElement, IElement)> PowBuiltins()
+        private static List<(IElement, IElement)> PowBuiltins()
         {
             var builtins = new List<(IElement, IElement)>();
             var lhs = new Expression(nameof(pow), new List<IElement>() 
@@ -36,14 +36,85 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             return builtins;
         }
 
-        private List<(IElement, IElement)> MulBuiltins()
+        private static List<(IElement, IElement)> MulBuiltins()
         {
             var builtins = new List<(IElement, IElement)>();
+
+            // mul(x_,add(a_,a___))  -> add(mul(x_,a_),mul(x_,a___))
+            var lhs = new Expression(nameof(mul), new List<IElement>()
+            {
+                new NullableSequencePattern("a"),
+                new ElementPattern("x"),
+                new NullableSequencePattern("b"),
+                new Expression(nameof(sum), new List<IElement>()
+                {
+                    new ElementPattern("y"),
+                    new NullableSequencePattern("z")
+                }),
+                new NullableSequencePattern("c")
+            });
+            var rhs = new Expression(nameof(mul), new List<IElement>()
+            {
+                new NullableSequencePattern("a"),
+                new NullableSequencePattern("b"),
+                new Expression(nameof(sum), new List<IElement>()
+                {
+                    new Expression(nameof(mul), new List<IElement>()
+                    {
+                        new ElementPattern("x"),
+                        new ElementPattern("y")
+                    }),
+                    new Expression(nameof(mul), new List<IElement>()
+                    {
+                        new ElementPattern("x"),
+                        new NullableSequencePattern("z")
+                    })
+                }),
+                new NullableSequencePattern("c"),
+            });
+            builtins.Add((lhs, rhs));
+
+            // mul(add(x_, y___), add(z___)) -> add(mul(x_, z___), mul(add(y___), add(z___)))
+            lhs = new Expression(nameof(mul), new List<IElement>()
+            {
+                new NullableSequencePattern("a"),
+                new Expression(nameof(sum), new List<IElement>()
+                {
+                    new ElementPattern("x"),
+                    new NullableSequencePattern("y")
+                }),
+                new NullableSequencePattern("b"),
+                new Expression(nameof(sum), new List<IElement>()
+                {
+                    new NullableSequencePattern("z")
+                }),
+                new NullableSequencePattern("c")
+            });
+            rhs = new Expression(nameof(mul), new List<IElement>()
+            {
+                new NullableSequencePattern("a"),
+                new NullableSequencePattern("b"),
+                new Expression(nameof(sum), new List<IElement>()
+                {
+                    new Expression(nameof(mul), new List<IElement>()
+                    {
+                        new ElementPattern("x"),
+                        new NullableSequencePattern("z")
+                    }),
+                    new Expression(nameof(mul), new List<IElement>()
+                    {
+                        new NullableSequencePattern("y"),
+                        new NullableSequencePattern("z")
+                    })
+                }),
+                new NullableSequencePattern("c"),
+            });
+            builtins.Add((lhs, rhs));
 
             return builtins;
         }
 
-        private List<(IElement, IElement)> AddBuiltins()
+        private static List<(IElement, IElement)> AddBuiltins()
         {
             var builtins = new List<(IElement, IElement)>();
 
@@ -61,7 +132,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                 new NullableSequencePattern("a"),
                 new NullableSequencePattern("b"),
                 new Expression(nameof(mul), new List<IElement>() 
-                { 
+                {
                     new Integer(2),
                     new ElementPattern("x")
                 }),
@@ -69,22 +140,65 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             });
             builtins.Add((lhs, rhs));
 
-
+            // sum(mul(2,x),mul(2,x)) -> mul(sum(2,2),x)
             lhs = new Expression(nameof(sum), new List<IElement>()
             {
                 new NullableSequencePattern("a"),
-
-                new NullableSequencePattern("b")
+                new Expression(nameof(mul), new List<IElement>() 
+                { 
+                    new IntegerPattern("x1"),
+                    new ElementPattern("y"),
+                }),
+                new NullableSequencePattern("b"),
+                new Expression(nameof(mul), new List<IElement>()
+                {
+                    new IntegerPattern("x2"),
+                    new ElementPattern("y"),
+                }),
+                new NullableSequencePattern("c")
             });
-
             rhs = new Expression(nameof(sum), new List<IElement>()
             {
                 new NullableSequencePattern("a"),
                 new NullableSequencePattern("b"),
                 new Expression(nameof(mul), new List<IElement>()
                 {
-                    new Integer(2),
-                    new ElementPattern("x")
+                    new Expression(nameof(sum), new List<IElement>() 
+                    { 
+                        new IntegerPattern("x1"),
+                        new IntegerPattern("x2")
+                    }),
+                    new ElementPattern("y")
+                }),
+                new NullableSequencePattern("c"),
+            });
+            builtins.Add((lhs, rhs));
+
+            // sum(x,mul(2,x)) -> mul(sum(2,1),x)
+            lhs = new Expression(nameof(sum), new List<IElement>()
+            {
+                new NullableSequencePattern("a"),
+                new ElementPattern("y"),
+                new NullableSequencePattern("b"),
+                new Expression(nameof(mul), new List<IElement>()
+                {
+                    new IntegerPattern("x"),
+                    new ElementPattern("y"),
+                }),
+                new NullableSequencePattern("c")
+            });
+            rhs = new Expression(nameof(sum), new List<IElement>()
+            {
+                new NullableSequencePattern("a"),
+                new NullableSequencePattern("b"),
+                new Expression(nameof(mul), new List<IElement>()
+                {
+                    new Expression(nameof(sum), new List<IElement>()
+                    {
+                        new IntegerPattern("x"),
+                        new Integer(1)
+                    }),
+                    new ElementPattern("y")
                 }),
                 new NullableSequencePattern("c"),
             });

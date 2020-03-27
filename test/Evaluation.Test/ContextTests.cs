@@ -14,6 +14,7 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
     [TestClass]
     public class ContextTests
     {
+        [TestMethod]
         public void Test1()
         {
             var lhs = new Expression(nameof(sum), new List<IElement>()

@@ -8,13 +8,14 @@ using ShiftCo.ifmo_ca_lab_3.Evaluation.Types;
 using static ShiftCo.ifmo_ca_lab_3.Evaluation.Util.Head;
 
 using static ShiftCo.ifmo_ca_lab_3.Evaluation.Core.PatternMatcher;
+using static ShiftCo.ifmo_ca_lab_3.Evaluation.Core.ContextInitializer;
 
 namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 {
     public static class Context
     {
         private static Dictionary<string, IPattern> Patterns = new Dictionary<string, IPattern>();
-        private static List<(IElement, IElement)> _context = new List<(IElement, IElement)>();
+        private static List<(IElement, IElement)> _context = GetInitialContext();
 
         public static void AddRule(IElement lhs, IElement rhs)
         {
@@ -45,6 +46,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             }
             return element;
         }
+
 
         private static void ClearPatterns()
         {
@@ -100,7 +102,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                         val = new Integer(int1.Element.Value * int2.Element.Value);
                         break;
 
-                    case nameof(pow):
+                    case nameof(Util.Head.pow):
                         val = new Integer((int)Math.Pow(int1.Element.Value, int2.Element.Value));
                         break;
 
@@ -120,7 +122,16 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                     return exp;
                 }
             }
-
+            if (lhs is Expression pow &&
+                pow.Operands.Count == 5 &&
+                pow.Operands[0] is NullableSequencePattern seq4 &&
+                pow.Operands[1] is ElementPattern el &&
+                pow.Operands[2] is NullableSequencePattern seq5 &&
+                pow.Operands[3] is IntegerPattern int3 &&
+                pow.Operands[4] is NullableSequencePattern seq6) 
+            {
+                return new Expression(nameof(mul), Enumerable.Repeat(el.Element, int3.Element.Value).ToList());
+            }
             Patterns = new Dictionary<string, IPattern>();
             PatternsSetUp(lhs);
             return ApplyPatterns(rhs);

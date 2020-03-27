@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Attributes;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Types;
@@ -70,16 +72,19 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
         public static IElement Run(IElement element)
         {
             var iteration = 0;
-            var post = element;
             IElement pre = null;
+            var post = new Expression("Evaluate", new List<IElement>()
+            {
+                element
+            });
             while (Comparer.Compare(pre, post) != 0 && iteration <= MaxIterationsAmount)
             {
                 pre = post;
-                post = Evaluate(pre);
+                post = (Expression)Evaluate(pre);
                 iteration++;
             }
             if (iteration == MaxIterationsAmount) throw new Exception("Amount of iterations exceeded");
-            return post;
+            return post.Operands.FirstOrDefault();
         }
     }
 }
