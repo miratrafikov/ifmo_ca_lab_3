@@ -45,6 +45,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Types
         public Expression(string head, params IElement[] operands)
         {
             Head = head;
+            Operands = new List<IElement>();
             foreach (var operand in operands)
             {
                 Operands.Add(operand);

@@ -79,6 +79,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                 {
                     Patterns = new Dictionary<string, IPattern>();
                     if (ArePatternsSame(lhs)) return lhs;
+                    return null;
                 }
                 else
                 {
@@ -91,6 +92,8 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
         // To see if all patterns with name 'x' are contains the same data.
         private static bool ArePatternsSame(IElement element)
         {
+            if (element is null)
+                return false;
             if (element is IPattern p)
             {
                 if (Patterns.ContainsKey(p.Name.Value))

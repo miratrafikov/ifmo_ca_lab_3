@@ -15,7 +15,8 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
     [TestClass]
     public class EvaluatorTests
     {
-        [TestMethod]
+        private static ElementComparer comparer = new ElementComparer();
+
         public void Test1()
         {
             var add = new Expression(nameof(sum), new List<IElement>()
@@ -45,12 +46,35 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
         [TestMethod]
         public void Test2()
         {
-            var expr = new Expression(nameof(sum), new List<IElement>()
-            {
+            var expr = new Expression(nameof(sum),
                 new Symbol("x"),
                 new Symbol("x")
-            });
-            var alteredExpr = Evaluator.Run(expr);
+            );
+            //var alteredExpr = Evaluator.Run(expr);
+            var alteredExpr = new Expression(nameof(mul),
+                new Integer(2),
+                new Symbol("x")
+            );
+            Assert.AreEqual(comparer.Compare(alteredExpr, Evaluator.Run(expr)), 0);
+        }
+
+        [TestMethod]
+        public void Test3()
+        {
+            var expr = new Expression(nameof(sum),
+                new Symbol("x"),
+                new Expression(nameof(mul),
+                    new Integer(3),
+                    new Symbol("x")
+                ),
+                new Symbol("x")
+            );
+            var alteredExpr = new Expression(nameof(mul),
+                new Integer(5),
+                new Symbol("x")
+            );
+            var evaluated = Evaluator.Run(expr);
+            Assert.AreEqual(comparer.Compare(alteredExpr, evaluated), 0);
         }
     }
 }

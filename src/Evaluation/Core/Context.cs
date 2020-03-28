@@ -163,7 +163,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             IPattern pattern = null;
             switch (rhs)
             {
-                case IPattern p when !Patterns.ContainsKey(p.Name.Value):
+                case IPattern p when (!Patterns.ContainsKey(p.Name.Value)):
                     return rhs;
                 case IPattern p when p.GetType() != Patterns[p.Name.Value].GetType():
                     throw new Exception("Pattern types does not matches");
@@ -176,24 +176,35 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                     return ((ElementPattern)pattern).Element;
 
                 case Expression exp:
-                    for (int i = 0; i < exp.Operands.Count; i++)
+                    var i = 0;
+                    while (i < exp.Operands.Count)
                     {
                         if (exp.Operands[i] is NullableSequencePattern seq)
                         {
-                            pattern = Patterns[seq.Name.Value];
-                            if (!(pattern is NullableSequencePattern))
+                            if (Patterns.ContainsKey(seq.Name.Value))
                             {
-                                throw new Exception("Pattern types does not matches");
-                            }
-                            if (((NullableSequencePattern)pattern).Operands.Count > 0)
-                            {
-                                exp.Operands.InsertRange(i, ((NullableSequencePattern)pattern).Operands);
+                                pattern = Patterns[seq.Name.Value];
+                                if (!(pattern is NullableSequencePattern))
+                                {
+                                    throw new Exception("Pattern types does not matches");
+                                }
+                                if (((NullableSequencePattern)pattern).Operands.Count > 0)
+                                {
+                                    var operands = ((NullableSequencePattern)pattern).Operands;
+                                    exp.Operands.InsertRange(i, operands);
+                                    exp.Operands.RemoveAt(i + operands.Count);
+                                }
+                                else
+                                {
+                                    exp.Operands.RemoveAt(i);
+                                }
                             }
                         }
                         else
                         {
                             exp.Operands[i] = ApplyPatterns(exp.Operands[i]);
                         }
+                        i++;
                     }
                     exp.Operands.RemoveAll(o => o is NullableSequencePattern n &&
                                                 n.Operands.Count == 0);

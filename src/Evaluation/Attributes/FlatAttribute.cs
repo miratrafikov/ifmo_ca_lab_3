@@ -20,7 +20,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Attributes
                     {
                         operands.Add(e.Operands.First());
                     }
-                    if (e.Head == head)
+                    else if (e.Head == head)
                     {
                         operands = operands.Concat(((Expression)operand).Operands).ToList();
                     }
