@@ -11,7 +11,7 @@ namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysisTest
         [TestMethod]
         public void Tokenize_GivenRandomValidString_ReturnsExpected()
         {
-            var str = "func)((,123_";
+            var str = "func)((,323_";
             var tokenList = new List<Token>
             {
                 new Token(TokenType.Symbol, "func"),
@@ -19,7 +19,7 @@ namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysisTest
                 new Token(TokenType.LeftBracket, "("),
                 new Token(TokenType.LeftBracket, "("),
                 new Token(TokenType.Comma, ","),
-                new Token(TokenType.Number, "123"),
+                new Token(TokenType.Number, "323"),
                 new Token(TokenType.Underscores, "_"),
                 new Token(TokenType.EOF, "")
             };
