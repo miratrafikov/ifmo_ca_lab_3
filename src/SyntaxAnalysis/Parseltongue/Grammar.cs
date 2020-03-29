@@ -6,7 +6,7 @@ namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Parseltongue
 {
     static class Grammar
     {
-        public static Dictionary<NonTerminal, List<List<object>>> Rules = new Dictionary<NonTerminal, List<List<object>>>();
+        public static Dictionary<NonTerminal, List<List<object>>> Rules { get; } = new Dictionary<NonTerminal, List<List<object>>>();
 
         static Grammar()
         {

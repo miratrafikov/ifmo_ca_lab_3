@@ -2,12 +2,12 @@
 {
     public enum TokenType
     {
-        Symbol,
-        Number,
+        Comma,
         LeftBracket,
         RightBracket,
-        Comma,
         Underscores,
+        Number,
+        Symbol,
         EOF
     }
 }
