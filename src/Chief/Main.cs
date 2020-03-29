@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using ShiftCo.ifmo_ca_lab_3.Chief.Exceptions;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
 using ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Lexington;
 using ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Parseltongue;
@@ -25,7 +25,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Chief
         {
             if (string.IsNullOrEmpty(s_inputString))
             {
-                throw new Exception("String is not provided for processing.");
+                throw new StringNotSetException();
             }
             s_tokens = Lexer.Tokenize(InputString);
         }
@@ -40,7 +40,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Chief
         {
             if (s_tokens == null)
             {
-                throw new Exception("No generated tokens list exists.");
+                throw new TokenListNotSetException();
             }
             s_tree = Parser.Parse(s_tokens);
         }
@@ -49,7 +49,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Chief
         {
             if (string.IsNullOrEmpty(s_inputString))
             {
-                throw new Exception("String is not provided for processing.");
+                throw new StringNotSetException();
             }
             s_tree = Parser.Parse(Lexer.Tokenize(InputString));
         }
