@@ -1,9 +1,10 @@
-﻿using ShiftCo.ifmo_ca_lab_3.Evaluation.Util;
+﻿using System;
+using ShiftCo.ifmo_ca_lab_3.Evaluation.Util;
 
 namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces
 {
-    public interface IElement
+    public interface IElement : ICloneable
     {
-        public Head Head { get; set; }
+        public string Head { get; set; }
     }
 }

@@ -11,18 +11,13 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Util
         public override int Compare(IElement left, IElement right)
         {
             // To avoid exceptions
+            if (left is IPattern || right is IPattern) return 0;
             if (right is null) return 1;
             if (left is null) return -1;
 
             // Compare Heads first
-            if (left.Head > right.Head)
-            {
-                return 1;
-            }
-            if (left.Head < right.Head)
-            {
-                return -1;
-            }
+            if (string.Compare(left.Head, right.Head) != 0) return string.Compare(left.Head, right.Head);
+
             // If both elemements are Integers return value according to the arithmetical order
             if (left is Integer li && right is Integer ri)
             {

@@ -1,6 +1,6 @@
 ﻿using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Types;
-using ShiftCo.ifmo_ca_lab_3.Evaluation.Util;
+using static ShiftCo.ifmo_ca_lab_3.Evaluation.Util.Head;
 
 namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Patterns
 {
@@ -8,12 +8,17 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Patterns
     {
         public ElementPattern(string name)
         {
-            Head = Head.Pattern;
+            Head = nameof(pattern);
             Name = name;
         }
 
-        public Head Head { get; set; }
+        public string Head { get; set; }
         public Symbol Name { get; set; }
         public IElement Element { get; set; }
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
+        }
     }
 }

@@ -20,7 +20,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Types
             };
         }
 
-        public Expression(Head head)
+        public Expression(string head)
         {
             Head = head;
             Operands = new List<IElement>();
@@ -31,7 +31,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Types
             };
         }
 
-        public Expression(Head head, List<IElement> operands)
+        public Expression(string head, List<IElement> operands)
         {
             Head = head;
             Operands = operands;
@@ -45,7 +45,12 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Types
         #endregion Constructors
 
         public List<IElement> Operands;
-        public Head Head { get; set; }
+        public string Head { get; set; }
         public List<IAttribute> Attributes { get; set; }
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
+        }
     }
 }

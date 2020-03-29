@@ -1,14 +1,14 @@
 ﻿namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Parseltongue
 {
-    public class Result
+    public struct Result
     {
-        public bool success;
-        public object value;
+        public bool Success { get; }
+        public object Value { get; }
 
         public Result(bool success, object value = null)
         {
-            this.success = success;
-            this.value = value;
+            Success = success;
+            Value = value;
         }
     }
 }
