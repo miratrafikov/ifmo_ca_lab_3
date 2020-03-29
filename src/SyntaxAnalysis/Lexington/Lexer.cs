@@ -1,51 +1,52 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using ShiftCo.ifmo_ca_lab_3.Commons.Exceptions;
 
 namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Lexington
 {
     public static class Lexer
     {
         // Алфавит лексера
-        private static readonly string letters = "abcdefghijklmnopqrstuvwxyz";
-        private static readonly string numbers = "0123456789";
-        private static readonly string brackets = "()";
-        private static readonly string comma = ",";
-        private static readonly string modificators = "-+";
-        private static readonly string underline = "_";
-        private static readonly string alphabet = letters + numbers + brackets + comma + modificators + underline;
+        private static readonly string s_letters = "abcdefghijklmnopqrstuvwxyz";
+        private static readonly string s_numbers = "0123456789";
+        private static readonly string s_brackets = "()";
+        private static readonly string s_comma = ",";
+        private static readonly string s_modificators = "-+";
+        private static readonly string s_underline = "_";
+        private static readonly string s_alphabet = s_letters + s_numbers + s_brackets + s_comma + s_modificators + s_underline;
 
         // Список найденных токенов
-        private static List<Token> Tokens;
+        private static List<Token> s_tokens;
 
         public static List<Token> Tokenize(string str)
         {
             AlphabetCheck(str);
-            Tokens = new List<Token>();
-            for (int i = 0; i < str.Length; i++)
+            s_tokens = new List<Token>();
+            for (var i = 0; i < str.Length; i++)
             {
                 var token = GetToken(str.Substring(i));
                 if (token.Content != null)
                 {
-                    Tokens.Add(token);
+                    s_tokens.Add(token);
                     i += token.Content.Length - 1;
                 }
                 else
                 {
-                    throw new Exception($"Col. #{i}: No suitable token for the prefix \"{str.Substring(i)}\".");
+                    throw new NoSuitableTokenException(str.Substring(i));
                 }
             }
-            Tokens.Add(new Token(TokenType.EOF, ""));
-            return Tokens;
+            s_tokens.Add(new Token(TokenType.EOF, ""));
+            return s_tokens;
         }
 
         private static void AlphabetCheck(string str)
         {
-            for (int i = 0; i < str.Length; i++)
+            for (var i = 0; i < str.Length; i++)
             {
-                if (!alphabet.Contains(str[i]))
+                if (!s_alphabet.Contains(str[i]))
                 {
-                    throw new Exception($"Col. #{i}: Non-alphabetical character \"{str[i]}\".");
+                    throw new StrangeCharacterException(str[i]);
                 }
             }
         }

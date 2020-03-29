@@ -8,6 +8,7 @@ using ShiftCo.ifmo_ca_lab_3.Evaluation.Types;
 using static ShiftCo.ifmo_ca_lab_3.Evaluation.Util.Head;
 
 using static ShiftCo.ifmo_ca_lab_3.Evaluation.Core.PatternMatcher;
+using ShiftCo.ifmo_ca_lab_3.Commons.Exceptions;
 
 namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 {
@@ -155,7 +156,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             switch (rhs)
             {
                 case IPattern p when p.GetType() != Patterns[p.Name.Value].GetType():
-                    throw new Exception("Pattern types does not matches");
+                    throw new PatternsDontMatchException();
                 case IntegerPattern integer:
                     pattern = Patterns[integer.Name.Value];
                     return ((IntegerPattern)pattern).Element;
@@ -172,7 +173,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                             pattern = Patterns[seq.Name.Value];
                             if (!(pattern is NullableSequencePattern))
                             {
-                                throw new Exception("Pattern types does not matches");
+                                throw new PatternsDontMatchException();
                             }
                             if (((NullableSequencePattern)pattern).Operands.Count > 0)
                             {
