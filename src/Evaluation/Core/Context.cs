@@ -8,31 +8,32 @@ using ShiftCo.ifmo_ca_lab_3.Evaluation.Types;
 using static ShiftCo.ifmo_ca_lab_3.Evaluation.Util.Head;
 
 using static ShiftCo.ifmo_ca_lab_3.Evaluation.Core.PatternMatcher;
+using ShiftCo.ifmo_ca_lab_3.Commons.Exceptions;
 
 namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 {
     public static class Context
     {
-        private static Dictionary<string, IPattern> Patterns = new Dictionary<string, IPattern>();
-        private static List<(IElement, IElement)> _context = new List<(IElement, IElement)>();
+        private static Dictionary<string, IPattern> s_patterns = new Dictionary<string, IPattern>();
+        private static List<(IElement, IElement)> s_context = new List<(IElement, IElement)>();
 
         public static void AddRule(IElement lhs, IElement rhs)
         {
-            _context.Add((lhs, rhs));
+            s_context.Add((lhs, rhs));
         }
 
         public static void AddRules(List<(IElement, IElement)> rules)
         {
             foreach (var rule in rules)
             {
-                _context.Add((rule.Item1, rule.Item2));
+                s_context.Add((rule.Item1, rule.Item2));
             }
         }
 
         public static IElement GetElement(IElement element)
         {
             ClearPatterns();
-            foreach (var rule in _context)
+            foreach (var rule in s_context)
             {
                 var (lhs, rhs) = rule;
                 var clone = lhs.Clone();
@@ -48,7 +49,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 
         private static void ClearPatterns()
         {
-            foreach (var rule in _context)
+            foreach (var rule in s_context)
             {
                 var (lhs, rhs) = rule;
                 lhs = ClearPatterns(lhs);
@@ -121,7 +122,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                 }
             }
 
-            Patterns = new Dictionary<string, IPattern>();
+            s_patterns = new Dictionary<string, IPattern>();
             PatternsSetUp(lhs);
             return ApplyPatterns(rhs);
         }
@@ -131,9 +132,9 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             switch (lhs)
             {
                 case IPattern p:
-                    if (!Patterns.ContainsKey(p.Name.Value))
+                    if (!s_patterns.ContainsKey(p.Name.Value))
                     {
-                        Patterns.Add(p.Name.Value, p);
+                        s_patterns.Add(p.Name.Value, p);
                     }
                     break;
 
@@ -154,14 +155,14 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             IPattern pattern = null;
             switch (rhs)
             {
-                case IPattern p when p.GetType() != Patterns[p.Name.Value].GetType():
-                    throw new Exception("Pattern types does not matches");
+                case IPattern p when p.GetType() != s_patterns[p.Name.Value].GetType():
+                    throw new PatternsDontMatchException();
                 case IntegerPattern integer:
-                    pattern = Patterns[integer.Name.Value];
+                    pattern = s_patterns[integer.Name.Value];
                     return ((IntegerPattern)pattern).Element;
 
                 case ElementPattern element:
-                    pattern = Patterns[element.Name.Value];
+                    pattern = s_patterns[element.Name.Value];
                     return ((ElementPattern)pattern).Element;
 
                 case Expression exp:
@@ -169,10 +170,10 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                     {
                         if (exp.Operands[i] is NullableSequencePattern seq)
                         {
-                            pattern = Patterns[seq.Name.Value];
+                            pattern = s_patterns[seq.Name.Value];
                             if (!(pattern is NullableSequencePattern))
                             {
-                                throw new Exception("Pattern types does not matches");
+                                throw new PatternsDontMatchException();
                             }
                             if (((NullableSequencePattern)pattern).Operands.Count > 0)
                             {

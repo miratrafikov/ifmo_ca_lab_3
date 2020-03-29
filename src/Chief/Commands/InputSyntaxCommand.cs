@@ -11,7 +11,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Chief.Commands
     [Command("syntax")]
     public class InputSyntaxCommand : ICommand
     {
-        private readonly Tuple<string, string>[] examples =
+        private readonly Tuple<string, string>[] _examples =
             {
                 new Tuple<string, string>("Func(x)",
                     "Expression with head \"Func\" and one symbolic argument."),
@@ -26,7 +26,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Chief.Commands
         public ValueTask ExecuteAsync(IConsole console)
         {
             IOBeautifier.PrintHeader(console, "Input examples");
-            foreach (var (input, description) in examples)
+            foreach (var (input, description) in _examples)
             {
                 IOBeautifier.PrintPair(console, input, description);
             }

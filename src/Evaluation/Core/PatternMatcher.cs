@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using ShiftCo.ifmo_ca_lab_3.Commons.Exceptions;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Patterns;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Types;
@@ -85,7 +85,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                     return null;
                 }
             }
-            throw new Exception("Unexpected type of pattern and/or object");
+            throw new StrangePatternOrObjectException();
         }
 
         // To see if all patterns with name 'x' are contains the same data.

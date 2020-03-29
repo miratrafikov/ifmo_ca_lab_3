@@ -14,8 +14,8 @@ namespace ShiftCo.ifmo_ca_lab_3.Chief.Commands
         public ValueTask ExecuteAsync(IConsole console)
         {
             Main.InputString = InputString;
-            Main.AcquireTokens();
-            Main.ParseTokens();
+            Main.GetTokensFromString();
+            Main.GetTreeFromTokens();
 
             return default;
         }

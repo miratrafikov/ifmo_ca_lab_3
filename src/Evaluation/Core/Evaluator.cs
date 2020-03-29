@@ -1,4 +1,5 @@
 ﻿using System;
+using ShiftCo.ifmo_ca_lab_3.Commons.Exceptions;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Attributes;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Types;
@@ -78,7 +79,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                 post = Evaluate(pre);
                 iteration++;
             }
-            if (iteration == MaxIterationsAmount) throw new Exception("Amount of iterations exceeded");
+            if (iteration == MaxIterationsAmount) throw new TooManyIterationsException();
             return post;
         }
     }

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-
-using ShiftCo.ifmo_ca_lab_3.Evaluation.Tony.AInterfaces;
+using ShiftCo.ifmo_ca_lab_3.Commons.Exceptions;
+using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
 using ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Lexington;
 using ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Parseltongue;
 
@@ -8,30 +8,59 @@ namespace ShiftCo.ifmo_ca_lab_3.Chief
 {
     static class Main
     {
-        private static string inputString;
+        private static string s_inputString;
         public static string InputString
         {
-            get { return inputString; }
+            get { return s_inputString; }
             set
             {
-                inputString = NormalizeString(value);
+                s_inputString = NormalizeString(value);
             }
         }
 
-        private static List<Token> tokens;
-        private static IExpression element;
+        private static List<Token> s_tokens;
+        private static IElement s_tree;
 
-        public static void AcquireTokens()
+        public static void GetTokensFromString()
         {
-            tokens = Lexer.Tokenize(InputString);
+            if (string.IsNullOrEmpty(s_inputString))
+            {
+                throw new StringNotSetException();
+            }
+            s_tokens = Lexer.Tokenize(InputString);
         }
 
-        public static void ParseTokens()
+        public static void GetTokensFromString(string inputString)
         {
-            element = Parser.Parse(tokens);
+            InputString = inputString;
+            s_tokens = Lexer.Tokenize(InputString);
         }
 
-        public static string NormalizeString(string str)
+        public static void GetTreeFromTokens()
+        {
+            if (s_tokens == null)
+            {
+                throw new TokenListNotSetException();
+            }
+            s_tree = Parser.Parse(s_tokens);
+        }
+
+        public static void GetTreeFromString()
+        {
+            if (string.IsNullOrEmpty(s_inputString))
+            {
+                throw new StringNotSetException();
+            }
+            s_tree = Parser.Parse(Lexer.Tokenize(InputString));
+        }
+        
+        public static void GetTreeFromString(string inputString)
+        {
+            InputString = inputString;
+            s_tree = Parser.Parse(Lexer.Tokenize(InputString));
+        }
+
+        private static string NormalizeString(string str)
         {
             return str.Replace(" ", string.Empty).ToLower();
         }

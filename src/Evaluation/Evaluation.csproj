@@ -5,4 +5,8 @@
     <RootNamespace>ShiftCo.ifmo_ca_lab_3.Evaluation</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Commons\Commons.csproj" />
+  </ItemGroup>
+
 </Project>

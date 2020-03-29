@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using ShiftCo.ifmo_ca_lab_3.Commons.Exceptions;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Patterns;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Types;
-using static ShiftCo.ifmo_ca_lab_3.Evaluation.Util.Head;
 using ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Lexington;
 
 using Terminal = ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Lexington.TokenType;
@@ -13,31 +12,31 @@ namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Parseltongue
 {
     public static class Parser
     {
-        private static List<Token> _tokens;
-        private static Token _token;
-        private static int _tokensIterator;
-        private static Stack<int> _tokensIteratorStack;
+        private static List<Token> s_tokens;
+        private static Token s_token;
+        private static int s_tokensIterator;
+        private static Stack<int> s_tokensIteratorStack;
 
         public static IElement Parse(List<Token> tokens)
         {
             Prepare(tokens);
             var result = GetSymbol(NonTerminal.Root);
-            if (result.success)
+            if (result.Success)
             {
                 // TODO
-                return ((List<IElement>)result.value)[0];
+                return ((List<IElement>)result.Value)[0];
             }
             else
             {
-                throw new Exception("Parse error: No suitable parse tree.");
+                throw new NoSuitableParseTreeException();
             }
         }
 
         private static void Prepare(List<Token> tokens)
         {
-            _tokens = tokens;
-            _tokensIterator = 0;
-            _tokensIteratorStack = new Stack<int>();
+            s_tokens = tokens;
+            s_tokensIterator = 0;
+            s_tokensIteratorStack = new Stack<int>();
         }
 
         private static Result GetSymbol(object symbol)
@@ -52,16 +51,16 @@ namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Parseltongue
             {
                 result = GetNonTerminal((NonTerminal)symbol);
             }
-            if (!result.success)
+            if (!result.Success)
             {
                 return result;
             }
             switch (symbol)
             {
                 case NonTerminal.Expression:
-                    return new Result(true, BuildExpression((List<IElement>)result.value));
+                    return new Result(true, BuildExpression((List<IElement>)result.Value));
                 case NonTerminal.Pattern:
-                    return new Result(true, BuildPattern((List<IElement>)result.value));
+                    return new Result(true, BuildPattern((List<IElement>)result.Value));
                 default:
                     return result;
             }
@@ -70,7 +69,7 @@ namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Parseltongue
 
         private static Result GetTerminal(Terminal requestedSymbol)
         {
-            if (_token.Type != requestedSymbol)
+            if (s_token.Type != requestedSymbol)
             {
                 return new Result(false);
             }
@@ -78,11 +77,11 @@ namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Parseltongue
             switch (requestedSymbol)
             {
                 case Terminal.Symbol:
-                    return new Result(true, new Symbol(_token.Content));
+                    return new Result(true, new Symbol(s_token.Content));
                 case Terminal.Number:
-                    return new Result(true, new Integer(Convert.ToInt32(_token.Content)));
+                    return new Result(true, new Integer(Convert.ToInt32(s_token.Content)));
                 case Terminal.Underscores:
-                    return new Result(true, new Symbol(_token.Content)); // TODO
+                    return new Result(true, new Symbol(s_token.Content)); // TODO
                 default:
                     return new Result(true);
             }
@@ -99,13 +98,13 @@ namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Parseltongue
                 foreach (var symbol in production)
                 {
                     var result = GetSymbol(symbol);
-                    if (!result.success)
+                    if (!result.Success)
                     {
                         productionMatches = false;
                         break;
                     }
 
-                    switch (result.value)
+                    switch (result.Value)
                     {
                         case null:
                             continue;
@@ -113,7 +112,7 @@ namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Parseltongue
                             correspondingObjects.AddRange(list);
                             break;
                         default:
-                            correspondingObjects.Add((IElement)result.value);
+                            correspondingObjects.Add((IElement)result.Value);
                             break;
                     }
                 }
@@ -137,9 +136,9 @@ namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Parseltongue
 
         private static IPattern BuildPattern(List<IElement> objects)
         {
-            string patternName = ((Symbol)objects[0]).Value;
-            string typeName = objects.Count == 2 ? "" : ((Symbol)objects[2]).Value;
-            int underscores = ((Symbol)objects[1]).Value.Length;
+            var patternName = ((Symbol)objects[0]).Value;
+            var typeName = objects.Count == 2 ? "" : ((Symbol)objects[2]).Value;
+            var underscores = ((Symbol)objects[1]).Value.Length;
             switch (underscores, typeName)
             {
                 case (1, ""):
@@ -151,25 +150,25 @@ namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Parseltongue
                 case (3, ""):
                     return new NullableSequencePattern(patternName);
                 default:
-                    throw new Exception("TODO");
+                    throw new DebugException();
             }
         }
 
         private static void SavePosition()
         {
-            _tokensIteratorStack.Push(_tokensIterator);
+            s_tokensIteratorStack.Push(s_tokensIterator);
         }
 
         private static void RestorePosition()
         {
-            _tokensIterator = _tokensIteratorStack.Pop();
-            _token = _tokens[_tokensIterator];
+            s_tokensIterator = s_tokensIteratorStack.Pop();
+            s_token = s_tokens[s_tokensIterator];
         }
 
         private static void NextToken()
         {
-            _token = _tokens[_tokensIterator];
-            _tokensIterator++;
+            s_token = s_tokens[s_tokensIterator];
+            s_tokensIterator++;
         }
     }
 }
