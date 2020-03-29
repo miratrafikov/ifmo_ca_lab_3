@@ -1,4 +1,4 @@
-﻿namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Parseltongue
+﻿namespace ShiftCo.ifmo_ca_lab_3.Commons
 {
     public struct Result
     {
