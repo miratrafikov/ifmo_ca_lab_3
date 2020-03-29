@@ -136,9 +136,9 @@ namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Parseltongue
 
         private static IPattern BuildPattern(List<IElement> objects)
         {
-            string patternName = ((Symbol)objects[0]).Value;
-            string typeName = objects.Count == 2 ? "" : ((Symbol)objects[2]).Value;
-            int underscores = ((Symbol)objects[1]).Value.Length;
+            var patternName = ((Symbol)objects[0]).Value;
+            var typeName = objects.Count == 2 ? "" : ((Symbol)objects[2]).Value;
+            var underscores = ((Symbol)objects[1]).Value.Length;
             switch (underscores, typeName)
             {
                 case (1, ""):
