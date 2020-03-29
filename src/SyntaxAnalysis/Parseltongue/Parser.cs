@@ -130,8 +130,9 @@ namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Parseltongue
 
         private static Expression BuildExpression(List<IElement> objectsList)
         {
+            var head = ((Symbol)objectsList[0]).Value;
             var operands = objectsList.GetRange(1, objectsList.Count - 1);
-            return new Expression(objectsList[0].ToString()) { Operands = operands };
+            return new Expression(head, operands);
         }
 
         private static IPattern BuildPattern(List<IElement> objects)

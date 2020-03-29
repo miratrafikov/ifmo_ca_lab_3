@@ -5,12 +5,17 @@
 
     <IsPackable>false</IsPackable>
 
-    <RootNamespace>ShiftCo.ifmo_ca_lab_3.ChiefTest</RootNamespace>  </PropertyGroup>
+    <RootNamespace>ShiftCo.ifmo_ca_lab_3.ChiefTest</RootNamespace>
+  </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0" />
     <PackageReference Include="MSTest.TestAdapter" Version="2.0.0" />
     <PackageReference Include="MSTest.TestFramework" Version="2.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Chief\Chief.csproj" />
   </ItemGroup>
 
 </Project>
