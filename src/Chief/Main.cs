@@ -6,20 +6,39 @@ using ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Parseltongue;
 
 namespace ShiftCo.ifmo_ca_lab_3.Chief
 {
-    static class Main
+    public static class Main
     {
+        private static readonly string s_alphabet = "abcdefghijklmnopqrstuvwxyz" + "0123456789" + "()" + "," + "-+" + "_";
         private static string s_inputString;
+        public static List<Token> Tokens { get; private set; }
+        public static IElement Tree { get; private set; }
+
         public static string InputString
         {
             get { return s_inputString; }
             set
             {
-                s_inputString = NormalizeString(value);
+                NormalizeString(ref value);
+                AlphabetCheck(value);
+                s_inputString = value;
             }
         }
 
-        private static List<Token> s_tokens;
-        private static IElement s_tree;
+        private static void NormalizeString(ref string str)
+        {
+            str = str.Replace(" ", string.Empty).ToLower();
+        }
+
+        private static void AlphabetCheck(string str)
+        {
+            for (var i = 0; i < str.Length; i++)
+            {
+                if (!s_alphabet.Contains(str[i]))
+                {
+                    throw new StrangeCharacterException(str[i]);
+                }
+            }
+        }
 
         public static void GetTokensFromString()
         {
@@ -27,22 +46,22 @@ namespace ShiftCo.ifmo_ca_lab_3.Chief
             {
                 throw new StringNotSetException();
             }
-            s_tokens = Lexer.Tokenize(InputString);
+            Tokens = Lexer.Tokenize(InputString);
         }
 
         public static void GetTokensFromString(string inputString)
         {
             InputString = inputString;
-            s_tokens = Lexer.Tokenize(InputString);
+            Tokens = Lexer.Tokenize(InputString);
         }
 
         public static void GetTreeFromTokens()
         {
-            if (s_tokens == null)
+            if (Tokens == null)
             {
                 throw new TokenListNotSetException();
             }
-            s_tree = Parser.Parse(s_tokens);
+            Tree = Parser.Parse(Tokens);
         }
 
         public static void GetTreeFromString()
@@ -51,18 +70,13 @@ namespace ShiftCo.ifmo_ca_lab_3.Chief
             {
                 throw new StringNotSetException();
             }
-            s_tree = Parser.Parse(Lexer.Tokenize(InputString));
+            Tree = Parser.Parse(Lexer.Tokenize(InputString));
         }
-        
+
         public static void GetTreeFromString(string inputString)
         {
             InputString = inputString;
-            s_tree = Parser.Parse(Lexer.Tokenize(InputString));
-        }
-
-        private static string NormalizeString(string str)
-        {
-            return str.Replace(" ", string.Empty).ToLower();
+            Tree = Parser.Parse(Lexer.Tokenize(InputString));
         }
     }
 }

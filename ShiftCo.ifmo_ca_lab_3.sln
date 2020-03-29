@@ -16,6 +16,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SyntaxAnalysis", "src\Synta
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chief.Test", "test\Chief.Test\Chief.Test.csproj", "{F2A1431C-5955-4796-A0DC-9E5617B8C7A3}"
+	ProjectSection(ProjectDependencies) = postProject
+		{FEA057CF-8C65-4ACD-B72A-26655C3800A0} = {FEA057CF-8C65-4ACD-B72A-26655C3800A0}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Evaluation.Test", "test\Evaluation.Test\Evaluation.Test.csproj", "{22BEA59C-4913-4AD8-A1B2-07026C78E4B7}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -24,7 +27,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Evaluation.Test", "test\Eva
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SyntaxAnalysis.Test", "test\SyntaxAnalysis.Test\SyntaxAnalysis.Test.csproj", "{F7870153-C76B-4537-9D67-F364D3ED3C7F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Commons", "src\Commons\Commons.csproj", "{8E370834-48EB-4BC1-A8F5-7A6E96F5086A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Commons", "src\Commons\Commons.csproj", "{8E370834-48EB-4BC1-A8F5-7A6E96F5086A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

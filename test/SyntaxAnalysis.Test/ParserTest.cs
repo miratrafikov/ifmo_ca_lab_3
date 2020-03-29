@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
@@ -14,26 +15,38 @@ namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysisTest
     [TestClass]
     public class ParserTest
     {
-        [TestMethod]
-        public void Parse_OnePattern()
-        {
-            var tokens = Lexer.Tokenize("a_integer");
-            var tree = Parser.Parse(tokens);
-            Assert.IsTrue(tree is IPattern);
-            tokens = Lexer.Tokenize("as12___");
-            tree = Parser.Parse(tokens);
-            Assert.IsTrue(tree is NullableSequencePattern);
-        }
+        //[TestMethod]
+        //public void GetParseTreeFromString_GivenData_StoresExpectedValue()
+        //{
+        //    var tokenList = new List<Token>
+        //    { 
+        //        new Token(TokenType.Symbol, "foo"),
+        //        new Token(TokenType.LeftBracket, "("),
+        //        new Token(TokenType.Symbol, "bar"),
+        //        new Token(TokenType.LeftBracket, "("),
+        //        new Token(TokenType.Number, "1"),
+        //        new Token(TokenType.Comma, ","),
+        //        new Token(TokenType.Number, "2"),
+        //        new Token(TokenType.RightBracket, ")"),
+        //        new Token(TokenType.Comma, ","),
+        //        new Token(TokenType.Number, "53"),
+        //        new Token(TokenType.RightBracket, ")"),
+        //        new Token(TokenType.EOF, "")
+        //    };
+        //    tokenList = Lexer.Tokenize("foo(bar(1,2),53)");
+        //    var tree = new Expression("foo", new List<IElement>
+        //    {
+        //        new Expression("bar", new List<IElement>
+        //        {
+        //            new Integer(1),
+        //            new Integer(2)
+        //        }),
+        //        new Integer(53)
+        //    });
 
-        [TestMethod]
-        public void Parse_ExpressionWithPattern()
-        {
-            var tokens = Lexer.Tokenize("set(fib(n_integer),mul(n,fib(sum(n,mul(1)))))");
-            var tree = Parser.Parse(tokens);
-            Assert.IsTrue(tree is Expression);
-            Expression firstChild = (Expression)((Expression)tree).Operands[0];
-            var pattern = firstChild.Operands[0];
-            Assert.IsTrue(pattern is IPattern);
-        }
+        //    var result = (Expression)Parser.Parse(tokenList);
+
+        //    Assert.IsTrue(result.Equals(tree));
+        //}
     }
 }
