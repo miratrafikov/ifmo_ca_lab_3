@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+
 using ShiftCo.ifmo_ca_lab_3.Commons.Exceptions;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
 using ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Lexington;
@@ -53,7 +54,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Chief
             }
             s_tree = Parser.Parse(Lexer.Tokenize(InputString));
         }
-        
+
         public static void GetTreeFromString(string inputString)
         {
             InputString = inputString;

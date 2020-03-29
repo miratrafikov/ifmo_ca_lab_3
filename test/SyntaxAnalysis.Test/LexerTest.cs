@@ -1,5 +1,5 @@
-﻿using System.Diagnostics;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Lexington;
 
 namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysisTest

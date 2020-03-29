@@ -1,9 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Patterns;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Types;
+
 using static ShiftCo.ifmo_ca_lab_3.Evaluation.Util.Head;
 
 namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
@@ -118,7 +119,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                         s_x,
                         s_seqZ
                     ),
-                    new Expression(nameof(mul), 
+                    new Expression(nameof(mul),
                         s_seqY,
                         s_seqZ
                     )
@@ -199,7 +200,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             rhs = new Expression(nameof(sum),
                 s_seq1,
                 s_seq2,
-                
+
                 new Expression(nameof(mul),
                     new Expression(nameof(sum),
                         s_seq4,

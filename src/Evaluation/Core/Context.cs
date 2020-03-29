@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using ShiftCo.ifmo_ca_lab_3.Commons.Exceptions;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Patterns;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Types;
-using static ShiftCo.ifmo_ca_lab_3.Evaluation.Util.Head;
 
-using static ShiftCo.ifmo_ca_lab_3.Evaluation.Core.PatternMatcher;
 using static ShiftCo.ifmo_ca_lab_3.Evaluation.Core.ContextInitializer;
-using ShiftCo.ifmo_ca_lab_3.Commons.Exceptions;
+using static ShiftCo.ifmo_ca_lab_3.Evaluation.Core.PatternMatcher;
+using static ShiftCo.ifmo_ca_lab_3.Evaluation.Util.Head;
 
 namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 {
@@ -127,7 +127,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                 pow._operands[1] is ElementPattern el &&
                 pow._operands[2] is NullableSequencePattern seq5 &&
                 pow._operands[3] is IntegerPattern int3 &&
-                pow._operands[4] is NullableSequencePattern seq6) 
+                pow._operands[4] is NullableSequencePattern seq6)
             {
                 return new Expression(nameof(mul), Enumerable.Repeat(el.Element, int3.Element.Value).ToList());
             }

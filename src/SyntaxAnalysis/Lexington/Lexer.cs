@@ -1,6 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
+
 using ShiftCo.ifmo_ca_lab_3.Commons.Exceptions;
 
 namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Lexington

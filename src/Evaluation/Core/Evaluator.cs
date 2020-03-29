@@ -1,11 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+
 using ShiftCo.ifmo_ca_lab_3.Commons.Exceptions;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Attributes;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Types;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Util;
+
 using static ShiftCo.ifmo_ca_lab_3.Evaluation.Util.Head;
 
 namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
@@ -52,7 +53,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 
                     // evaluate each child
                     // TODO: Hold logic
-                    for ( var i = 0; i < e._operands.Count; i++)
+                    for (var i = 0; i < e._operands.Count; i++)
                     {
                         e._operands[i] = Evaluate(e._operands[i]);
                     }
@@ -60,7 +61,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                     if (e.Head == nameof(set) || e.Head == nameof(delayed))
                     {
                         Context.AddRule(e._operands[0], e._operands[1]);
-                    } 
+                    }
 
                     // apply rules
                     return Context.GetElement(e);
