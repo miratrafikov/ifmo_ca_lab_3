@@ -7,6 +7,8 @@ using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Patterns;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Types;
 
+using static ShiftCo.ifmo_ca_lab_3.Evaluation.Core.ContextInitializer;
+using static ShiftCo.ifmo_ca_lab_3.Evaluation.Core.PatternMatcher;
 using static ShiftCo.ifmo_ca_lab_3.Evaluation.Util.Head;
 
 namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
@@ -14,7 +16,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
     public static class Context
     {
         private static Dictionary<string, IPattern> s_patterns = new Dictionary<string, IPattern>();
-        private static readonly List<(IElement, IElement)> s_context = new List<(IElement, IElement)>();
+        private static readonly List<(IElement, IElement)> s_context = GetInitialContext();
 
         public static void AddRule(IElement lhs, IElement rhs)
         {
@@ -35,16 +37,15 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             foreach (var rule in s_context)
             {
                 var (lhs, rhs) = rule;
-                var clone = lhs.Clone();
-                var matcher = new PatternMatcher();
-                var matchresult = matcher.Matches((IElement)clone, element);
-                if (!(matchresult is null))
+                var matchResult = Matches(lhs, element);
+                if (!(matchResult is null))
                 {
-                    return GetRhs(matchresult, rhs);
+                    return GetRhs(matchResult, rhs);
                 }
             }
             return element;
         }
+
 
         private static void ClearPatterns()
         {
@@ -100,7 +101,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                         val = new Integer(int1.Element.Value * int2.Element.Value);
                         break;
 
-                    case nameof(pow):
+                    case nameof(Util.Head.pow):
                         val = new Integer((int)Math.Pow(int1.Element.Value, int2.Element.Value));
                         break;
 
@@ -119,6 +120,16 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                                                 n.Operands.Count == 0);
                     return exp;
                 }
+            }
+            if (lhs is Expression pow &&
+                pow._operands.Count == 5 &&
+                pow._operands[0] is NullableSequencePattern seq4 &&
+                pow._operands[1] is ElementPattern el &&
+                pow._operands[2] is NullableSequencePattern seq5 &&
+                pow._operands[3] is IntegerPattern int3 &&
+                pow._operands[4] is NullableSequencePattern seq6)
+            {
+                return new Expression(nameof(mul), Enumerable.Repeat(el.Element, int3.Element.Value).ToList());
             }
 
             s_patterns = new Dictionary<string, IPattern>();
@@ -154,6 +165,8 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             IPattern pattern = null;
             switch (rhs)
             {
+                case IPattern p when (!s_patterns.ContainsKey(p.Name.Value)):
+                    return rhs;
                 case IPattern p when p.GetType() != s_patterns[p.Name.Value].GetType():
                     throw new PatternsDontMatchException();
                 case IntegerPattern integer:
@@ -165,24 +178,35 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                     return ((ElementPattern)pattern).Element;
 
                 case Expression exp:
-                    for (var i = 0; i < exp._operands.Count; i++)
+                    var i = 0;
+                    while (i < exp._operands.Count)
                     {
                         if (exp._operands[i] is NullableSequencePattern seq)
                         {
-                            pattern = s_patterns[seq.Name.Value];
-                            if (!(pattern is NullableSequencePattern))
+                            if (s_patterns.ContainsKey(seq.Name.Value))
                             {
-                                throw new PatternsDontMatchException();
-                            }
-                            if (((NullableSequencePattern)pattern).Operands.Count > 0)
-                            {
-                                exp._operands.InsertRange(i, ((NullableSequencePattern)pattern).Operands);
+                                pattern = s_patterns[seq.Name.Value];
+                                if (!(pattern is NullableSequencePattern))
+                                {
+                                    throw new PatternsDontMatchException();
+                                }
+                                if (((NullableSequencePattern)pattern).Operands.Count > 0)
+                                {
+                                    var operands = ((NullableSequencePattern)pattern).Operands;
+                                    exp._operands.InsertRange(i, operands);
+                                    exp._operands.RemoveAt(i + operands.Count);
+                                }
+                                else
+                                {
+                                    exp._operands.RemoveAt(i);
+                                }
                             }
                         }
                         else
                         {
                             exp._operands[i] = ApplyPatterns(exp._operands[i]);
                         }
+                        i++;
                     }
                     exp._operands.RemoveAll(o => o is NullableSequencePattern n &&
                                                 n.Operands.Count == 0);

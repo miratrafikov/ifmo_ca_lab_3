@@ -13,9 +13,9 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 {
     public class PatternMatcher
     {
-        private Dictionary<string, IPattern> _patterns = new Dictionary<string, IPattern>();
+        private static Dictionary<string, IPattern> s_patterns = new Dictionary<string, IPattern>();
 
-        public IElement Matches(IElement lhs, IElement obj)
+        public static IElement Matches(IElement lhs, IElement obj)
         {
             if (lhs == null || obj == null)
             {
@@ -78,8 +78,9 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                     ((Expression)lhs)._operands[j] is NullableSequencePattern) j++;
                 if (j == ((Expression)lhs)._operands.Count)
                 {
-                    _patterns = new Dictionary<string, IPattern>();
+                    s_patterns = new Dictionary<string, IPattern>();
                     if (ArePatternsSame(lhs)) return lhs;
+                    return null;
                 }
                 else
                 {
@@ -90,14 +91,16 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
         }
 
         // To see if all patterns with name 'x' are contains the same data.
-        private bool ArePatternsSame(IElement element)
+        private static bool ArePatternsSame(IElement element)
         {
+            if (element is null)
+                return false;
             if (element is IPattern p)
             {
-                if (_patterns.ContainsKey(p.Name.Value))
+                if (s_patterns.ContainsKey(p.Name.Value))
                 {
                     var comparer = new ElementComparer();
-                    var dp = _patterns[p.Name.Value];
+                    var dp = s_patterns[p.Name.Value];
                     if (p is NullableSequencePattern l && dp is NullableSequencePattern r)
                     {
                         if (l.Operands.Count != r.Operands.Count) return false;
@@ -119,7 +122,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                 }
                 else
                 {
-                    _patterns.Add(p.Name.Value, p);
+                    s_patterns.Add(p.Name.Value, p);
                     return true;
                 }
             }
