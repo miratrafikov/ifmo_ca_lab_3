@@ -3,45 +3,44 @@ using System.Collections.Generic;
 
 using ConsoleTables;
 
-using ShiftCo.ifmo_ca_lab_3.Evaluation;
-using ShiftCo.ifmo_ca_lab_3.EvaluationInterfaces;
+using ShiftCo.ifmo_ca_lab_3.Evaluation.Types;
+using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
 using ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Lexington;
 
 namespace ShiftCo.ifmo_ca_lab_3.Chief.IOUtils
 {
     public static class DataStructuresWriter
     {
-        public static void PrintElementsTree(object element, string indent = "", bool last = true)
+        public static void PrintTree(object element, string indent = "", bool last = true)
         {
-            var head = ((IExpression)element).Head.ToLower();
-            string? value;
+            var head = ((IElement)element).Head;
             switch (element)
             {
-                case Value number:
-                    value = number.Key.ToString();
-                    Console.WriteLine($"{indent}+- {head.ToLower()} {value}");
+                case Integer integer:
+                    var value = integer.Value.ToString();
+                    Console.WriteLine($"{indent}+- {head} {value}");
+                    break;
+                case Symbol symbol:
+                    value = symbol.Value;
+                    Console.WriteLine($"{indent}+- {head} {value}");
                     break;
                 case Expression expression:
-                    value = (head == "symbol") ? expression.Key.ToString() : "";
-                    Console.WriteLine($"{indent}+- {head.ToLower()} {value}");
+                    Console.WriteLine($"{indent}+- {head}");
                     indent += last ? "   " : "|  ";
-                    if (expression.Operands != null)
+                    for (var i = 0; i < expression._operands.Count; i++)
                     {
-                        for (var i = 0; i < expression.Operands.Count; i++)
-                        {
-                            PrintElementsTree(expression.Operands[i], indent, i == expression.Operands.Count - 1);
-                        }
+                        PrintTree(expression._operands[i], indent, i == expression._operands.Count - 1);
                     }
                     break;
             }
         }
 
-        public static void TalkTokens(ref List<Token> tokens)
+        public static void PrintTokens(ref List<Token> tokens)
         {
             var table = new ConsoleTable("Type ID", "Content");
-            foreach (var Token in tokens)
+            foreach (var token in tokens)
             {
-                table.AddRow(Token.Type, Token.Content);
+                table.AddRow(token.Type, token.Content);
             }
             table.Write(Format.Alternative);
         }

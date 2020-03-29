@@ -20,7 +20,7 @@ namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysisTest
             var tokens = Lexer.Tokenize("a_integer");
             var tree = Parser.Parse(tokens);
             Assert.IsTrue(tree is IPattern);
-            tokens = Lexer.Tokenize("as12__");
+            tokens = Lexer.Tokenize("as12___");
             tree = Parser.Parse(tokens);
             Assert.IsTrue(tree is NullableSequencePattern);
         }
@@ -31,8 +31,8 @@ namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysisTest
             var tokens = Lexer.Tokenize("set(fib(n_integer),mul(n,fib(sum(n,mul(1)))))");
             var tree = Parser.Parse(tokens);
             Assert.IsTrue(tree is Expression);
-            Expression firstChild = (Expression)((Expression)tree).Operands[0];
-            var pattern = firstChild.Operands[0];
+            Expression firstChild = (Expression)((Expression)tree)._operands[0];
+            var pattern = firstChild._operands[0];
             Assert.IsTrue(pattern is IPattern);
         }
     }

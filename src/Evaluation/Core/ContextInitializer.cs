@@ -14,28 +14,28 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
         #region Alphabet
 
         // Elements
-        private static IPattern x = new ElementPattern("x");
-        private static IPattern y = new ElementPattern("y");
-        private static IPattern z = new ElementPattern("z");
+        private static readonly IPattern s_x = new ElementPattern("x");
+        private static readonly IPattern s_y = new ElementPattern("y");
+        private static readonly IPattern s_z = new ElementPattern("z");
 
         // Integers
-        private static IPattern int1 = new IntegerPattern("int1");
-        private static IPattern int2 = new IntegerPattern("int2");
-        private static IPattern int3 = new IntegerPattern("int3");
+        private static readonly IPattern s_int1 = new IntegerPattern("int1");
+        private static readonly IPattern s_int2 = new IntegerPattern("int2");
+        private static readonly IPattern s_int3 = new IntegerPattern("int3");
 
         // Sequences
         // Named sequences
-        private static IPattern s_x = new NullableSequencePattern("s_x");
-        private static IPattern s_y = new NullableSequencePattern("s_y");
-        private static IPattern s_z = new NullableSequencePattern("s_z");
+        private static readonly IPattern s_seqX = new NullableSequencePattern("s_x");
+        private static readonly IPattern s_seqY = new NullableSequencePattern("s_y");
+        private static readonly IPattern s_seqZ = new NullableSequencePattern("s_z");
 
         // _ seqs
-        private static IPattern seq1 = new NullableSequencePattern("seq1");
-        private static IPattern seq2 = new NullableSequencePattern("seq2");
-        private static IPattern seq3 = new NullableSequencePattern("seq3");
-        private static IPattern seq4 = new NullableSequencePattern("seq4");
-        private static IPattern seq5 = new NullableSequencePattern("seq5");
-        private static IPattern seq6 = new NullableSequencePattern("seq6");
+        private static readonly IPattern s_seq1 = new NullableSequencePattern("seq1");
+        private static readonly IPattern s_seq2 = new NullableSequencePattern("seq2");
+        private static readonly IPattern s_seq3 = new NullableSequencePattern("seq3");
+        private static readonly IPattern s_seq4 = new NullableSequencePattern("seq4");
+        private static readonly IPattern s_seq5 = new NullableSequencePattern("seq5");
+        private static readonly IPattern s_seq6 = new NullableSequencePattern("seq6");
 
         #endregion
 
@@ -55,11 +55,11 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
         {
             var builtins = new List<(IElement, IElement)>();
             var lhs = new Expression(nameof(pow),
-                seq1,
-                x,
-                seq2,
-                y,
-                seq3
+                s_seq1,
+                s_x,
+                s_seq2,
+                s_y,
+                s_seq3
             );
             var rhs = new Expression();
             builtins.Add((lhs, rhs));
@@ -73,57 +73,57 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 
             // mul(x_,add(a_,a___))  -> add(mul(x_,a_),mul(x_,a___))
             var lhs = new Expression(nameof(mul),
-                seq1,
-                x,
-                seq2,
+                s_seq1,
+                s_x,
+                s_seq2,
                 new Expression(nameof(sum),
-                    y,
-                    s_z
+                    s_y,
+                    s_seqZ
                 ),
-                seq3
+                s_seq3
             );
             var rhs = new Expression(nameof(mul),
-                seq1,
-                seq2,
+                s_seq1,
+                s_seq2,
                 new Expression(nameof(sum),
                     new Expression(nameof(mul),
-                        x,
-                        y
+                        s_x,
+                        s_y
                     ),
                     new Expression(nameof(mul),
-                        x,
-                        s_z
+                        s_x,
+                        s_seqZ
                     )
                 ),
-                seq3
+                s_seq3
             );
             builtins.Add((lhs, rhs));
 
             // mul(add(x_, y___), add(z___)) -> add(mul(x_, z___), mul(add(y___), add(z___)))
             lhs = new Expression(nameof(mul),
-                seq1,
+                s_seq1,
                 new Expression(nameof(sum),
-                    x,
-                    s_y
+                    s_x,
+                    s_seqY
                 ),
-                seq2,
-                new Expression(nameof(sum), s_z),
-                seq3
+                s_seq2,
+                new Expression(nameof(sum), s_seqZ),
+                s_seq3
             );
             rhs = new Expression(nameof(mul),
-                seq1,
-                seq2,
+                s_seq1,
+                s_seq2,
                 new Expression(nameof(sum),
                     new Expression(nameof(mul),
-                        x,
-                        s_z
+                        s_x,
+                        s_seqZ
                     ),
                     new Expression(nameof(mul), 
-                        s_y,
-                        s_z
+                        s_seqY,
+                        s_seqZ
                     )
                 ),
-                seq3
+                s_seq3
             );
             builtins.Add((lhs, rhs));
 
@@ -137,80 +137,80 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 
             // sum(x,x) -> mul(2,x)
             var lhs = new Expression(nameof(sum),
-                seq1,
-                x,
-                seq2,
-                x,
-                seq3
+                s_seq1,
+                s_x,
+                s_seq2,
+                s_x,
+                s_seq3
             );
             var rhs = new Expression(nameof(sum),
-                seq1,
-                seq2,
+                s_seq1,
+                s_seq2,
                 new Expression(nameof(mul),
                     new Integer(2),
-                    x
+                    s_x
                 ),
-                seq3
+                s_seq3
             );
             builtins.Add((lhs, rhs));
 
             // sum(mul(2,x),mul(2,x)) -> mul(sum(2,2),x)
             lhs = new Expression(nameof(sum),
-                seq1,
+                s_seq1,
                 new Expression(nameof(mul),
-                    int1,
-                    x
+                    s_int1,
+                    s_x
                 ),
-                seq2,
+                s_seq2,
                 new Expression(nameof(mul),
-                    int2,
-                    x
+                    s_int2,
+                    s_x
                 ),
-                seq3
+                s_seq3
             );
             rhs = new Expression(nameof(sum),
-                seq1,
-                seq2,
+                s_seq1,
+                s_seq2,
                 new Expression(nameof(mul),
                     new Expression(nameof(sum),
-                        seq4,
-                        int1,
-                        seq5,
-                        int2,
-                        seq6
+                        s_seq4,
+                        s_int1,
+                        s_seq5,
+                        s_int2,
+                        s_seq6
                     ),
-                    x
+                    s_x
                 ),
-                seq3
+                s_seq3
             );
             builtins.Add((lhs, rhs));
 
             // sum(x,mul(2,x)) -> mul(sum(2,1),x)
             lhs = new Expression(nameof(sum),
-                seq1,
-                x,
-                seq2,
+                s_seq1,
+                s_x,
+                s_seq2,
                 new Expression(nameof(mul),
-                    int1,
-                    x
+                    s_int1,
+                    s_x
                 ),
-                seq3
+                s_seq3
             );
             rhs = new Expression(nameof(sum),
-                seq1,
-                seq2,
+                s_seq1,
+                s_seq2,
                 
                 new Expression(nameof(mul),
                     new Expression(nameof(sum),
-                        seq4,
-                        int1,
-                        seq5,
+                        s_seq4,
+                        s_int1,
+                        s_seq5,
                         new Integer(1),
-                        seq6
+                        s_seq6
                     ),
-                    x
+                    s_x
                 ),
-                seq3
+                s_seq3
             );
             builtins.Add((lhs, rhs));
 

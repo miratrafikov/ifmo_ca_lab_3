@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ShiftCo.ifmo_ca_lab_3.Commons.Exceptions;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Attributes;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Types;
@@ -11,8 +12,8 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 {
     public static class Evaluator
     {
-        private static readonly int MaxIterationsAmount = 1000;
-        private static readonly ElementComparer Comparer = new ElementComparer();
+        private static readonly int s_maxIterationsAmount = 1000;
+        private static readonly ElementComparer s_comparer = new ElementComparer();
 
         private static IElement Evaluate(IElement element)
         {
@@ -51,14 +52,14 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 
                     // evaluate each child
                     // TODO: Hold logic
-                    for ( int i = 0; i < e.Operands.Count; i++)
+                    for ( var i = 0; i < e._operands.Count; i++)
                     {
-                        e.Operands[i] = Evaluate(e.Operands[i]);
+                        e._operands[i] = Evaluate(e._operands[i]);
                     }
 
                     if (e.Head == nameof(set) || e.Head == nameof(delayed))
                     {
-                        Context.AddRule(e.Operands[0], e.Operands[1]);
+                        Context.AddRule(e._operands[0], e._operands[1]);
                     } 
 
                     // apply rules
@@ -77,14 +78,14 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             {
                 element
             });
-            while (Comparer.Compare(pre, post) != 0 && iteration <= MaxIterationsAmount)
+            while (s_comparer.Compare(pre, post) != 0 && iteration <= s_maxIterationsAmount)
             {
                 pre = post;
                 post = (Expression)Evaluate(pre);
                 iteration++;
             }
-            if (iteration == MaxIterationsAmount) throw new Exception("Amount of iterations exceeded");
-            return post.Operands.FirstOrDefault();
+            if (iteration == s_maxIterationsAmount) throw new TooManyIterationsException();
+            return post._operands.FirstOrDefault();
         }
     }
 }

@@ -30,12 +30,12 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Util
                 return string.Compare(ls.Value, rs.Value);
             }
             // Expression with lesser operands is less than the other one
-            if (left is Expression le && right is Expression re && le.Operands.Count != re.Operands.Count)
+            if (left is Expression le && right is Expression re && le._operands.Count != re._operands.Count)
             {
-                return le.Operands.Count - re.Operands.Count;
+                return le._operands.Count - re._operands.Count;
             }
             // Compare each operand
-            var zipedOperands = ((Expression)left).Operands.Zip(((Expression)right).Operands,
+            var zipedOperands = ((Expression)left)._operands.Zip(((Expression)right)._operands,
                 (l, r) => new { Left = l, Right = r });
             foreach (var operand in zipedOperands)
             {
@@ -51,9 +51,8 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Util
 
         private int CompareHeads(string left, string right)
         {
-            object parsedLeft, parsedRight;
-            Enum.TryParse(typeof(Head), left, true, out parsedLeft);
-            Enum.TryParse(typeof(Head), right, true, out parsedRight);
+            Enum.TryParse(typeof(Head), left, true, out var parsedLeft);
+            Enum.TryParse(typeof(Head), right, true, out var parsedRight);
 
             if (parsedRight is null && parsedLeft is null) return 0;
             if (parsedLeft is null) return -1;

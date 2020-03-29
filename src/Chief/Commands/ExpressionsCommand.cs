@@ -11,7 +11,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Chief.Commands
     [Command("exprs")]
     public class ExpressionsCommand : ICommand
     {
-        private readonly Tuple<string, string>[] expressions =
+        private readonly Tuple<string, string>[] _expressions =
         {
             new Tuple<string, string>("Sum", "(element)+"),
             new Tuple<string, string>("Mul", "(element)+"),
@@ -23,7 +23,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Chief.Commands
         public ValueTask ExecuteAsync(IConsole console)
         {
             IOBeautifier.PrintHeader(console, "Built-in expressions and their operands");
-            foreach (var (expression, operands) in expressions)
+            foreach (var (expression, operands) in _expressions)
             {
                 IOBeautifier.PrintPair(console, expression, operands);
             }

@@ -9,31 +9,32 @@ using static ShiftCo.ifmo_ca_lab_3.Evaluation.Util.Head;
 
 using static ShiftCo.ifmo_ca_lab_3.Evaluation.Core.PatternMatcher;
 using static ShiftCo.ifmo_ca_lab_3.Evaluation.Core.ContextInitializer;
+using ShiftCo.ifmo_ca_lab_3.Commons.Exceptions;
 
 namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 {
     public static class Context
     {
-        private static Dictionary<string, IPattern> Patterns = new Dictionary<string, IPattern>();
-        private static List<(IElement, IElement)> _context = GetInitialContext();
+        private static Dictionary<string, IPattern> s_patterns = new Dictionary<string, IPattern>();
+        private static readonly List<(IElement, IElement)> s_context = GetInitialContext();
 
         public static void AddRule(IElement lhs, IElement rhs)
         {
-            _context.Add((lhs, rhs));
+            s_context.Add((lhs, rhs));
         }
 
         public static void AddRules(List<(IElement, IElement)> rules)
         {
             foreach (var rule in rules)
             {
-                _context.Add((rule.Item1, rule.Item2));
+                s_context.Add((rule.Item1, rule.Item2));
             }
         }
 
         public static IElement GetElement(IElement element)
         {
             ClearPatterns();
-            foreach (var rule in _context)
+            foreach (var rule in s_context)
             {
                 var (lhs, rhs) = rule;
                 var matchResult = Matches(lhs, element);
@@ -48,7 +49,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 
         private static void ClearPatterns()
         {
-            foreach (var rule in _context)
+            foreach (var rule in s_context)
             {
                 var (lhs, rhs) = rule;
                 lhs = ClearPatterns(lhs);
@@ -67,11 +68,11 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                     return new NullableSequencePattern(seq.Name.Value);
                 case Expression exp:
                     var operands = new List<IElement>();
-                    foreach (var o in exp.Operands)
+                    foreach (var o in exp._operands)
                     {
                         operands.Add(ClearPatterns(o));
                     }
-                    exp.Operands = operands;
+                    exp._operands = operands;
                     return exp;
                 default:
                     return lhs;
@@ -82,12 +83,12 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
         {
             // Hardcode
             if (lhs is Expression expr &&
-                expr.Operands.Count == 5 &&
-                expr.Operands[0] is NullableSequencePattern seq1 &&
-                expr.Operands[1] is IntegerPattern int1 &&
-                expr.Operands[2] is NullableSequencePattern seq2 &&
-                expr.Operands[3] is IntegerPattern int2 &&
-                expr.Operands[4] is NullableSequencePattern seq3)
+                expr._operands.Count == 5 &&
+                expr._operands[0] is NullableSequencePattern seq1 &&
+                expr._operands[1] is IntegerPattern int1 &&
+                expr._operands[2] is NullableSequencePattern seq2 &&
+                expr._operands[3] is IntegerPattern int2 &&
+                expr._operands[4] is NullableSequencePattern seq3)
             {
                 Integer val;
                 switch (expr.Head)
@@ -115,22 +116,23 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                     operands.Add(val);
                     operands = operands.Concat(seq3.Operands).ToList();
                     var exp = new Expression(expr.Head, operands); ;
-                    exp.Operands.RemoveAll(o => o is NullableSequencePattern n &&
+                    exp._operands.RemoveAll(o => o is NullableSequencePattern n &&
                                                 n.Operands.Count == 0);
                     return exp;
                 }
             }
             if (lhs is Expression pow &&
-                pow.Operands.Count == 5 &&
-                pow.Operands[0] is NullableSequencePattern seq4 &&
-                pow.Operands[1] is ElementPattern el &&
-                pow.Operands[2] is NullableSequencePattern seq5 &&
-                pow.Operands[3] is IntegerPattern int3 &&
-                pow.Operands[4] is NullableSequencePattern seq6) 
+                pow._operands.Count == 5 &&
+                pow._operands[0] is NullableSequencePattern seq4 &&
+                pow._operands[1] is ElementPattern el &&
+                pow._operands[2] is NullableSequencePattern seq5 &&
+                pow._operands[3] is IntegerPattern int3 &&
+                pow._operands[4] is NullableSequencePattern seq6) 
             {
                 return new Expression(nameof(mul), Enumerable.Repeat(el.Element, int3.Element.Value).ToList());
             }
-            Patterns = new Dictionary<string, IPattern>();
+
+            s_patterns = new Dictionary<string, IPattern>();
             PatternsSetUp(lhs);
             return ApplyPatterns(rhs);
         }
@@ -140,14 +142,14 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             switch (lhs)
             {
                 case IPattern p:
-                    if (!Patterns.ContainsKey(p.Name.Value))
+                    if (!s_patterns.ContainsKey(p.Name.Value))
                     {
-                        Patterns.Add(p.Name.Value, p);
+                        s_patterns.Add(p.Name.Value, p);
                     }
                     break;
 
                 case Expression e:
-                    foreach (var o in e.Operands)
+                    foreach (var o in e._operands)
                     {
                         PatternsSetUp(o);
                     }
@@ -163,50 +165,50 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             IPattern pattern = null;
             switch (rhs)
             {
-                case IPattern p when (!Patterns.ContainsKey(p.Name.Value)):
+                case IPattern p when (!s_patterns.ContainsKey(p.Name.Value)):
                     return rhs;
-                case IPattern p when p.GetType() != Patterns[p.Name.Value].GetType():
-                    throw new Exception("Pattern types does not matches");
+                case IPattern p when p.GetType() != s_patterns[p.Name.Value].GetType():
+                    throw new PatternsDontMatchException();
                 case IntegerPattern integer:
-                    pattern = Patterns[integer.Name.Value];
+                    pattern = s_patterns[integer.Name.Value];
                     return ((IntegerPattern)pattern).Element;
 
                 case ElementPattern element:
-                    pattern = Patterns[element.Name.Value];
+                    pattern = s_patterns[element.Name.Value];
                     return ((ElementPattern)pattern).Element;
 
                 case Expression exp:
                     var i = 0;
-                    while (i < exp.Operands.Count)
+                    while (i < exp._operands.Count)
                     {
-                        if (exp.Operands[i] is NullableSequencePattern seq)
+                        if (exp._operands[i] is NullableSequencePattern seq)
                         {
-                            if (Patterns.ContainsKey(seq.Name.Value))
+                            if (s_patterns.ContainsKey(seq.Name.Value))
                             {
-                                pattern = Patterns[seq.Name.Value];
+                                pattern = s_patterns[seq.Name.Value];
                                 if (!(pattern is NullableSequencePattern))
                                 {
-                                    throw new Exception("Pattern types does not matches");
+                                    throw new PatternsDontMatchException();
                                 }
                                 if (((NullableSequencePattern)pattern).Operands.Count > 0)
                                 {
                                     var operands = ((NullableSequencePattern)pattern).Operands;
-                                    exp.Operands.InsertRange(i, operands);
-                                    exp.Operands.RemoveAt(i + operands.Count);
+                                    exp._operands.InsertRange(i, operands);
+                                    exp._operands.RemoveAt(i + operands.Count);
                                 }
                                 else
                                 {
-                                    exp.Operands.RemoveAt(i);
+                                    exp._operands.RemoveAt(i);
                                 }
                             }
                         }
                         else
                         {
-                            exp.Operands[i] = ApplyPatterns(exp.Operands[i]);
+                            exp._operands[i] = ApplyPatterns(exp._operands[i]);
                         }
                         i++;
                     }
-                    exp.Operands.RemoveAll(o => o is NullableSequencePattern n &&
+                    exp._operands.RemoveAll(o => o is NullableSequencePattern n &&
                                                 n.Operands.Count == 0);
                     return exp;
 

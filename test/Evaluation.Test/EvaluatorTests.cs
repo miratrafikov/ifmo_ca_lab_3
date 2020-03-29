@@ -15,7 +15,7 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
     [TestClass]
     public class EvaluatorTests
     {
-        private static ElementComparer comparer = new ElementComparer();
+        private static readonly ElementComparer s_comparer = new ElementComparer();
 
         public void Test1()
         {
@@ -35,11 +35,11 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
             });
 
             var rhs = new Expression(nameof(sum));
-            var sets = Evaluator.Run(new Expression(nameof(set), new List<IElement>() 
-            { 
+            _ = Evaluator.Run(new Expression(nameof(set), new List<IElement>()
+            {
                 lhs, rhs
             }));
-            var res = Evaluator.Run(add);
+            _ = Evaluator.Run(add);
 
         }
 
@@ -55,7 +55,7 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
                 new Integer(2),
                 new Symbol("x")
             );
-            Assert.AreEqual(comparer.Compare(alteredExpr, Evaluator.Run(expr)), 0);
+            Assert.AreEqual(s_comparer.Compare(alteredExpr, Evaluator.Run(expr)), 0);
         }
 
         [TestMethod]
@@ -74,7 +74,7 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
                 new Symbol("x")
             );
             var evaluated = Evaluator.Run(expr);
-            Assert.AreEqual(comparer.Compare(alteredExpr, evaluated), 0);
+            Assert.AreEqual(s_comparer.Compare(alteredExpr, evaluated), 0);
         }
     }
 }
