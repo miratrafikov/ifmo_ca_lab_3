@@ -1,6 +1,7 @@
 ﻿using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Types;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Util;
+
 using static ShiftCo.ifmo_ca_lab_3.Evaluation.Util.Head;
 
 namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Attributes
@@ -10,7 +11,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Attributes
         public Expression Apply(Expression expr)
         {
             if (expr.Head == nameof(pow)) return expr;
-            var operands = expr.Operands;
+            var operands = expr._operands;
             if (operands != null)
                 operands.Sort(new ElementComparer());
             return new Expression(expr.Head, operands);

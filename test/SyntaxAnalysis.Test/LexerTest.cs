@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Lexington;
 
 namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysisTest
@@ -43,7 +45,7 @@ namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysisTest
 
             Assert.IsTrue(result.SequenceEqual(tokenList));
         }
-        
+
         [TestMethod]
         public void Tokenize_GivenNotSoSimpleSymbolString_ReturnsExpected()
         {

@@ -1,9 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Patterns;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Types;
+
 using static ShiftCo.ifmo_ca_lab_3.Evaluation.Util.Head;
 
 namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
@@ -23,7 +24,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
         private List<(IElement, IElement)> PowBuiltins()
         {
             var builtins = new List<(IElement, IElement)>();
-            var lhs = new Expression(nameof(pow), new List<IElement>() 
+            var lhs = new Expression(nameof(pow), new List<IElement>()
             {
                 new NullableSequencePattern("a"),
                 new ElementPattern("x"),
@@ -48,7 +49,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             var builtins = new List<(IElement, IElement)>();
 
             // sum(x,x) -> mul(2,x)
-            var lhs = new Expression(nameof(sum), new List<IElement>() 
+            var lhs = new Expression(nameof(sum), new List<IElement>()
             {
                 new NullableSequencePattern("a"),
                 new ElementPattern("x"),
@@ -60,8 +61,8 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             {
                 new NullableSequencePattern("a"),
                 new NullableSequencePattern("b"),
-                new Expression(nameof(mul), new List<IElement>() 
-                { 
+                new Expression(nameof(mul), new List<IElement>()
+                {
                     new Integer(2),
                     new ElementPattern("x")
                 }),

@@ -2,20 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using ShiftCo.ifmo_ca_lab_3.Commons.Exceptions;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Patterns;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Types;
-using static ShiftCo.ifmo_ca_lab_3.Evaluation.Util.Head;
 
-using static ShiftCo.ifmo_ca_lab_3.Evaluation.Core.PatternMatcher;
-using ShiftCo.ifmo_ca_lab_3.Commons.Exceptions;
+using static ShiftCo.ifmo_ca_lab_3.Evaluation.Util.Head;
 
 namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 {
     public static class Context
     {
         private static Dictionary<string, IPattern> s_patterns = new Dictionary<string, IPattern>();
-        private static List<(IElement, IElement)> s_context = new List<(IElement, IElement)>();
+        private static readonly List<(IElement, IElement)> s_context = new List<(IElement, IElement)>();
 
         public static void AddRule(IElement lhs, IElement rhs)
         {
@@ -68,11 +67,11 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                     return new NullableSequencePattern(seq.Name.Value);
                 case Expression exp:
                     var operands = new List<IElement>();
-                    foreach (var o in exp.Operands)
+                    foreach (var o in exp._operands)
                     {
                         operands.Add(ClearPatterns(o));
                     }
-                    exp.Operands = operands;
+                    exp._operands = operands;
                     return exp;
                 default:
                     return lhs;
@@ -83,12 +82,12 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
         {
             // Hardcode
             if (lhs is Expression expr &&
-                expr.Operands.Count == 5 &&
-                expr.Operands[0] is NullableSequencePattern seq1 &&
-                expr.Operands[1] is IntegerPattern int1 &&
-                expr.Operands[2] is NullableSequencePattern seq2 &&
-                expr.Operands[3] is IntegerPattern int2 &&
-                expr.Operands[4] is NullableSequencePattern seq3)
+                expr._operands.Count == 5 &&
+                expr._operands[0] is NullableSequencePattern seq1 &&
+                expr._operands[1] is IntegerPattern int1 &&
+                expr._operands[2] is NullableSequencePattern seq2 &&
+                expr._operands[3] is IntegerPattern int2 &&
+                expr._operands[4] is NullableSequencePattern seq3)
             {
                 Integer val;
                 switch (expr.Head)
@@ -116,7 +115,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                     operands.Add(val);
                     operands = operands.Concat(seq3.Operands).ToList();
                     var exp = new Expression(expr.Head, operands); ;
-                    exp.Operands.RemoveAll(o => o is NullableSequencePattern n &&
+                    exp._operands.RemoveAll(o => o is NullableSequencePattern n &&
                                                 n.Operands.Count == 0);
                     return exp;
                 }
@@ -139,7 +138,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                     break;
 
                 case Expression e:
-                    foreach (var o in e.Operands)
+                    foreach (var o in e._operands)
                     {
                         PatternsSetUp(o);
                     }
@@ -166,9 +165,9 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                     return ((ElementPattern)pattern).Element;
 
                 case Expression exp:
-                    for (int i = 0; i < exp.Operands.Count; i++)
+                    for (var i = 0; i < exp._operands.Count; i++)
                     {
-                        if (exp.Operands[i] is NullableSequencePattern seq)
+                        if (exp._operands[i] is NullableSequencePattern seq)
                         {
                             pattern = s_patterns[seq.Name.Value];
                             if (!(pattern is NullableSequencePattern))
@@ -177,15 +176,15 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                             }
                             if (((NullableSequencePattern)pattern).Operands.Count > 0)
                             {
-                                exp.Operands.InsertRange(i, ((NullableSequencePattern)pattern).Operands);
+                                exp._operands.InsertRange(i, ((NullableSequencePattern)pattern).Operands);
                             }
                         }
                         else
                         {
-                            exp.Operands[i] = ApplyPatterns(exp.Operands[i]);
+                            exp._operands[i] = ApplyPatterns(exp._operands[i]);
                         }
                     }
-                    exp.Operands.RemoveAll(o => o is NullableSequencePattern n &&
+                    exp._operands.RemoveAll(o => o is NullableSequencePattern n &&
                                                 n.Operands.Count == 0);
                     return exp;
 

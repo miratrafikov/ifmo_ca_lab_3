@@ -2,7 +2,6 @@
 
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Attributes;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
-using ShiftCo.ifmo_ca_lab_3.Evaluation.Util;
 
 namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Types
 {
@@ -12,7 +11,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Types
 
         public Expression()
         {
-            Operands = new List<IElement>();
+            _operands = new List<IElement>();
             Attributes = new List<IAttribute>()
             {
                 new FlatAttribute(),
@@ -23,7 +22,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Types
         public Expression(string head)
         {
             Head = head;
-            Operands = new List<IElement>();
+            _operands = new List<IElement>();
             Attributes = new List<IAttribute>()
             {
                 new FlatAttribute(),
@@ -34,7 +33,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Types
         public Expression(string head, List<IElement> operands)
         {
             Head = head;
-            Operands = operands;
+            _operands = operands;
             Attributes = new List<IAttribute>()
             {
                 new FlatAttribute(),
@@ -44,7 +43,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Types
 
         #endregion Constructors
 
-        public List<IElement> Operands;
+        public List<IElement> _operands;
         public string Head { get; set; }
         public List<IAttribute> Attributes { get; set; }
 

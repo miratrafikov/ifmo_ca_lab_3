@@ -3,8 +3,8 @@ using System.Collections.Generic;
 
 using ConsoleTables;
 
-using ShiftCo.ifmo_ca_lab_3.Evaluation.Types;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
+using ShiftCo.ifmo_ca_lab_3.Evaluation.Types;
 using ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Lexington;
 
 namespace ShiftCo.ifmo_ca_lab_3.Chief.IOUtils
@@ -27,9 +27,9 @@ namespace ShiftCo.ifmo_ca_lab_3.Chief.IOUtils
                 case Expression expression:
                     Console.WriteLine($"{indent}+- {head}");
                     indent += last ? "   " : "|  ";
-                    for (var i = 0; i < expression.Operands.Count; i++)
+                    for (var i = 0; i < expression._operands.Count; i++)
                     {
-                        PrintTree(expression.Operands[i], indent, i == expression.Operands.Count - 1);
+                        PrintTree(expression._operands[i], indent, i == expression._operands.Count - 1);
                     }
                     break;
             }
