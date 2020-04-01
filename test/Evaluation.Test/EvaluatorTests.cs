@@ -6,6 +6,7 @@ using ShiftCo.ifmo_ca_lab_3.Evaluation.Core;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Patterns;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Types;
+using ShiftCo.ifmo_ca_lab_3.Evaluation.Types.Atoms;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Util;
 
 using static ShiftCo.ifmo_ca_lab_3.Evaluation.Util.Head;
