@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using static ShiftCo.ifmo_ca_lab_3.Evaluation.Util.EnumUtilizer;
+using static ShiftCo.ifmo_ca_lab_3.Commons.EnumUtilizer;
 
 namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Lexington
 {

@@ -1,4 +1,4 @@
-﻿namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Util
+﻿namespace ShiftCo.ifmo_ca_lab_3.Commons
 {
     public static class EnumUtilizer
     {
