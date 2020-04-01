@@ -3,7 +3,7 @@ using static ShiftCo.ifmo_ca_lab_3.Evaluation.Util.Head;
 
 namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Types.Atoms
 {
-    public class Integer : IAtom<int>
+    public class Integer : IAtom, IElement
     {
         public Integer(int value)
         {
