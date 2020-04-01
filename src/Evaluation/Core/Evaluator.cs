@@ -24,47 +24,46 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             }
             switch (element)
             {
-                case Integer i:
-                    return i;
+                case Integer elementAsInteger:
+                    return elementAsInteger;
 
-                case Symbol s:
-                    // lookup in context
-                    return Context.GetElement(s);
+                case Symbol elementAsSymbol:
+                    return Context.GetElement(elementAsSymbol);
 
-                case Expression e:
+                case Expression elementAsExpression:
                     // evaluate head
-                    var head = new Symbol(e.Head);
+                    var head = new Symbol(elementAsExpression.Head);
                     var newHead = Context.GetElement(head);
                     if (newHead is Symbol nhead)
                     {
-                        e.Head = nhead.Value;
+                        elementAsExpression.Head = nhead.Value;
                     }
 
                     // apply attributes
-                    if (e.Head != nameof(set) && e.Head != nameof(delayed))
+                    if (elementAsExpression.Head != nameof(set) && elementAsExpression.Head != nameof(delayed))
                     {
-                        var tmp = e;
-                        foreach (var attribute in e.Attributes)
+                        var tmp = elementAsExpression;
+                        foreach (var attribute in elementAsExpression.Attributes)
                         {
                             tmp = attribute.Apply(tmp);
                         }
-                        e = tmp;
+                        elementAsExpression = tmp;
                     }
 
                     // evaluate each child
                     // TODO: Hold logic
-                    for (var i = 0; i < e.Operands.Count; i++)
+                    for (var i = 0; i < elementAsExpression.Operands.Count; i++)
                     {
-                        e.Operands[i] = Evaluate(e.Operands[i]);
+                        elementAsExpression.Operands[i] = Evaluate(elementAsExpression.Operands[i]);
                     }
 
-                    if (e.Head == nameof(set) || e.Head == nameof(delayed))
+                    if (elementAsExpression.Head == nameof(set) || elementAsExpression.Head == nameof(delayed))
                     {
-                        Context.AddRule(e.Operands[0], e.Operands[1]);
+                        Context.AddRule(elementAsExpression.Operands[0], elementAsExpression.Operands[1]);
                     }
 
                     // apply rules
-                    return Context.GetElement(e);
+                    return Context.GetElement(elementAsExpression);
 
                 default:
                     return element;

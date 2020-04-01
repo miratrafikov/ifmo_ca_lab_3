@@ -7,7 +7,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Types
 {
     public class Expression : IElement
     {
-        public string Head { get; }
+        public string Head { get; set; }
         public List<IElement> Operands { get; set; }
         public List<IAttribute> Attributes { get; }
 
