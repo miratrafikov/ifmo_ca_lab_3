@@ -54,14 +54,14 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 
                     // evaluate each child
                     // TODO: Hold logic
-                    for (var i = 0; i < e._operands.Count; i++)
+                    for (var i = 0; i < e.Operands.Count; i++)
                     {
-                        e._operands[i] = Evaluate(e._operands[i]);
+                        e.Operands[i] = Evaluate(e.Operands[i]);
                     }
 
                     if (e.Head == nameof(set) || e.Head == nameof(delayed))
                     {
-                        Context.AddRule(e._operands[0], e._operands[1]);
+                        Context.AddRule(e.Operands[0], e.Operands[1]);
                     }
 
                     // apply rules
@@ -87,7 +87,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                 iteration++;
             }
             if (iteration == s_maxIterationsAmount) throw new TooManyIterationsException();
-            return post._operands.FirstOrDefault();
+            return post.Operands.FirstOrDefault();
         }
     }
 }

@@ -31,12 +31,12 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Util
                 return string.Compare(ls.Value, rs.Value);
             }
             // Expression with lesser operands is less than the other one
-            if (left is Expression le && right is Expression re && le._operands.Count != re._operands.Count)
+            if (left is Expression le && right is Expression re && le.Operands.Count != re.Operands.Count)
             {
-                return le._operands.Count - re._operands.Count;
+                return le.Operands.Count - re.Operands.Count;
             }
             // Compare each operand
-            var zipedOperands = ((Expression)left)._operands.Zip(((Expression)right)._operands,
+            var zipedOperands = ((Expression)left).Operands.Zip(((Expression)right).Operands,
                 (l, r) => new { Left = l, Right = r });
             foreach (var operand in zipedOperands)
             {

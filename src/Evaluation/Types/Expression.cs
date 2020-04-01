@@ -7,11 +7,12 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Types
 {
     public class Expression : IElement
     {
-        #region Constructors
+        public IElement Head { get; set; }
+        public List<IElement> Operands { get; set; }
+        public List<IAttribute> Attributes { get; set; }
 
         public Expression()
         {
-            _operands = new List<IElement>();
             Attributes = new List<IAttribute>()
             {
                 new FlatAttribute(),
@@ -19,52 +20,19 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Types
             };
         }
 
-        public Expression(string head)
+        public Expression(IElement head) : this()
         {
             Head = head;
-            _operands = new List<IElement>();
-            Attributes = new List<IAttribute>()
-            {
-                new FlatAttribute(),
-                new OrderlessAttribute()
-            };
         }
 
-        public Expression(string head, List<IElement> operands)
+        public Expression(IElement head, List<IElement> operands) : this(head)
         {
-            Head = head;
-            _operands = operands;
-            Attributes = new List<IAttribute>()
-            {
-                new FlatAttribute(),
-                new OrderlessAttribute()
-            };
+            Operands = operands;
         }
-
-        public Expression(string head, params IElement[] operands)
-        {
-            Head = head;
-            _operands = new List<IElement>();
-            foreach (var operand in operands)
-            {
-                _operands.Add(operand);
-            }
-            Attributes = new List<IAttribute>()
-            {
-                new FlatAttribute(),
-                new OrderlessAttribute()
-            };
-        }
-
-        #endregion Constructors
-
-        public List<IElement> _operands;
-        public string Head { get; set; }
-        public List<IAttribute> Attributes { get; set; }
 
         public object Clone()
         {
-            return this.MemberwiseClone();
+            return MemberwiseClone();
         }
     }
 }
