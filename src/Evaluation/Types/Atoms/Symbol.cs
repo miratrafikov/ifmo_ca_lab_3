@@ -4,14 +4,14 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Types.Atoms
 {
     public class Symbol : IAtom, IElement
     {
-        public string Value { get; }
+        public string Name { get; }
 
-        public Symbol(string value)
+        public Symbol(string name)
         {
-            Value = value;
+            Name = name;
         }
 
-        public static implicit operator Symbol(string value) => new Symbol(value);
+        public static implicit operator Symbol(string name) => new Symbol(name);
 
         public object Clone()
         {

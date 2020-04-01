@@ -22,7 +22,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Chief.IOUtils
                     Console.WriteLine($"{indent}+- {head} {value}");
                     break;
                 case Symbol symbol:
-                    value = symbol.Value;
+                    value = symbol.Name;
                     Console.WriteLine($"{indent}+- {head} {value}");
                     break;
                 case Expression expression:

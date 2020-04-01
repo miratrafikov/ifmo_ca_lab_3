@@ -120,16 +120,16 @@ namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Parseltongue
 
         private static Expression BuildExpression(List<IElement> objectsList)
         {
-            var head = ((Symbol)objectsList[0]).Value;
+            var head = ((Symbol)objectsList[0]).Name;
             var operands = objectsList.GetRange(1, objectsList.Count - 1);
             return new Expression(head, operands);
         }
 
         private static IPattern BuildPattern(List<IElement> objects)
         {
-            var patternName = ((Symbol)objects[0]).Value;
-            var underscoresCount = ((Symbol)objects[1]).Value.Length;
-            var typeName = objects.Count == 2 ? "" : ((Symbol)objects[2]).Value;
+            var patternName = ((Symbol)objects[0]).Name;
+            var underscoresCount = ((Symbol)objects[1]).Name.Length;
+            var typeName = objects.Count == 2 ? "" : ((Symbol)objects[2]).Name;
             switch (underscoresCount, typeName)
             {
                 case (1, ""):
