@@ -8,8 +8,6 @@ using ShiftCo.ifmo_ca_lab_3.Evaluation.Types;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Types.Atoms;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Util;
 
-using static ShiftCo.ifmo_ca_lab_3.Evaluation.Util.Head;
-
 namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 {
     public static class Evaluator
