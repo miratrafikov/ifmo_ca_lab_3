@@ -7,7 +7,7 @@ using static ShiftCo.ifmo_ca_lab_3.Evaluation.Util.Head;
 
 namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Patterns
 {
-    public class NullableSequencePattern : IPattern
+    public class NullableSequencePattern
     {
         public NullableSequencePattern(string name)
         {

@@ -5,7 +5,7 @@ using static ShiftCo.ifmo_ca_lab_3.Evaluation.Util.Head;
 
 namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Patterns
 {
-    public class IntegerPattern : IPattern
+    public class IntegerPattern
     {
         public IntegerPattern(string name)
         {
