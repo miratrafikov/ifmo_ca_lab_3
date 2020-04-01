@@ -4,7 +4,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Types.Atoms
 {
     public class Integer : IAtom, IElement
     {
-        public int Value { get; set; }
+        public int Value { get; }
 
         public Integer(int value)
         {

@@ -4,7 +4,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Types.Atoms
 {
     public class Symbol : IAtom, IElement
     {
-        public string Value { get; set; }
+        public string Value { get; }
 
         public Symbol(string value)
         {
