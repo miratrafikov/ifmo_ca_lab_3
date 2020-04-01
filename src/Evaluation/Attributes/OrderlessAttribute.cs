@@ -11,10 +11,10 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Attributes
         public Expression Apply(Expression expr)
         {
             if (expr.Head == nameof(pow)) return expr;
-            var operands = expr.Operands;
-            if (operands != null)
-                operands.Sort(new ElementComparer());
-            return new Expression(expr.Head, operands);
+            var elements = expr.Elements;
+            if (elements != null)
+                elements.Sort(new ElementComparer());
+            return new Expression(expr.Head, elements);
         }
     }
 }

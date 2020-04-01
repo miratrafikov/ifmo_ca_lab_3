@@ -53,21 +53,21 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             if (lhs is Expression p && obj is Expression o)
             {
                 var j = 0;
-                for (var i = 0; i < o.Operands.Count; i++)
+                for (var i = 0; i < o.Elements.Count; i++)
                 {
                     // Skip all nullable sequences in pattern
-                    while (j < p.Operands.Count && p.Operands[j] is NullableSequencePattern) j++;
+                    while (j < p.Elements.Count && p.Elements[j] is NullableSequencePattern) j++;
                     IElement tempPattern = null;
-                    if (j < p.Operands.Count) tempPattern = p.Operands[j];
-                    if (!(Matches(tempPattern, o.Operands[i]) is null))
+                    if (j < p.Elements.Count) tempPattern = p.Elements[j];
+                    if (!(Matches(tempPattern, o.Elements[i]) is null))
                     {
-                        ((Expression)lhs).Operands[j] = tempPattern;
+                        ((Expression)lhs).Elements[j] = tempPattern;
                         j++;
                     }
                     // If does not matches but previous
-                    else if (j > 0 && p.Operands[j - 1] is NullableSequencePattern)
+                    else if (j > 0 && p.Elements[j - 1] is NullableSequencePattern)
                     {
-                        ((NullableSequencePattern)((Expression)lhs).Operands[j - 1]).Operands.Add(o.Operands[i]);
+                        ((NullableSequencePattern)((Expression)lhs).Elements[j - 1]).Operands.Add(o.Elements[i]);
                     }
                     else
                     {
@@ -75,9 +75,9 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                     }
                 }
 
-                while (j < ((Expression)lhs).Operands.Count &&
-                    ((Expression)lhs).Operands[j] is NullableSequencePattern) j++;
-                if (j == ((Expression)lhs).Operands.Count)
+                while (j < ((Expression)lhs).Elements.Count &&
+                    ((Expression)lhs).Elements[j] is NullableSequencePattern) j++;
+                if (j == ((Expression)lhs).Elements.Count)
                 {
                     s_patterns = new Dictionary<string, IPattern>();
                     if (ArePatternsSame(lhs)) return lhs;
@@ -129,7 +129,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             }
             else if (element is Expression expr)
             {
-                foreach (var o in expr.Operands)
+                foreach (var o in expr.Elements)
                 {
                     if (!ArePatternsSame(o)) return false;
                 }

@@ -67,12 +67,12 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                 case NullableSequencePattern seq:
                     return new NullableSequencePattern(seq.Name.Value);
                 case Expression exp:
-                    var operands = new List<IElement>();
-                    foreach (var o in exp.Operands)
+                    var elements = new List<IElement>();
+                    foreach (var o in exp.Elements)
                     {
-                        operands.Add(ClearPatterns(o));
+                        elements.Add(ClearPatterns(o));
                     }
-                    exp.Operands = operands;
+                    exp.Elements = elements;
                     return exp;
                 default:
                     return lhs;
@@ -83,12 +83,12 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
         {
             // Hardcode
             if (lhs is Expression expr &&
-                expr.Operands.Count == 5 &&
-                expr.Operands[0] is NullableSequencePattern seq1 &&
-                expr.Operands[1] is IntegerPattern int1 &&
-                expr.Operands[2] is NullableSequencePattern seq2 &&
-                expr.Operands[3] is IntegerPattern int2 &&
-                expr.Operands[4] is NullableSequencePattern seq3)
+                expr.Elements.Count == 5 &&
+                expr.Elements[0] is NullableSequencePattern seq1 &&
+                expr.Elements[1] is IntegerPattern int1 &&
+                expr.Elements[2] is NullableSequencePattern seq2 &&
+                expr.Elements[3] is IntegerPattern int2 &&
+                expr.Elements[4] is NullableSequencePattern seq3)
             {
                 Integer val;
                 switch (expr.Head)
@@ -111,23 +111,23 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                 }
                 if (!(val is null))
                 {
-                    var operands = seq1.Operands;
-                    operands = operands.Concat(seq2.Operands).ToList();
-                    operands.Add(val);
-                    operands = operands.Concat(seq3.Operands).ToList();
-                    var exp = new Expression(expr.Head, operands); ;
-                    exp.Operands.RemoveAll(o => o is NullableSequencePattern n &&
+                    var elements = seq1.Operands;
+                    elements = elements.Concat(seq2.Operands).ToList();
+                    elements.Add(val);
+                    elements = elements.Concat(seq3.Operands).ToList();
+                    var exp = new Expression(expr.Head, elements); ;
+                    exp.Elements.RemoveAll(o => o is NullableSequencePattern n &&
                                                 n.Operands.Count == 0);
                     return exp;
                 }
             }
             if (lhs is Expression pow &&
-                pow.Operands.Count == 5 &&
-                pow.Operands[0] is NullableSequencePattern seq4 &&
-                pow.Operands[1] is ElementPattern el &&
-                pow.Operands[2] is NullableSequencePattern seq5 &&
-                pow.Operands[3] is IntegerPattern int3 &&
-                pow.Operands[4] is NullableSequencePattern seq6)
+                pow.Elements.Count == 5 &&
+                pow.Elements[0] is NullableSequencePattern seq4 &&
+                pow.Elements[1] is ElementPattern el &&
+                pow.Elements[2] is NullableSequencePattern seq5 &&
+                pow.Elements[3] is IntegerPattern int3 &&
+                pow.Elements[4] is NullableSequencePattern seq6)
             {
                 return new Expression(nameof(mul), Enumerable.Repeat(el.Element, int3.Element.Value).ToList());
             }
@@ -149,7 +149,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                     break;
 
                 case Expression e:
-                    foreach (var o in e.Operands)
+                    foreach (var o in e.Elements)
                     {
                         PatternsSetUp(o);
                     }
@@ -179,9 +179,9 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 
                 case Expression exp:
                     var i = 0;
-                    while (i < exp.Operands.Count)
+                    while (i < exp.Elements.Count)
                     {
-                        if (exp.Operands[i] is NullableSequencePattern seq)
+                        if (exp.Elements[i] is NullableSequencePattern seq)
                         {
                             if (s_patterns.ContainsKey(seq.Name.Value))
                             {
@@ -192,23 +192,23 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                                 }
                                 if (((NullableSequencePattern)pattern).Operands.Count > 0)
                                 {
-                                    var operands = ((NullableSequencePattern)pattern).Operands;
-                                    exp.Operands.InsertRange(i, operands);
-                                    exp.Operands.RemoveAt(i + operands.Count);
+                                    var elements = ((NullableSequencePattern)pattern).Operands;
+                                    exp.Elements.InsertRange(i, elements);
+                                    exp.Elements.RemoveAt(i + elements.Count);
                                 }
                                 else
                                 {
-                                    exp.Operands.RemoveAt(i);
+                                    exp.Elements.RemoveAt(i);
                                 }
                             }
                         }
                         else
                         {
-                            exp.Operands[i] = ApplyPatterns(exp.Operands[i]);
+                            exp.Elements[i] = ApplyPatterns(exp.Elements[i]);
                         }
                         i++;
                     }
-                    exp.Operands.RemoveAll(o => o is NullableSequencePattern n &&
+                    exp.Elements.RemoveAll(o => o is NullableSequencePattern n &&
                                                 n.Operands.Count == 0);
                     return exp;
 

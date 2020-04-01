@@ -8,7 +8,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Types
     public class Expression : IElement
     {
         public IElement Head { get; set; }
-        public List<IElement> Operands { get; set; }
+        public List<IElement> Elements { get; set; }
         public List<IAttribute> Attributes { get; set; }
 
         public Expression()
@@ -25,9 +25,9 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Types
             Head = head;
         }
 
-        public Expression(IElement head, List<IElement> operands) : this(head)
+        public Expression(IElement head, List<IElement> elements) : this(head)
         {
-            Operands = operands;
+            Elements = elements;
         }
 
         public object Clone()

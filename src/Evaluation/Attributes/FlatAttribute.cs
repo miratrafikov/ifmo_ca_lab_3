@@ -11,30 +11,30 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Attributes
         public Expression Apply(Expression expr)
         {
             var head = expr.Head;
-            var operands = new List<IElement>();
-            foreach (var operand in expr.Operands)
+            var elements = new List<IElement>();
+            foreach (var element in expr.Elements)
             {
-                if (operand is Expression e)
+                if (element is Expression e)
                 {
-                    if (e.Operands.Count == 1)
+                    if (e.Elements.Count == 1)
                     {
-                        operands.Add(e.Operands.First());
+                        elements.Add(e.Elements.First());
                     }
                     else if (e.Head == head)
                     {
-                        operands = operands.Concat(((Expression)operand).Operands).ToList();
+                        elements = elements.Concat(((Expression)element).Elements).ToList();
                     }
                     else
                     {
-                        operands.Add(operand);
+                        elements.Add(element);
                     }
                 }
                 else
                 {
-                    operands.Add(operand);
+                    elements.Add(element);
                 }
             }
-            return new Expression(head, operands);
+            return new Expression(head, elements);
         }
     }
 }
