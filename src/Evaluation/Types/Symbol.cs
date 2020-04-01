@@ -13,6 +13,23 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Types
             Value = value;
         }
 
+        public override int GetHashCode()
+        {
+            var hashCode = 17 * Head.GetHashCode();
+            hashCode += 23 * Value.GetHashCode();
+            return hashCode;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return (obj is Symbol objAsSymbol && objAsSymbol.Value == Value);
+        }
+
+        public override string ToString()
+        {
+            return Value;
+        }
+
         public static implicit operator Symbol(string value) => new Symbol(value);
 
         public object Clone()
