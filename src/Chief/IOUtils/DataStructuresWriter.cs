@@ -27,9 +27,9 @@ namespace ShiftCo.ifmo_ca_lab_3.Chief.IOUtils
                 case Expression expression:
                     Console.WriteLine($"{indent}+- {head}");
                     indent += last ? "   " : "|  ";
-                    for (var i = 0; i < expression._operands.Count; i++)
+                    for (var i = 0; i < expression.Operands.Count; i++)
                     {
-                        PrintTree(expression._operands[i], indent, i == expression._operands.Count - 1);
+                        PrintTree(expression.Operands[i], indent, i == expression.Operands.Count - 1);
                     }
                     break;
             }
