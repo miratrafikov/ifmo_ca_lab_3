@@ -8,7 +8,6 @@ using ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Parseltongue;
 
 namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
 {
-    [TestClass]
     public class FromInput
     {
         [TestMethod]

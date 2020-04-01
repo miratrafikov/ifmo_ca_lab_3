@@ -17,6 +17,7 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
     {
         private static readonly ElementComparer s_comparer = new ElementComparer();
 
+        [TestMethod]
         public void Test1()
         {
             var add = new Expression(nameof(sum), new List<IElement>()
@@ -25,37 +26,8 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
                 new Integer(3),
                 new Integer(3)
             });
-            var lhs = new Expression(nameof(sum), new List<IElement>()
-            {
-                new NullableSequencePattern("a"),
-                new IntegerPattern("x"),
-                new NullableSequencePattern("b"),
-                new IntegerPattern("y"),
-                new NullableSequencePattern("c")
-            });
-
-            var rhs = new Expression(nameof(sum));
-            _ = Evaluator.Run(new Expression(nameof(set), new List<IElement>()
-            {
-                lhs, rhs
-            }));
-            _ = Evaluator.Run(add);
-
-        }
-
-        [TestMethod]
-        public void Test2()
-        {
-            var expr = new Expression(nameof(sum),
-                new Symbol("x"),
-                new Symbol("x")
-            );
-            //var alteredExpr = Evaluator.Run(expr);
-            var alteredExpr = new Expression(nameof(mul),
-                new Integer(2),
-                new Symbol("x")
-            );
-            Assert.AreEqual(s_comparer.Compare(alteredExpr, Evaluator.Run(expr)), 0);
+            var evaluated = Evaluator.Run(add);
+            Assert.AreEqual(s_comparer.Compare(new Integer(8), evaluated), 0);
         }
 
         [TestMethod]
@@ -75,6 +47,54 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
             );
             var evaluated = Evaluator.Run(expr);
             Assert.AreEqual(s_comparer.Compare(alteredExpr, evaluated), 0);
+        }
+
+        [TestMethod]
+        public void Test4()
+        {
+            var expr = new Expression(nameof(mul),
+                new Expression(nameof(sum),
+                    new Integer(3),
+                    new Symbol("x")
+                ),
+                new Integer(2)
+            );
+            var altered = new Expression(nameof(sum),
+                new Integer(6),
+                new Expression(nameof(mul),
+                    new Integer(2),
+                    new Symbol("x")
+                )
+            );
+            var evaluated = Evaluator.Run(expr);
+            Assert.AreEqual(s_comparer.Compare(evaluated, altered), 0);
+        }
+
+        public void Test5()
+        {
+            var expr = new Expression(nameof(mul),
+                new Expression(nameof(sum),
+                    new Integer(2),
+                    new Symbol("x")
+                ),
+                new Expression(nameof(sum),
+                    new Integer(2),
+                    new Symbol("x")
+                )
+            );
+            var altered = new Expression(nameof(sum),
+                new Integer(4),
+                new Expression(nameof(mul),
+                    new Symbol("x"),
+                    new Symbol("x")
+                ),
+                new Expression(nameof(mul),
+                    new Symbol("4"),
+                    new Symbol("x")
+                )
+            );
+            var evaluated = Evaluator.Run(expr);
+            Assert.AreEqual(s_comparer.Compare(evaluated, altered), 0);
         }
     }
 }

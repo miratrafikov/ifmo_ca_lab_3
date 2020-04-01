@@ -1,19 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
-using ShiftCo.ifmo_ca_lab_3.Commons.Exceptions;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Patterns;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Types;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Util;
-
 using static ShiftCo.ifmo_ca_lab_3.Evaluation.Util.Head;
 
 namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 {
     public class PatternMatcher
     {
-        private static Dictionary<string, IPattern> s_patterns = new Dictionary<string, IPattern>();
+        private static Dictionary<string, IPattern> Patterns = new Dictionary<string, IPattern>();
 
         public static IElement Matches(IElement lhs, IElement obj)
         {
@@ -51,8 +50,8 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 
             if (lhs is Expression p && obj is Expression o)
             {
-                var j = 0;
-                for (var i = 0; i < o._operands.Count; i++)
+                int j = 0;
+                for (int i = 0; i < o._operands.Count; i++)
                 {
                     // Skip all nullable sequences in pattern
                     while (j < p._operands.Count && p._operands[j] is NullableSequencePattern) j++;
@@ -78,35 +77,33 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                     ((Expression)lhs)._operands[j] is NullableSequencePattern) j++;
                 if (j == ((Expression)lhs)._operands.Count)
                 {
-                    s_patterns = new Dictionary<string, IPattern>();
+                    Patterns = new Dictionary<string, IPattern>();
                     if (ArePatternsSame(lhs)) return lhs;
-                    return null;
                 }
                 else
                 {
                     return null;
                 }
             }
-            throw new StrangePatternOrObjectException();
+            return null;
+            throw new Exception("Unexpected type of pattern and/or object");
         }
 
         // To see if all patterns with name 'x' are contains the same data.
         private static bool ArePatternsSame(IElement element)
         {
-            if (element is null)
-                return false;
             if (element is IPattern p)
             {
-                if (s_patterns.ContainsKey(p.Name.Value))
+                if (Patterns.ContainsKey(p.Name.Value))
                 {
                     var comparer = new ElementComparer();
-                    var dp = s_patterns[p.Name.Value];
+                    var dp = Patterns[p.Name.Value];
                     if (p is NullableSequencePattern l && dp is NullableSequencePattern r)
                     {
                         if (l.Operands.Count != r.Operands.Count) return false;
-                        foreach (var (first, second) in l.Operands.Zip(r.Operands))
+                        foreach (var o in l.Operands.Zip(r.Operands))
                         {
-                            if (comparer.Compare(first, second) != 0) return false;
+                            if (comparer.Compare(o.First, o.Second) != 0) return false;
                         }
                         return true;
                     }
@@ -122,7 +119,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                 }
                 else
                 {
-                    s_patterns.Add(p.Name.Value, p);
+                    Patterns.Add(p.Name.Value, p);
                     return true;
                 }
             }

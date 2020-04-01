@@ -72,8 +72,19 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
         {
             var builtins = new List<(IElement, IElement)>();
 
-            // mul(x_,add(a_,a___))  -> add(mul(x_,a_),mul(x_,a___))
+            // mul(1,2) -> 2
             var lhs = new Expression(nameof(mul),
+                s_seq1,
+                s_int1,
+                s_seq2,
+                s_int2,
+                s_seq3
+            );
+            var rhs = new Expression();
+            builtins.Add((lhs, rhs));
+
+            // mul(x_,add(a_,a___))  -> add(mul(x_,a_),mul(x_,a___))
+            lhs = new Expression(nameof(mul),
                 s_seq1,
                 s_x,
                 s_seq2,
@@ -83,7 +94,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                 ),
                 s_seq3
             );
-            var rhs = new Expression(nameof(mul),
+            rhs = new Expression(nameof(mul),
                 s_seq1,
                 s_seq2,
                 new Expression(nameof(sum),
@@ -136,15 +147,26 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
         {
             var builtins = new List<(IElement, IElement)>();
 
-            // sum(x,x) -> mul(2,x)
+            // add(1,2) -> 3
             var lhs = new Expression(nameof(sum),
+                s_seq1,
+                s_int1,
+                s_seq2,
+                s_int2,
+                s_seq3
+            );
+            var rhs = new Expression();
+            builtins.Add((lhs, rhs));
+
+            // sum(x,x) -> mul(2,x)
+            lhs = new Expression(nameof(sum),
                 s_seq1,
                 s_x,
                 s_seq2,
                 s_x,
                 s_seq3
             );
-            var rhs = new Expression(nameof(sum),
+            rhs = new Expression(nameof(sum),
                 s_seq1,
                 s_seq2,
                 new Expression(nameof(mul),
