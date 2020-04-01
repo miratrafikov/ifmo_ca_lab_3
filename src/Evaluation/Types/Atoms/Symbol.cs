@@ -1,18 +1,15 @@
 ﻿using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
-using static ShiftCo.ifmo_ca_lab_3.Evaluation.Util.Head;
 
 namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Types.Atoms
 {
     public class Symbol : IAtom, IElement
     {
+        public string Value { get; set; }
+
         public Symbol(string value)
         {
-            Head = nameof(symbol);
             Value = value;
         }
-
-        public string Head { get; set; }
-        public string Value { get; set; }
 
         public static implicit operator Symbol(string value) => new Symbol(value);
 

@@ -1,18 +1,15 @@
 ﻿using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
-using static ShiftCo.ifmo_ca_lab_3.Evaluation.Util.Head;
 
 namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Types.Atoms
 {
     public class Integer : IAtom, IElement
     {
+        public int Value { get; set; }
+
         public Integer(int value)
         {
-            Head = nameof(integer);
             Value = value;
         }
-
-        public string Head { get; set; }
-        public int Value { get; set; }
 
         public static implicit operator Integer(int value) => new Integer(value);
 
