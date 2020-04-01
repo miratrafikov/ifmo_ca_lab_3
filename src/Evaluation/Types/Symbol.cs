@@ -4,7 +4,7 @@ using static ShiftCo.ifmo_ca_lab_3.Evaluation.Util.Head;
 
 namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Types
 {
-    public class Symbol : IAtom<string>
+    public class Symbol : IElement, IAtom
     {
         public Symbol(string value)
         {
