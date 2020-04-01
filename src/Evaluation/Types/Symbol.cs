@@ -30,11 +30,11 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Types
             return Value;
         }
 
-        public static implicit operator Symbol(string value) => new Symbol(value);
-
         public object Clone()
         {
-            return this.MemberwiseClone();
+            return MemberwiseClone();
         }
+
+        public static implicit operator Symbol(string value) => new Symbol(value);
     }
 }
