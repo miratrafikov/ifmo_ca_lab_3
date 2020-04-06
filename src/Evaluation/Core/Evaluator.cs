@@ -13,7 +13,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 {
     public static class Evaluator
     {
-        private static readonly int s_maxIterationsAmount = 10000;
+        private static readonly int s_maxIterationsAmount = 1000;
         private static int s_iterations = 0;
         private static readonly ElementComparer s_comparer = new ElementComparer();
 
@@ -21,7 +21,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
         {
             s_iterations = 0;
             var expr = new Expression("Evaluate", element);
-            return ((Expression)LoopedEvaluate(expr))._operands.FirstOrDefault();
+            return LoopedEvaluate(expr);
         }
 
         private static void IncreaseIterations()
@@ -33,16 +33,21 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             }
         }
 
-        private static IElement LoopedEvaluate(IElement expression)
+        private static IElement LoopedEvaluate(IElement element)
         {
-            var post = expression;
-            IElement pre = null;
-            while (s_comparer.Compare(pre, post) != 0)
+            var evaluated = Evaluate(element);
+            if (evaluated is Expression expr && expr._operands.Count == 1)
             {
-                pre = post;
-                post = Evaluate(pre);
+                evaluated = expr._operands.First();
             }
-            return post;
+            if (s_comparer.Compare(evaluated, element) == 0)
+            {
+                return evaluated;
+            }
+            else
+            {
+                return LoopedEvaluate(evaluated);
+            }
         }
 
         private static IElement Evaluate(IElement element)
@@ -57,6 +62,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                     return Context.GetElement(s);
 
                 case Expression e:
+                    // TODO: 
                     if (e.Attributes.Contains(new HoldAttribute()))
                     {
                         return e;
