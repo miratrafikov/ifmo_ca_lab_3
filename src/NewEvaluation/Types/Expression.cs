@@ -9,6 +9,7 @@ namespace ShiftCo.ifmo_ca_lab_3.NewEvaluation.Types
     {
         public IElement Head { get; set; }
         public List<IElement> Elements { get; set; }
+        public List<Attribute> Attributes { get; set; }
 
         public Expression(IElement head, List<IElement> elements)
         {
@@ -49,6 +50,14 @@ namespace ShiftCo.ifmo_ca_lab_3.NewEvaluation.Types
                 }
             }
             return str;
+        }
+
+        public void AddAttribute(Attribute attribute)
+        {
+            if (!Attributes.Contains(attribute))
+            {
+                Attributes.Add(attribute);
+            }
         }
     }
 }
