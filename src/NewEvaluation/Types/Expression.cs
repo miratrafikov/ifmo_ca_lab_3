@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using ShiftCo.ifmo_ca_lab_3.NewEvaluation.Interfaces;
+using ShiftCo.ifmo_ca_lab_3.NewEvaluation.Utils;
+using Attribute = System.Attribute;
 
 namespace ShiftCo.ifmo_ca_lab_3.NewEvaluation.Types
 {
@@ -24,7 +26,8 @@ namespace ShiftCo.ifmo_ca_lab_3.NewEvaluation.Types
 
         public override int GetHashCode()
         {
-            var hashCode = 17 * Head.GetHashCode();
+            var hashCode = 17 * (int)Element.Expression;
+            hashCode += 23 * Head.GetHashCode();
             foreach (var element in Elements)
             {
                 hashCode += 23 * element.GetHashCode();

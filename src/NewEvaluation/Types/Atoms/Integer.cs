@@ -1,4 +1,5 @@
 ﻿using ShiftCo.ifmo_ca_lab_3.NewEvaluation.Interfaces;
+using ShiftCo.ifmo_ca_lab_3.NewEvaluation.Utils;
 
 namespace ShiftCo.ifmo_ca_lab_3.NewEvaluation.Types.Atoms
 {
@@ -13,7 +14,7 @@ namespace ShiftCo.ifmo_ca_lab_3.NewEvaluation.Types.Atoms
 
         public override int GetHashCode()
         {
-            var hashCode = 17;
+            var hashCode = 17 * (int)Element.Integer;
             hashCode += 23 * Value.GetHashCode();
             return hashCode;
         }
