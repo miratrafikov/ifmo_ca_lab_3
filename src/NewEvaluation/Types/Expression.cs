@@ -11,6 +11,11 @@ namespace ShiftCo.ifmo_ca_lab_3.NewEvaluation.Types
         public List<IElement> Elements { get; set; }
         public List<Attribute> Attributes { get; set; }
 
+        public Expression(IElement head)
+        {
+            Head = head;
+        }
+
         public Expression(IElement head, List<IElement> elements)
         {
             Head = head;
