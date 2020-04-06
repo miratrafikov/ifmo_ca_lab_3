@@ -10,5 +10,22 @@ namespace ShiftCo.ifmo_ca_lab_3.NewEvaluation.Types.Atoms
         {
             Value = value;
         }
+
+        public override int GetHashCode()
+        {
+            var hashCode = 17;
+            hashCode += 23 * Value.GetHashCode();
+            return hashCode;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return (obj is Symbol objAsSymbol && objAsSymbol.Value == Value);
+        }
+
+        public override string ToString()
+        {
+            return Value;
+        }
     }
 }
