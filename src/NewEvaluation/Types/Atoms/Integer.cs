@@ -1,6 +1,8 @@
-﻿namespace ShiftCo.ifmo_ca_lab_3.NewEvaluation.Types.Atoms
+﻿using ShiftCo.ifmo_ca_lab_3.NewEvaluation.Interfaces;
+
+namespace ShiftCo.ifmo_ca_lab_3.NewEvaluation.Types.Atoms
 {
-    public class Integer
+    public class Integer : IAtom, IElement
     {
         public readonly int Value;
 
