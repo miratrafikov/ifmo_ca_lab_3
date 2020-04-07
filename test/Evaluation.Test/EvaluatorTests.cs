@@ -92,10 +92,124 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
                 new Expression(nameof(mul),
                     new Symbol("x"),
                     new Symbol("x")
-                )                
+                )
             );
             var evaluated = Evaluator.Run(expr);
             Assert.AreEqual(s_comparer.Compare(evaluated, altered), 0);
+        }
+
+        [TestMethod]
+        public void Test5()
+        {
+            var expr = new Expression(nameof(pow),
+                new Expression(nameof(sum),
+                    new Integer(2),
+                    new Symbol("x")
+                ),
+                new Integer(2)
+            );
+            var altered = new Expression(nameof(sum),
+                new Integer(4),
+                new Expression(nameof(mul),
+                    new Integer(4),
+                    new Symbol("x")
+                ),
+                new Expression(nameof(mul),
+                    new Symbol("x"),
+                    new Symbol("x")
+                )
+            );
+            var evaluated = Evaluator.Run(expr);
+            Assert.AreEqual(0, s_comparer.Compare(evaluated, altered));
+        }
+
+        [TestMethod]
+        public void Test6()
+        {
+            var expr = new Expression(nameof(pow),
+                new Expression(nameof(sum),
+                    new Integer(-2),
+                    new Symbol("x")
+                ),
+                new Integer(2)
+            );
+            var altered = new Expression(nameof(sum),
+                new Integer(4),
+                new Expression(nameof(mul),
+                    new Integer(-4),
+                    new Symbol("x")
+                ),
+                new Expression(nameof(mul),
+                    new Symbol("x"),
+                    new Symbol("x")
+                )
+            );
+            var evaluated = Evaluator.Run(expr);
+            Assert.AreEqual(0, s_comparer.Compare(evaluated, altered));
+        }
+
+        [TestMethod]
+        public void Test7()
+        {
+            var expr = new Expression(nameof(pow),
+                new Expression(nameof(sum),
+                    new Expression(nameof(mul),
+                        new Integer(-1),
+                        new Symbol("y")
+                    ),
+                    new Symbol("x")
+                ),
+                new Integer(2)
+            ) ;
+            var altered = new Expression(nameof(sum),
+                new Expression(nameof(mul),
+                    new Symbol("x"),
+                    new Symbol("x")
+                ),
+                new Expression(nameof(mul),
+                    new Symbol("y"),
+                    new Symbol("y")
+                ),
+                new Expression(nameof(mul),
+                    new Integer(-2),
+                    new Symbol("x"),
+                    new Symbol("y")
+                )
+            );
+            var evaluated = Evaluator.Run(expr);
+            Assert.AreEqual(0, s_comparer.Compare(evaluated, altered));
+        }
+
+        [TestMethod]
+        public void Test8()
+        {
+            var expr = new Expression(nameof(pow),
+                new Expression(nameof(sum),
+                    new Expression(nameof(mul),
+                        new Integer(-1),
+                        new Symbol("y")
+                    ),
+                    new Symbol("x")
+                ),
+                new Integer(3)
+            );
+            var altered = new Expression(nameof(sum),
+                new Expression(nameof(mul),
+                    new Symbol("x"),
+                    new Symbol("x")
+                ),
+                new Expression(nameof(mul),
+                    new Symbol("y"),
+                    new Symbol("y")
+                ),
+                new Expression(nameof(mul),
+                    new Integer(-2),
+                    new Symbol("x"),
+                    new Symbol("y")
+                )
+            );
+            var evaluated = Evaluator.Run(expr);
+            Assert.AreEqual(0, s_comparer.Compare(evaluated, altered));
         }
     }
 }

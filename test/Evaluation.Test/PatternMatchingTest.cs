@@ -11,6 +11,7 @@ using static ShiftCo.ifmo_ca_lab_3.Evaluation.Util.Head;
 
 namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
 {
+    [TestClass]
     public class PatternMatchingTest
     {
         [TestMethod]

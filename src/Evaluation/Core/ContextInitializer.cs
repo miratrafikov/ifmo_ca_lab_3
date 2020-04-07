@@ -26,9 +26,9 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 
         // Sequences
         // Named sequences
-        private static readonly IPattern s_seqX = new NullableSequencePattern("s_x");
-        private static readonly IPattern s_seqY = new NullableSequencePattern("s_y");
-        private static readonly IPattern s_seqZ = new NullableSequencePattern("s_z");
+        private static readonly IPattern s_seqX = new NullableSequencePattern("seqX");
+        private static readonly IPattern s_seqY = new NullableSequencePattern("seqY");
+        private static readonly IPattern s_seqZ = new NullableSequencePattern("seqZ");
 
         // _ seqs
         private static readonly IPattern s_seq1 = new NullableSequencePattern("seq1");
@@ -61,15 +61,15 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                 s_seq1,
                 s_x,
                 s_seq2,
-                s_y,
+                s_int1,
                 s_seq3
             );
             var rhs = new Expression();
             builtins.Add((lhs, rhs));
 
             // pow(x, 0) -> 1
-            lhs = new Expression(nameof(pow), 
-                s_seq1, 
+            lhs = new Expression(nameof(pow),
+                s_seq1,
                 new Integer(0)
             );
             rhs = new Expression(nameof(pow),
@@ -93,6 +93,22 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                 s_seq3
             );
             var rhs = new Expression();
+            builtins.Add((lhs, rhs));
+
+            // mul(1,x) -> x
+            lhs = new Expression(nameof(mul),
+                s_seq1,
+                new Integer(1),
+                s_seq2,
+                s_seqX,
+                s_seq3
+            );
+            rhs = new Expression(nameof(mul),
+                s_seq1,
+                s_seq2,
+                s_seqX,
+                s_seq3
+            );
             builtins.Add((lhs, rhs));
 
             // mul(0,x) -> o/
@@ -180,12 +196,12 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             builtins.Add((lhs, rhs));
 
             // add(0,x,y) -> add(x,y)
-            lhs = new Expression(nameof(sum), 
+            lhs = new Expression(nameof(sum),
                 s_seq1,
                 new Integer(0),
                 s_seq2
             );
-            rhs = new Expression(nameof(sum), 
+            rhs = new Expression(nameof(sum),
                 s_seq1,
                 s_seq2
             );
@@ -215,12 +231,12 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                 s_seq1,
                 new Expression(nameof(mul),
                     s_int1,
-                    s_x
+                    s_seqX
                 ),
                 s_seq2,
                 new Expression(nameof(mul),
                     s_int2,
-                    s_x
+                    s_seqX
                 ),
                 s_seq3
             );
@@ -235,7 +251,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                         s_int2,
                         s_seq6
                     ),
-                    s_x
+                    s_seqX
                 ),
                 s_seq3
             );
@@ -265,6 +281,34 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                         s_seq6
                     ),
                     s_x
+                ),
+                s_seq3
+            );
+            builtins.Add((lhs, rhs));
+
+            // sum(mul(x,y),mul(2,x,y)) -> mul(sum(2,1),x,y)
+            lhs = new Expression(nameof(sum),
+                s_seq1,
+                new Expression(nameof(mul), s_seqX),
+                s_seq2,
+                new Expression(nameof(mul),
+                    s_int1,
+                    s_seqX
+                ),
+                s_seq3
+            );
+            rhs = new Expression(nameof(sum),
+                s_seq1,
+                s_seq2,
+                new Expression(nameof(mul),
+                    new Expression(nameof(sum),
+                        s_seq4,
+                        s_int1,
+                        s_seq5,
+                        new Integer(1),
+                        s_seq6
+                    ),
+                    s_seqX
                 ),
                 s_seq3
             );

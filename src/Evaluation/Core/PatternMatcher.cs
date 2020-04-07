@@ -13,6 +13,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
     public class PatternMatcher
     {
         private static Dictionary<string, IPattern> Patterns = new Dictionary<string, IPattern>();
+        private static ElementComparer Comparer = new ElementComparer();
 
         public static Result Matches(IElement lhs, IElement obj)
         {
@@ -27,13 +28,6 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                 return new Result(false);
             }
 
-            // No pattern kinds required
-            // Example: Symbol x and Symbol x
-            if (ReferenceEquals(lhs, obj))
-            {
-                return new Result(true, lhs);
-            }
-
             // Pattern is kind of '_Integer'
             if (obj is Integer integer && lhs is IntegerPattern)
             {
@@ -45,6 +39,13 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             if (lhs is ElementPattern)
             {
                 ((ElementPattern)lhs).Element = obj;
+                return new Result(true, lhs);
+            }
+
+            // No pattern kinds required
+            // Example: Symbol x and Symbol x
+            if (Comparer.Compare(lhs, obj) == 0)
+            {
                 return new Result(true, lhs);
             }
 
@@ -87,7 +88,6 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                 }
             }
             return new Result(false);
-            throw new Exception("Unexpected type of pattern and/or object");
         }
 
         // To see if all patterns with name 'x' are contain the same data.
