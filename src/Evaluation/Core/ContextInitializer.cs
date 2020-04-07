@@ -46,8 +46,8 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             var context = new List<(IElement, IElement)>();
             context = context
                 .Concat(PowBuiltins())
-                .Concat(AddBuiltins())
                 .Concat(MulBuiltins())
+                .Concat(AddBuiltins())
                 .ToList();
             return context;
         }
@@ -56,6 +56,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
         private static List<(IElement, IElement)> PowBuiltins()
         {
             var builtins = new List<(IElement, IElement)>();
+            // Pow(x,2) -> Mul(x,x)
             var lhs = new Expression(nameof(pow),
                 s_seq1,
                 s_x,
@@ -103,6 +104,34 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             rhs = new Expression(nameof(mul), new Integer(0));
             builtins.Add((lhs, rhs));
 
+            // mul(add(x_, y___), add(z___)) -> add(mul(x_, z___), mul(add(y___), add(z___)))
+            lhs = new Expression(nameof(mul),
+                s_seq1,
+                new Expression(nameof(sum),
+                    s_x,
+                    s_seqY
+                ),
+                s_seq2,
+                new Expression(nameof(sum), s_seqZ),
+                s_seq3
+            );
+            rhs = new Expression(nameof(mul),
+                s_seq1,
+                s_seq2,
+                new Expression(nameof(sum),
+                    new Expression(nameof(mul),
+                        s_x,
+                        new Expression(nameof(sum), s_seqZ)
+                    ),
+                    new Expression(nameof(mul),
+                        new Expression(nameof(sum), s_seqY),
+                        new Expression(nameof(sum), s_seqZ)
+                    )
+                ),
+                s_seq3
+            );
+            builtins.Add((lhs, rhs));
+
             // mul(x_,add(a_,a___))  -> add(mul(x_,a_),mul(x_,a___))
             lhs = new Expression(nameof(mul),
                 s_seq1,
@@ -124,35 +153,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                     ),
                     new Expression(nameof(mul),
                         s_x,
-                        s_seqZ
-                    )
-                ),
-                s_seq3
-            );
-            builtins.Add((lhs, rhs));
-
-            // mul(add(x_, y___), add(z___)) -> add(mul(x_, z___), mul(add(y___), add(z___)))
-            lhs = new Expression(nameof(mul),
-                s_seq1,
-                new Expression(nameof(sum),
-                    s_x,
-                    s_seqY
-                ),
-                s_seq2,
-                new Expression(nameof(sum), s_seqZ),
-                s_seq3
-            );
-            rhs = new Expression(nameof(mul),
-                s_seq1,
-                s_seq2,
-                new Expression(nameof(sum),
-                    new Expression(nameof(mul),
-                        s_x,
-                        s_seqZ
-                    ),
-                    new Expression(nameof(mul),
-                        s_seqY,
-                        s_seqZ
+                        new Expression(nameof(sum), s_seqZ)
                     )
                 ),
                 s_seq3

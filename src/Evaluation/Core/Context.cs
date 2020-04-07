@@ -38,9 +38,9 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             {
                 var (lhs, rhs) = rule;
                 var matchResult = Matches(lhs, element);
-                if (!(matchResult is null))
+                if (matchResult.Success == true)
                 {
-                    return GetRhs(matchResult, rhs);
+                    return GetRhs((IElement)matchResult.Value, rhs);
                 }
             }
             return element;
@@ -53,6 +53,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             {
                 var (lhs, rhs) = rule;
                 lhs = ClearPatterns(lhs);
+                rhs = ClearPatterns(rhs);
             }
         }
 
@@ -162,26 +163,30 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 
         private static IElement ApplyPatterns(IElement rhs)
         {
+            IElement result = null;
             IPattern pattern = null;
             switch (rhs)
             {
                 case IPattern p when (!s_patterns.ContainsKey(p.Name.Value)):
-                    return rhs;
+                    result = rhs;
+                    break;
                 case IPattern p when p.GetType() != s_patterns[p.Name.Value].GetType():
                     throw new PatternsDontMatchException();
                 case IntegerPattern integer:
                     pattern = s_patterns[integer.Name.Value];
-                    return ((IntegerPattern)pattern).Element;
+                    result = ((IntegerPattern)pattern).Element;
+                    break;
 
                 case ElementPattern element:
                     pattern = s_patterns[element.Name.Value];
-                    return ((ElementPattern)pattern).Element;
+                    result = ((ElementPattern)pattern).Element;
+                    break;
 
-                case Expression exp:
-                    var i = 0;
-                    while (i < exp._operands.Count)
+                case Expression expr:
+                    result = new Expression(expr.Head);
+                    foreach(var operand in expr._operands)
                     {
-                        if (exp._operands[i] is NullableSequencePattern seq)
+                        if (operand is NullableSequencePattern seq)
                         {
                             if (s_patterns.ContainsKey(seq.Name.Value))
                             {
@@ -193,28 +198,22 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                                 if (((NullableSequencePattern)pattern).Operands.Count > 0)
                                 {
                                     var operands = ((NullableSequencePattern)pattern).Operands;
-                                    exp._operands.InsertRange(i, operands);
-                                    exp._operands.RemoveAt(i + operands.Count);
-                                }
-                                else
-                                {
-                                    exp._operands.RemoveAt(i);
+                                    ((Expression)result)._operands.AddRange(operands);
                                 }
                             }
                         }
                         else
                         {
-                            exp._operands[i] = ApplyPatterns(exp._operands[i]);
+                            ((Expression)result)._operands.Add(ApplyPatterns(operand));
                         }
-                        i++;
                     }
-                    exp._operands.RemoveAll(o => o is NullableSequencePattern n &&
-                                                n.Operands.Count == 0);
-                    return exp;
+                    break;
 
                 default:
-                    return rhs;
+                    result = rhs;
+                    break;
             }
+            return result;
         }
     }
 }

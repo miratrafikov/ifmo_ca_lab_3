@@ -31,7 +31,7 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
         }
 
         [TestMethod]
-        public void Test3()
+        public void Test2()
         {
             var expr = new Expression(nameof(sum),
                 new Symbol("x"),
@@ -50,7 +50,7 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
         }
 
         [TestMethod]
-        public void Test4()
+        public void Test3()
         {
             var expr = new Expression(nameof(mul),
                 new Expression(nameof(sum),
@@ -70,7 +70,8 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
             Assert.AreEqual(s_comparer.Compare(evaluated, altered), 0);
         }
 
-        public void Test5()
+        [TestMethod]
+        public void Test4()
         {
             var expr = new Expression(nameof(mul),
                 new Expression(nameof(sum),
@@ -85,13 +86,13 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
             var altered = new Expression(nameof(sum),
                 new Integer(4),
                 new Expression(nameof(mul),
-                    new Symbol("x"),
+                    new Integer(4),
                     new Symbol("x")
                 ),
                 new Expression(nameof(mul),
-                    new Symbol("4"),
+                    new Symbol("x"),
                     new Symbol("x")
-                )
+                )                
             );
             var evaluated = Evaluator.Run(expr);
             Assert.AreEqual(s_comparer.Compare(evaluated, altered), 0);
