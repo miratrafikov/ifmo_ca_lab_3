@@ -144,6 +144,28 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 
         }
 
+        private static Expression ClearPatterns(Expression expr,int from, int to)
+        {
+            for (var i = from; i <= to; i++)
+            {
+                switch (expr.Operands[i])
+                {
+                    case NullableSequencePattern seq:
+                        seq.Operands = new List<IElement>();
+                        break;
+                    case ElementPattern elem:
+                        elem.Element = null;
+                        break;
+                    case IntegerPattern integer:
+                        integer.Element = null;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            return expr;
+        }
+
         // To see if all patterns with name 'x' are contain the same data.
         private static bool ArePatternsSame(IElement element)
         {

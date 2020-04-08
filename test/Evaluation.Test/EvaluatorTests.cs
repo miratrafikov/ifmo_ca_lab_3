@@ -180,17 +180,15 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
             Assert.AreEqual(0, s_comparer.Compare(evaluated, altered));
         }
 
+        [TestMethod]
         public void Test8()
         {
             var expr = new Expression(nameof(pow),
                 new Expression(nameof(sum),
-                    new Expression(nameof(mul),
-                        new Integer(-1),
-                        new Symbol("y")
-                    ),
+                    new Symbol("y"),
                     new Symbol("x")
                 ),
-                new Integer(3)
+                new Integer(4)
             );
             var altered = new Expression(nameof(sum),
                 new Expression(nameof(mul),
