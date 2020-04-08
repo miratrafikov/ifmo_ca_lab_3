@@ -1,6 +1,4 @@
-﻿using System;
-using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Core;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Types;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Util;
@@ -19,7 +17,8 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
                 new Symbol("summa"),
                 new Symbol("sum")
             );
-            Evaluator.Run(expr);
+            var s = Evaluator.Run(expr);
+            Assert.AreEqual(0,Comparer.Compare(s, new Symbol("sum")));
             expr = new Expression("summa",
                 new Integer(2),
                 new Integer(2));

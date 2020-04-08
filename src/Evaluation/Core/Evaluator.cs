@@ -92,28 +92,18 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 
                 case Expression e:
 
-                    if (e.Attributes.Contains(new HoldAttribute("HoldAll")))
-                    {
-                        return e;
-                    }
-
                     // apply attributes
                     e = ApplyAttributes(e);
 
-                    // evaluate each child
-                    var ini = 0;
-                    if (e.Attributes.Contains(new HoldAttribute("HoldFirst"))) ini = Math.Min(1, e.Operands.Count);
-                    for (var i = ini; i < e.Operands.Count; i++)
+                    if (!e.Attributes.Contains(new HoldAttribute("HoldAll")))
                     {
-                        e.Operands[i] = LoopedEvaluate(e.Operands[i]);
-                    }
-
-                    // add a rule in the context if expr is set
-                    if (e.Head == nameof(set))
-                    {
-                        Context.AddRule(e.Operands[0], e.Operands[1]);
-                        // no need in applying rules
-                        return e.Operands[1];
+                        // evaluate each child
+                        var ini = 0;
+                        if (e.Attributes.Contains(new HoldAttribute("HoldFirst"))) ini = Math.Min(1, e.Operands.Count);
+                        for (var i = ini; i < e.Operands.Count; i++)
+                        {
+                            e.Operands[i] = LoopedEvaluate(e.Operands[i]);
+                        }
                     }
 
                     // apply rules
