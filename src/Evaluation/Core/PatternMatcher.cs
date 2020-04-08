@@ -76,6 +76,18 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 
                     //return AreExpressionsMatches(p, o);
                 }
+
+                while (j < ((Expression)lhs).Operands.Count &&
+                    ((Expression)lhs).Operands[j] is NullableSequencePattern) j++;
+                if (j == ((Expression)lhs).Operands.Count)
+                {
+                    Patterns = new Dictionary<string, IPattern>();
+                    if (ArePatternsSame(lhs)) return new Result(true, lhs);
+                }
+                else
+                {
+                    return new Result(false);
+                }
             }
             return new Result(false);
         }
