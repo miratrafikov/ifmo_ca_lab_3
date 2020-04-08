@@ -116,12 +116,14 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                 else if (matches.Count > 0 && pos.Count > 0)
                 {
                     var lastMatch = matches.Pop();
+                    var lastPos = pos.Pop();
                     // TODO: reset all patterns after lastmatch
 
                     // move all elements into seq from last match to his closest nullable seq, 
                     // which goes before him
-                    var c = lastMatch;
+                    var c = lastPos;
                     while (!(pattern.Operands[c] is NullableSequencePattern)) c--;
+                    pattern = ClearPatterns(pattern, c, pattern.Operands.Count);
 
                 }
                 else
