@@ -180,7 +180,6 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
             Assert.AreEqual(0, s_comparer.Compare(evaluated, altered));
         }
 
-        [TestMethod]
         public void Test8()
         {
             var expr = new Expression(nameof(pow),

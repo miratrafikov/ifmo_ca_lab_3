@@ -36,9 +36,9 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
         private static IElement LoopedEvaluate(IElement element)
         {
             var evaluated = Evaluate(element);
-            if (evaluated is Expression expr && expr._operands.Count == 1)
+            if (evaluated is Expression expr && expr.Operands.Count == 1)
             {
-                evaluated = expr._operands.First();
+                evaluated = expr.Operands.First();
             }
             if (s_comparer.Compare(evaluated, element) == 0)
             {
@@ -76,17 +76,17 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 
                     // evaluate each child
                     // TODO: Hold logic
-                    for (var i = 0; i < e._operands.Count; i++)
+                    for (var i = 0; i < e.Operands.Count; i++)
                     {
-                        e._operands[i] = LoopedEvaluate(e._operands[i]);
+                        e.Operands[i] = LoopedEvaluate(e.Operands[i]);
                     }
 
                     // add a rule in the context if expr is either set or delayed 
                     if (e.Head == nameof(set) || e.Head == nameof(delayed))
                     {
-                        Context.AddRule(e._operands[0], e._operands[1]);
+                        Context.AddRule(e.Operands[0], e.Operands[1]);
                         // no need in applying rules
-                        return e._operands[1];
+                        return e.Operands[1];
                     }
 
                     // apply rules

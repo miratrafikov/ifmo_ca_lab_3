@@ -11,7 +11,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Types
 
         public Expression()
         {
-            _operands = new List<IElement>();
+            Operands = new List<IElement>();
             Attributes = new List<IAttribute>()
             {
                 new ComplexAttribute(),
@@ -23,7 +23,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Types
         public Expression(string head)
         {
             Head = head;
-            _operands = new List<IElement>();
+            Operands = new List<IElement>();
             Attributes = new List<IAttribute>()
             {
                 new ComplexAttribute(),
@@ -35,7 +35,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Types
         public Expression(string head, List<IElement> operands)
         {
             Head = head;
-            _operands = operands;
+            Operands = operands;
             Attributes = new List<IAttribute>()
             {
                 new ComplexAttribute(),
@@ -47,10 +47,10 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Types
         public Expression(string head, params IElement[] operands)
         {
             Head = head;
-            _operands = new List<IElement>();
+            Operands = new List<IElement>();
             foreach (var operand in operands)
             {
-                _operands.Add(operand);
+                Operands.Add(operand);
             }
             Attributes = new List<IAttribute>()
             {
@@ -62,7 +62,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Types
 
         #endregion Constructors
 
-        public List<IElement> _operands;
+        public List<IElement> Operands;
         public string Head { get; set; }
         public List<IAttribute> Attributes { get; set; }
 

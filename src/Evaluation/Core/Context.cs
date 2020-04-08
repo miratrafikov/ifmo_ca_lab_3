@@ -33,6 +33,10 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 
         public static IElement GetElement(IElement element)
         {
+            if (element.Head == "sum" && ((Expression)element).Operands.Count == 5)
+            {
+                Console.WriteLine("q");
+            }
             ClearPatterns();
             foreach (var rule in s_context)
             {
@@ -69,11 +73,11 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                     return new NullableSequencePattern(seq.Name.Value);
                 case Expression exp:
                     var operands = new List<IElement>();
-                    foreach (var o in exp._operands)
+                    foreach (var o in exp.Operands)
                     {
                         operands.Add(ClearPatterns(o));
                     }
-                    exp._operands = operands;
+                    exp.Operands = operands;
                     return exp;
                 default:
                     return lhs;
@@ -84,12 +88,12 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
         {
             // Hardcode
             if (lhs is Expression expr &&
-                expr._operands.Count == 5 &&
-                expr._operands[0] is NullableSequencePattern seq1 &&
-                expr._operands[1] is IntegerPattern int1 &&
-                expr._operands[2] is NullableSequencePattern seq2 &&
-                expr._operands[3] is IntegerPattern int2 &&
-                expr._operands[4] is NullableSequencePattern seq3)
+                expr.Operands.Count == 5 &&
+                expr.Operands[0] is NullableSequencePattern seq1 &&
+                expr.Operands[1] is IntegerPattern int1 &&
+                expr.Operands[2] is NullableSequencePattern seq2 &&
+                expr.Operands[3] is IntegerPattern int2 &&
+                expr.Operands[4] is NullableSequencePattern seq3)
             {
                 Integer val;
                 switch (expr.Head)
@@ -117,18 +121,18 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                     operands.Add(val);
                     operands = operands.Concat(seq3.Operands).ToList();
                     var exp = new Expression(expr.Head, operands); ;
-                    exp._operands.RemoveAll(o => o is NullableSequencePattern n &&
+                    exp.Operands.RemoveAll(o => o is NullableSequencePattern n &&
                                                 n.Operands.Count == 0);
                     return exp;
                 }
             }
             if (lhs is Expression pow &&
-                pow._operands.Count == 5 &&
-                pow._operands[0] is NullableSequencePattern seq4 &&
-                pow._operands[1] is ElementPattern el &&
-                pow._operands[2] is NullableSequencePattern seq5 &&
-                pow._operands[3] is IntegerPattern int3 &&
-                pow._operands[4] is NullableSequencePattern seq6)
+                pow.Operands.Count == 5 &&
+                pow.Operands[0] is NullableSequencePattern seq4 &&
+                pow.Operands[1] is ElementPattern el &&
+                pow.Operands[2] is NullableSequencePattern seq5 &&
+                pow.Operands[3] is IntegerPattern int3 &&
+                pow.Operands[4] is NullableSequencePattern seq6)
             {
                 return new Expression(nameof(mul), Enumerable.Repeat(el.Element, int3.Element.Value).ToList());
             }
@@ -150,7 +154,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                     break;
 
                 case Expression e:
-                    foreach (var o in e._operands)
+                    foreach (var o in e.Operands)
                     {
                         PatternsSetUp(o);
                     }
@@ -184,7 +188,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 
                 case Expression expr:
                     result = new Expression(expr.Head);
-                    foreach(var operand in expr._operands)
+                    foreach(var operand in expr.Operands)
                     {
                         if (operand is NullableSequencePattern seq)
                         {
@@ -198,13 +202,13 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                                 if (((NullableSequencePattern)pattern).Operands.Count > 0)
                                 {
                                     var operands = ((NullableSequencePattern)pattern).Operands;
-                                    ((Expression)result)._operands.AddRange(operands);
+                                    ((Expression)result).Operands.AddRange(operands);
                                 }
                             }
                         }
                         else
                         {
-                            ((Expression)result)._operands.Add(ApplyPatterns(operand));
+                            ((Expression)result).Operands.Add(ApplyPatterns(operand));
                         }
                     }
                     break;

@@ -10,13 +10,13 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Attributes
         public Expression Apply(Expression expr)
         {
             var operands = new List<IElement>();
-            foreach (var operand in expr._operands)
+            foreach (var operand in expr.Operands)
             {
                 if (operand is Expression e)
                 {
-                    if (e._operands.Count == 1)
+                    if (e.Operands.Count == 1)
                     {
-                        operands.Add(e._operands.First());
+                        operands.Add(e.Operands.First());
                     }
                     else
                     {
@@ -28,7 +28,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Attributes
                     operands.Add(operand);
                 }
             }
-            expr._operands = operands;
+            expr.Operands = operands;
             return expr;
         }
     }

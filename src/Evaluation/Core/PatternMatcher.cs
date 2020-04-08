@@ -52,42 +52,84 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             if (lhs is Expression p && obj is Expression o)
             {
                 int j = 0;
-                for (int i = 0; i < o._operands.Count; i++)
+                for (int i = 0; i < o.Operands.Count; i++)
                 {
                     // Skip all nullable sequences in pattern
-                    while (j < p._operands.Count && p._operands[j] is NullableSequencePattern) j++;
+                    while (j < p.Operands.Count && p.Operands[j] is NullableSequencePattern) j++;
                     IElement tempPattern = null;
-                    if (j < p._operands.Count) tempPattern = p._operands[j];
-                    var matchResult = Matches(tempPattern, o._operands[i]);
+                    if (j < p.Operands.Count) tempPattern = p.Operands[j];
+                    var matchResult = Matches(tempPattern, o.Operands[i]);
                     if (matchResult.Success == true)
                     {
-                        ((Expression)lhs)._operands[j] = (IElement)matchResult.Value;
+                        ((Expression)lhs).Operands[j] = (IElement)matchResult.Value;
                         j++;
                     }
                     // If does not matches but previous is nullable sequence
-                    else if (j > 0 && p._operands[j - 1] is NullableSequencePattern)
+                    else if (j > 0 && p.Operands[j - 1] is NullableSequencePattern)
                     {
-                        ((NullableSequencePattern)((Expression)lhs)._operands[j - 1]).Operands.Add(o._operands[i]);
+                        ((NullableSequencePattern)((Expression)lhs).Operands[j - 1]).Operands.Add(o.Operands[i]);
                     }
                     else
                     {
                         return new Result(false);
                     }
-                }
 
-                while (j < ((Expression)lhs)._operands.Count &&
-                    ((Expression)lhs)._operands[j] is NullableSequencePattern) j++;
-                if (j == ((Expression)lhs)._operands.Count)
+                    //return AreExpressionsMatches(p, o);
+                }
+            }
+            return new Result(false);
+        }
+
+        private static Result AreExpressionsMatches(Expression pattern, Expression expr)
+        {
+            Stack<int> matches = new Stack<int>();
+            Stack<int> pos = new Stack<int>();
+            int i = 0, j = 0;
+            while (i < expr.Operands.Count)
+            {
+                while (j < pattern.Operands.Count && expr.Operands[j] is NullableSequencePattern) j++;
+                var matchResult = new Result(false);
+                if (j < expr.Operands.Count) matchResult = Matches(pattern.Operands[j], expr.Operands[i]);
+                if (matchResult.Success == true)
                 {
-                    Patterns = new Dictionary<string, IPattern>();
-                    if (ArePatternsSame(lhs)) return new Result(true, lhs);
+                    pattern.Operands[j] = (IElement)matchResult.Value;
+                    matches.Push(i);
+                    pos.Push(j);
+                    j++;
+                } 
+                else if (j > 0 && pattern.Operands[j - 1] is NullableSequencePattern)
+                {
+                    ((NullableSequencePattern)pattern.Operands[j - 1]).Operands.Add(expr.Operands[i]);
+                }
+                else if (matches.Count > 0 && pos.Count > 0)
+                {
+                    var lastMatch = matches.Pop();
+                    // TODO: reset all patterns after lastmatch
+
+                    // move all elements into seq from last match to his closest nullable seq, 
+                    // which goes before him
+                    var c = lastMatch;
+                    while (!(pattern.Operands[c] is NullableSequencePattern)) c--;
+
                 }
                 else
                 {
                     return new Result(false);
                 }
+                i++;
+            }
+
+            // skip the rest of nullable seqs
+            if (j == pattern.Operands.Count)
+            {
+                if (ArePatternsSame(pattern)) return new Result(true, pattern);
+            }
+            else if (matches.Count > 0 && pos.Count > 0)
+            {
+
             }
             return new Result(false);
+
         }
 
         // To see if all patterns with name 'x' are contain the same data.
@@ -126,7 +168,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             }
             else if (element is Expression expr)
             {
-                foreach (var o in expr._operands)
+                foreach (var o in expr.Operands)
                 {
                     if (!ArePatternsSame(o)) return false;
                 }
