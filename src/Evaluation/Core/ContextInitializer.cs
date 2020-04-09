@@ -26,9 +26,9 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 
         // Sequences
         // Named sequences
-        private static readonly IPattern s_seqX = new NullableSequencePattern("s_x");
-        private static readonly IPattern s_seqY = new NullableSequencePattern("s_y");
-        private static readonly IPattern s_seqZ = new NullableSequencePattern("s_z");
+        private static readonly IPattern s_seqX = new NullableSequencePattern("seqX");
+        private static readonly IPattern s_seqY = new NullableSequencePattern("seqY");
+        private static readonly IPattern s_seqZ = new NullableSequencePattern("seqZ");
 
         // _ seqs
         private static readonly IPattern s_seq1 = new NullableSequencePattern("seq1");
@@ -44,9 +44,11 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
         public static List<(IElement, IElement)> GetInitialContext()
         {
             var context = new List<(IElement, IElement)>();
-            context = context.Concat(PowBuiltins())
-                .Concat(AddBuiltins())
+            context = context
+                .Concat(PowBuiltins())
                 .Concat(MulBuiltins())
+                .Concat(AddBuiltins())
+                .Concat(IfBuiltins())
                 .ToList();
             return context;
         }
@@ -55,14 +57,25 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
         private static List<(IElement, IElement)> PowBuiltins()
         {
             var builtins = new List<(IElement, IElement)>();
+            // Pow(x,2) -> Mul(x,x)
             var lhs = new Expression(nameof(pow),
                 s_seq1,
                 s_x,
                 s_seq2,
-                s_y,
+                s_int1,
                 s_seq3
             );
             var rhs = new Expression();
+            builtins.Add((lhs, rhs));
+
+            // pow(x, 0) -> 1
+            lhs = new Expression(nameof(pow),
+                s_seq1,
+                new Integer(0)
+            );
+            rhs = new Expression(nameof(pow),
+                new Integer(1)
+            );
             builtins.Add((lhs, rhs));
             return builtins;
         }
@@ -72,32 +85,40 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
         {
             var builtins = new List<(IElement, IElement)>();
 
-            // mul(x_,add(a_,a___))  -> add(mul(x_,a_),mul(x_,a___))
+            // mul(1,2) -> 2
             var lhs = new Expression(nameof(mul),
                 s_seq1,
-                s_x,
+                s_int1,
                 s_seq2,
-                new Expression(nameof(sum),
-                    s_y,
-                    s_seqZ
-                ),
+                s_int2,
                 s_seq3
             );
-            var rhs = new Expression(nameof(mul),
+            var rhs = new Expression();
+            builtins.Add((lhs, rhs));
+
+            // mul(1,x) -> x
+            lhs = new Expression(nameof(mul),
+                s_seq1,
+                new Integer(1),
+                s_seq2,
+                s_seqX,
+                s_seq3
+            );
+            rhs = new Expression(nameof(mul),
                 s_seq1,
                 s_seq2,
-                new Expression(nameof(sum),
-                    new Expression(nameof(mul),
-                        s_x,
-                        s_y
-                    ),
-                    new Expression(nameof(mul),
-                        s_x,
-                        s_seqZ
-                    )
-                ),
+                s_seqX,
                 s_seq3
             );
+            builtins.Add((lhs, rhs));
+
+            // mul(0,x) -> o/
+            lhs = new Expression(nameof(mul),
+                s_seq1,
+                new Integer(0),
+                s_seq2
+            );
+            rhs = new Expression(nameof(mul), new Integer(0));
             builtins.Add((lhs, rhs));
 
             // mul(add(x_, y___), add(z___)) -> add(mul(x_, z___), mul(add(y___), add(z___)))
@@ -117,11 +138,39 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                 new Expression(nameof(sum),
                     new Expression(nameof(mul),
                         s_x,
-                        s_seqZ
+                        new Expression(nameof(sum), s_seqZ)
                     ),
                     new Expression(nameof(mul),
-                        s_seqY,
-                        s_seqZ
+                        new Expression(nameof(sum), s_seqY),
+                        new Expression(nameof(sum), s_seqZ)
+                    )
+                ),
+                s_seq3
+            );
+            builtins.Add((lhs, rhs));
+
+            // mul(x_,add(a_,a___))  -> add(mul(x_,a_),mul(x_,a___))
+            lhs = new Expression(nameof(mul),
+                s_seq1,
+                s_x,
+                s_seq2,
+                new Expression(nameof(sum),
+                    s_y,
+                    s_seqZ
+                ),
+                s_seq3
+            );
+            rhs = new Expression(nameof(mul),
+                s_seq1,
+                s_seq2,
+                new Expression(nameof(sum),
+                    new Expression(nameof(mul),
+                        s_x,
+                        s_y
+                    ),
+                    new Expression(nameof(mul),
+                        s_x,
+                        new Expression(nameof(sum), s_seqZ)
                     )
                 ),
                 s_seq3
@@ -136,15 +185,38 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
         {
             var builtins = new List<(IElement, IElement)>();
 
-            // sum(x,x) -> mul(2,x)
+            // add(1,2) -> 3
             var lhs = new Expression(nameof(sum),
+                s_seq1,
+                s_int1,
+                s_seq2,
+                s_int2,
+                s_seq3
+            );
+            var rhs = new Expression();
+            builtins.Add((lhs, rhs));
+
+            // add(0,x,y) -> add(x,y)
+            lhs = new Expression(nameof(sum),
+                s_seq1,
+                new Integer(0),
+                s_seq2
+            );
+            rhs = new Expression(nameof(sum),
+                s_seq1,
+                s_seq2
+            );
+            builtins.Add((lhs, rhs));
+
+            // sum(x,x) -> mul(2,x)
+            lhs = new Expression(nameof(sum),
                 s_seq1,
                 s_x,
                 s_seq2,
                 s_x,
                 s_seq3
             );
-            var rhs = new Expression(nameof(sum),
+            rhs = new Expression(nameof(sum),
                 s_seq1,
                 s_seq2,
                 new Expression(nameof(mul),
@@ -160,12 +232,12 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                 s_seq1,
                 new Expression(nameof(mul),
                     s_int1,
-                    s_x
+                    s_seqX
                 ),
                 s_seq2,
                 new Expression(nameof(mul),
                     s_int2,
-                    s_x
+                    s_seqX
                 ),
                 s_seq3
             );
@@ -180,7 +252,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                         s_int2,
                         s_seq6
                     ),
-                    s_x
+                    s_seqX
                 ),
                 s_seq3
             );
@@ -215,7 +287,173 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             );
             builtins.Add((lhs, rhs));
 
+            // sum(mul(x,y),mul(2,x,y)) -> mul(sum(2,1),x,y)
+            lhs = new Expression(nameof(sum),
+                s_seq1,
+                new Expression(nameof(mul), s_seqX),
+                s_seq2,
+                new Expression(nameof(mul),
+                    s_int1,
+                    s_seqX
+                ),
+                s_seq3
+            );
+            rhs = new Expression(nameof(sum),
+                s_seq1,
+                s_seq2,
+                new Expression(nameof(mul),
+                    new Expression(nameof(sum),
+                        s_seq4,
+                        s_int1,
+                        s_seq5,
+                        new Integer(1),
+                        s_seq6
+                    ),
+                    s_seqX
+                ),
+                s_seq3
+            );
+            builtins.Add((lhs, rhs));
+
             return builtins;
         }
+
+        // If
+        private static List<(IElement, IElement)> IfBuiltins()
+        {
+            var builtins = new List<(IElement, IElement)>();
+
+            // Then
+            IElement lhs = new Expression("if",
+                new Symbol("true"),
+                new ElementPattern("then"),
+                new ElementPattern("else")
+            );
+            IElement rhs = new ElementPattern("then");
+            builtins.Add((lhs, rhs));
+
+            //Else
+            lhs = new Expression("if",
+                new Symbol("false"),
+                new ElementPattern("then"),
+                new ElementPattern("else"));
+            rhs = new ElementPattern("else");
+            builtins.Add((lhs, rhs));
+
+            // Less
+            lhs = new Expression("less",
+                s_int1,
+                s_int2
+            );
+            rhs = new Expression();
+            builtins.Add((lhs, rhs));
+
+            // LessOrEquals
+            lhs = new Expression("lesse",
+                s_int1,
+                s_int2
+            );
+            rhs = new Expression();
+            builtins.Add((lhs, rhs));
+
+            // Greater
+            lhs = new Expression("greater",
+                s_int1,
+                s_int2
+            );
+            rhs = new Expression();
+            builtins.Add((lhs, rhs));
+
+            // GreaterOrEquals
+            lhs = new Expression("greatere",
+                s_int1,
+                s_int2
+            );
+            rhs = new Expression();
+            builtins.Add((lhs, rhs));
+
+            // Equals
+            lhs = new Expression("equals",
+                s_int1,
+                s_int2
+            );
+            rhs = new Expression();
+            builtins.Add((lhs, rhs));
+
+            // NotEquals
+            lhs = new Expression("nequals",
+                s_int1,
+                s_int2
+            );
+            rhs = new Expression();
+            builtins.Add((lhs, rhs));
+
+            // Not(false) -> true
+            lhs = new Expression("not",
+                new Symbol("false")
+            );
+            rhs = new Symbol("true");
+            builtins.Add((lhs, rhs));
+
+            // Not(true) -> false
+            lhs = new Expression("not",
+                new Symbol("true")
+            );
+            rhs = new Symbol("false");
+            builtins.Add((lhs, rhs));
+
+            // And (true, true) -> true
+            lhs = new Expression("and",
+                s_seq1,
+                new Symbol("true"),
+                s_seq2,
+                new Symbol("true"),
+                s_seq3
+            );
+            rhs = new Expression("and",
+                s_seq1,
+                s_seq2,
+                new Symbol("true"),
+                s_seq3
+            );
+            builtins.Add((lhs, rhs));
+
+            // And (false) -> false
+            lhs = new Expression("and",
+                s_seq1,
+                new Symbol("false"),
+                s_seq2
+            );
+            rhs = new Symbol("false");
+            builtins.Add((lhs, rhs));
+
+            // Or (false, false) -> false
+            lhs = new Expression("or",
+                s_seq1,
+                new Symbol("false"),
+                s_seq2,
+                new Symbol("false"),
+                s_seq3
+            );
+            rhs = new Expression("or",
+                s_seq1,
+                s_seq2,
+                new Symbol("false"),
+                s_seq3
+            );
+            builtins.Add((lhs, rhs));
+
+            // Or (true) -> true
+            lhs = new Expression("or",
+                s_seq1,
+                new Symbol("true"),
+                s_seq2
+            );
+            rhs = new Symbol("true");
+            builtins.Add((lhs, rhs));
+
+            return builtins;
+        }
+
     }
 }
