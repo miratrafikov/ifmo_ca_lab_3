@@ -1,14 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
-using ShiftCo.ifmo_ca_lab_3.Evaluation.Patterns;
-using ShiftCo.ifmo_ca_lab_3.Evaluation.Types;
-using ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Lexington;
-using ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Parseltongue;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysisTest
 {

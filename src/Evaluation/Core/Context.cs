@@ -217,7 +217,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 
                 case Expression expr:
                     result = new Expression(expr.Head);
-                    foreach(var operand in expr.Operands)
+                    foreach (var operand in expr.Operands)
                     {
                         if (operand is NullableSequencePattern seq)
                         {

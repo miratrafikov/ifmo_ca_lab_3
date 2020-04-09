@@ -159,7 +159,7 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
                     new Symbol("x")
                 ),
                 new Integer(2)
-            ) ;
+            );
             var altered = new Expression(nameof(sum),
                 new Expression(nameof(mul),
                     new Symbol("x"),

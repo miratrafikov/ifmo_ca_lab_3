@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Core;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Types;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Util;
