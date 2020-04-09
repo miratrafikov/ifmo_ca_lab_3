@@ -33,10 +33,6 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 
         public static IElement GetElement(IElement element)
         {
-            /*if (element.Head == "sum" && ((Expression)element).Operands.Count == 5)
-            {
-                Console.WriteLine("q");
-            }*/
             ClearPatterns();
             foreach (var rule in s_context)
             {
@@ -86,6 +82,39 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 
         private static IElement GetRhs(IElement lhs, IElement rhs)
         {
+            IntegerPattern left = null, right = null;
+
+            // Conditions
+            switch (lhs.Head)
+            {
+                case ("equals"):
+                    left = (IntegerPattern)((Expression)lhs).Operands[0];
+                    right = (IntegerPattern)((Expression)lhs).Operands[1];
+                    return left.Element == right.Element ? new Symbol("true") : new Symbol("false");
+                case ("nequals"):
+                    left = (IntegerPattern)((Expression)lhs).Operands[0];
+                    right = (IntegerPattern)((Expression)lhs).Operands[1];
+                    return left.Element != right.Element ? new Symbol("true") : new Symbol("false");
+                case ("greater"):
+                    left = (IntegerPattern)((Expression)lhs).Operands[0];
+                    right = (IntegerPattern)((Expression)lhs).Operands[1];
+                    return left.Element.Value > right.Element.Value ? new Symbol("true") : new Symbol("false");
+                case ("greatere"):
+                    left = (IntegerPattern)((Expression)lhs).Operands[0];
+                    right = (IntegerPattern)((Expression)lhs).Operands[1];
+                    return left.Element.Value >= right.Element.Value ? new Symbol("true") : new Symbol("false");
+                case ("less"):
+                    left = (IntegerPattern)((Expression)lhs).Operands[0];
+                    right = (IntegerPattern)((Expression)lhs).Operands[1];
+                    return left.Element.Value < right.Element.Value ? new Symbol("true") : new Symbol("false");
+                case ("lesse"):
+                    left = (IntegerPattern)((Expression)lhs).Operands[0];
+                    right = (IntegerPattern)((Expression)lhs).Operands[1];
+                    return left.Element.Value <= right.Element.Value ? new Symbol("true") : new Symbol("false");
+                default:
+                    break;
+            }
+
             // Hardcode
             if (lhs is Expression expr &&
                 expr.Operands.Count == 5 &&

@@ -48,6 +48,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                 .Concat(PowBuiltins())
                 .Concat(MulBuiltins())
                 .Concat(AddBuiltins())
+                .Concat(IfBuiltins())
                 .ToList();
             return context;
         }
@@ -316,5 +317,143 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 
             return builtins;
         }
+
+        // If
+        private static List<(IElement, IElement)> IfBuiltins()
+        {
+            var builtins = new List<(IElement, IElement)>();
+
+            // Then
+            IElement lhs = new Expression("if",
+                new Symbol("true"),
+                new ElementPattern("then"),
+                new ElementPattern("else")
+            );
+            IElement rhs = new ElementPattern("then");
+            builtins.Add((lhs, rhs));
+
+            //Else
+            lhs = new Expression("if",
+                new Symbol("false"),
+                new ElementPattern("then"),
+                new ElementPattern("else"));
+            rhs = new ElementPattern("else");
+            builtins.Add((lhs, rhs));
+
+            // Less
+            lhs = new Expression("less",
+                s_int1,
+                s_int2
+            );
+            rhs = new Expression();
+            builtins.Add((lhs, rhs));
+
+            // LessOrEquals
+            lhs = new Expression("lesse",
+                s_int1,
+                s_int2
+            );
+            rhs = new Expression();
+            builtins.Add((lhs, rhs));
+
+            // Greater
+            lhs = new Expression("greater",
+                s_int1,
+                s_int2
+            );
+            rhs = new Expression();
+            builtins.Add((lhs, rhs));
+
+            // GreaterOrEquals
+            lhs = new Expression("greatere",
+                s_int1,
+                s_int2
+            );
+            rhs = new Expression();
+            builtins.Add((lhs, rhs));
+
+            // Equals
+            lhs = new Expression("equals",
+                s_int1,
+                s_int2
+            );
+            rhs = new Expression();
+            builtins.Add((lhs, rhs));
+
+            // NotEquals
+            lhs = new Expression("nequals",
+                s_int1,
+                s_int2
+            );
+            rhs = new Expression();
+            builtins.Add((lhs, rhs));
+
+            // Not(false) -> true
+            lhs = new Expression("not",
+                new Symbol("false")
+            );
+            rhs = new Symbol("true");
+            builtins.Add((lhs, rhs));
+
+            // Not(true) -> false
+            lhs = new Expression("not",
+                new Symbol("true")
+            );
+            rhs = new Symbol("false");
+            builtins.Add((lhs, rhs));
+
+            // And (true, true) -> true
+            lhs = new Expression("and",
+                s_seq1,
+                new Symbol("true"),
+                s_seq2,
+                new Symbol("true"),
+                s_seq3
+            );
+            rhs = new Expression("and",
+                s_seq1,
+                s_seq2,
+                new Symbol("true"),
+                s_seq3
+            );
+            builtins.Add((lhs, rhs));
+
+            // And (false) -> false
+            lhs = new Expression("and",
+                s_seq1,
+                new Symbol("false"),
+                s_seq2
+            );
+            rhs = new Symbol("false");
+            builtins.Add((lhs, rhs));
+
+            // Or (false, false) -> false
+            lhs = new Expression("or",
+                s_seq1,
+                new Symbol("false"),
+                s_seq2,
+                new Symbol("false"),
+                s_seq3
+            );
+            rhs = new Expression("or",
+                s_seq1,
+                s_seq2,
+                new Symbol("false"),
+                s_seq3
+            );
+            builtins.Add((lhs, rhs));
+
+            // Or (true) -> true
+            lhs = new Expression("or",
+                s_seq1,
+                new Symbol("true"),
+                s_seq2
+            );
+            rhs = new Symbol("true");
+            builtins.Add((lhs, rhs));
+
+            return builtins;
+        }
+
     }
 }

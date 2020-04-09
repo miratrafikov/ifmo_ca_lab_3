@@ -55,6 +55,10 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             {
                 ((Expression)element).Attributes.Add(new HoldAttribute("HoldAll"));
             }
+            if (element.Head == "if")
+            {
+                ((Expression)element).Attributes.Add(new HoldAttribute("HoldRest"));
+            }
 
             // add a rule in the context if expr is delayed 
             if (element.Head == nameof(delayed) || element.Head == nameof(set))
@@ -98,9 +102,10 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                     if (!e.Attributes.Contains(new HoldAttribute("HoldAll")))
                     {
                         // evaluate each child
-                        var ini = 0;
-                        if (e.Attributes.Contains(new HoldAttribute("HoldFirst"))) ini = Math.Min(1, e.Operands.Count);
-                        for (var i = ini; i < e.Operands.Count; i++)
+                        int from = 0, to = e.Operands.Count;
+                        if (((Expression)element).Attributes.Contains(new HoldAttribute("HoldFirst"))) from = Math.Min(1, e.Operands.Count);
+                        if (((Expression)element).Attributes.Contains(new HoldAttribute("HoldRest"))) to = Math.Min(1, e.Operands.Count);
+                        for (var i = from; i < to; i++)
                         {
                             e.Operands[i] = LoopedEvaluate(e.Operands[i]);
                         }
@@ -112,34 +117,6 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                 default:
                     return element;
             }
-        }
-
-        private static Expression AddHoldAttribute(Expression expr, string attr)
-        {
-            switch (attr)
-            {
-                case "HoldAll":
-                    expr.Attributes.Add(new HoldAttribute(attr));
-                    for (var i = 0; i < expr.Operands.Count; i++)
-                    {
-                        if (expr.Operands[i] is Expression)
-                        {
-                            ((Expression)expr.Operands[i]).Attributes.Add(new HoldAttribute(attr));
-                        }
-                    }
-                    break;
-                case "HoldFirst":
-                    expr.Attributes.Add(new HoldAttribute(attr));
-                    if (expr.Operands.First() is Expression)
-                    {
-                        ((Expression)expr.Operands[0]).Attributes.Add(new HoldAttribute(attr));
-                    }
-                    break;
-                default:
-                    break;
-            }
-            
-            return expr;
         }
 
         private static string EvaluateHead(IElement expr)
@@ -155,7 +132,10 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 
         private static Expression ApplyAttributes(Expression expr)
         {
-            if (expr.Head == nameof(set) || expr.Head == nameof(delayed))
+            if (expr.Head == nameof(set) || expr.Head == nameof(delayed) || expr.Head == "if" ||
+                expr.Head == "equals" || expr.Head == "nequals" || expr.Head == "greater" ||
+                expr.Head == "greatere" || expr.Head == "less" || expr.Head == "lesse" ||
+                expr.Head == "and" || expr.Head == "or" || expr.Head == "not")
             {
                 return expr;
             }

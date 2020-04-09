@@ -182,12 +182,42 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
         [TestMethod]
         public void Test8()
         {
+            var expr = new Expression(nameof(mul),
+                new Expression(nameof(sum),
+                    new Symbol("x"),
+                    new Expression(nameof(mul),
+                        new Integer(-1),
+                        new Symbol("y")
+                    )
+                ),
+                new Expression(nameof(sum),
+                    new Symbol("x"),
+                    new Symbol("y")
+                )
+            );
+            var altered = new Expression("sum",
+                new Expression("mul",
+                    new Symbol("x"),
+                    new Symbol("x")
+                ),
+                new Expression("mul",
+                    new Integer(-1),
+                    new Symbol("y"),
+                    new Symbol("y")
+                )
+            );
+            var eavluated = Evaluator.Run(expr);
+            Assert.AreEqual(0, s_comparer.Compare(eavluated, altered));
+        }
+
+        public void Test9()
+        {
             var expr = new Expression(nameof(pow),
                 new Expression(nameof(sum),
                     new Symbol("y"),
                     new Symbol("x")
                 ),
-                new Integer(5)
+                new Integer(10)
             );
             var altered = new Expression(nameof(sum),
                 new Expression(nameof(mul),
