@@ -4,7 +4,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Core;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
-using ShiftCo.ifmo_ca_lab_3.Evaluation.Patterns;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Types;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Util;
 
@@ -188,7 +187,7 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
                     new Symbol("y"),
                     new Symbol("x")
                 ),
-                new Integer(4)
+                new Integer(5)
             );
             var altered = new Expression(nameof(sum),
                 new Expression(nameof(mul),

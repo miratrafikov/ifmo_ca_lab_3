@@ -14,7 +14,6 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Types
             Operands = new List<IElement>();
             Attributes = new List<IAttribute>()
             {
-                new ComplexAttribute(),
                 new FlatAttribute(),
                 new OrderlessAttribute()
             };
@@ -26,7 +25,6 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Types
             Operands = new List<IElement>();
             Attributes = new List<IAttribute>()
             {
-                new ComplexAttribute(),
                 new FlatAttribute(),
                 new OrderlessAttribute()
             };
@@ -38,7 +36,6 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Types
             Operands = operands;
             Attributes = new List<IAttribute>()
             {
-                new ComplexAttribute(),
                 new FlatAttribute(),
                 new OrderlessAttribute()
             };
@@ -54,7 +51,6 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Types
             }
             Attributes = new List<IAttribute>()
             {
-                new ComplexAttribute(),
                 new FlatAttribute(),
                 new OrderlessAttribute()
             };

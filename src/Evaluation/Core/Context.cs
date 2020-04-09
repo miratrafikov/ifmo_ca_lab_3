@@ -16,7 +16,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
     public static class Context
     {
         private static Dictionary<string, IPattern> s_patterns = new Dictionary<string, IPattern>();
-        private static readonly List<(IElement, IElement)> s_context = GetInitialContext();
+        public static readonly List<(IElement, IElement)> s_context = GetInitialContext();
 
         public static void AddRule(IElement lhs, IElement rhs)
         {
@@ -33,10 +33,10 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 
         public static IElement GetElement(IElement element)
         {
-            if (element.Head == "sum" && ((Expression)element).Operands.Count == 5)
+            /*if (element.Head == "sum" && ((Expression)element).Operands.Count == 5)
             {
                 Console.WriteLine("q");
-            }
+            }*/
             ClearPatterns();
             foreach (var rule in s_context)
             {

@@ -17,6 +17,9 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 
         public static Result Matches(IElement lhs, IElement obj)
         {
+            var alikeMatch = AlikeMatch(lhs, obj);
+            if (alikeMatch.Success == true) return alikeMatch;
+
             if (lhs == null || obj == null)
             {
                 return new Result(false);
@@ -73,8 +76,6 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                     {
                         return new Result(false);
                     }
-
-                    //return AreExpressionsMatches(p, o);
                 }
 
                 while (j < ((Expression)lhs).Operands.Count &&
@@ -92,80 +93,104 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             return new Result(false);
         }
 
-        private static Result AreExpressionsMatches(Expression pattern, Expression expr)
+        private static Result AlikeMatch(IElement el1, IElement el2)
         {
-            Stack<int> matches = new Stack<int>();
-            Stack<int> pos = new Stack<int>();
-            int i = 0, j = 0;
-            while (i < expr.Operands.Count)
+            if (el1 is Expression pattern && el2 is Expression expr)
             {
-                while (j < pattern.Operands.Count && expr.Operands[j] is NullableSequencePattern) j++;
-                var matchResult = new Result(false);
-                if (j < expr.Operands.Count) matchResult = Matches(pattern.Operands[j], expr.Operands[i]);
-                if (matchResult.Success == true)
+                if (pattern.Head == nameof(sum) &&
+                    expr.Head == nameof(sum) &&
+                    pattern.Operands.Count == 5 &&
+                    pattern.Operands[0] is NullableSequencePattern seq1 &&
+                    pattern.Operands[1] is ElementPattern x &&
+                    pattern.Operands[2] is NullableSequencePattern seq2 &&
+                    pattern.Operands[3] is ElementPattern y &&
+                    pattern.Operands[4] is NullableSequencePattern seq3)
                 {
-                    pattern.Operands[j] = (IElement)matchResult.Value;
-                    matches.Push(i);
-                    pos.Push(j);
-                    j++;
-                } 
-                else if (j > 0 && pattern.Operands[j - 1] is NullableSequencePattern)
-                {
-                    ((NullableSequencePattern)pattern.Operands[j - 1]).Operands.Add(expr.Operands[i]);
-                }
-                else if (matches.Count > 0 && pos.Count > 0)
-                {
-                    var lastMatch = matches.Pop();
-                    var lastPos = pos.Pop();
-                    // TODO: reset all patterns after lastmatch
-
-                    // move all elements into seq from last match to his closest nullable seq, 
-                    // which goes before him
-                    var c = lastPos;
-                    while (!(pattern.Operands[c] is NullableSequencePattern)) c--;
-                    pattern = ClearPatterns(pattern, c, pattern.Operands.Count);
-
-                }
-                else
-                {
+                    for (var i = 0; i < expr.Operands.Count - 1; i++)
+                    {
+                        for (var j = i + 1; j < expr.Operands.Count; j++)
+                        {
+                            if (Comparer.Compare(expr.Operands[i], expr.Operands[j]) == 0)
+                            {
+                                seq1.Operands = expr.Operands.GetRange(0, i);
+                                seq2.Operands = expr.Operands.GetRange(i + 1, j - i - 1);
+                                if (j == expr.Operands.Count - 1)
+                                {
+                                    seq3.Operands = new List<IElement>();
+                                }
+                                else
+                                {
+                                    seq3.Operands = expr.Operands.GetRange(j + 1, expr.Operands.Count - j - 1);
+                                }
+                                x.Element = expr.Operands[j];
+                                y.Element = expr.Operands[j];
+                                return new Result(true, pattern);
+                            }
+                        }
+                    }
                     return new Result(false);
                 }
-                i++;
-            }
-
-            // skip the rest of nullable seqs
-            if (j == pattern.Operands.Count)
-            {
-                if (ArePatternsSame(pattern)) return new Result(true, pattern);
-            }
-            else if (matches.Count > 0 && pos.Count > 0)
-            {
-
-            }
-            return new Result(false);
-
-        }
-
-        private static Expression ClearPatterns(Expression expr,int from, int to)
-        {
-            for (var i = from; i <= to; i++)
-            {
-                switch (expr.Operands[i])
+                else 
+                if (pattern.Head == nameof(sum) &&
+                    expr.Head == nameof(sum) &&
+                    pattern.Operands.Count == 5 &&
+                    pattern.Operands[0] is NullableSequencePattern seq4 &&
+                    pattern.Operands[1] is Expression e1 &&
+                    e1.Head == nameof(mul) &&
+                    e1.Operands.Count == 1 &&
+                    e1.Operands[0] is NullableSequencePattern seqX &&
+                    pattern.Operands[2] is NullableSequencePattern seq5 &&
+                    pattern.Operands[3] is Expression e2 &&
+                    e2.Head == nameof(mul) &&
+                    e2.Operands.Count == 2 &&
+                    e2.Operands[0] is IntegerPattern integer &&
+                    e2.Operands[1] is NullableSequencePattern seqY &&
+                    pattern.Operands[4] is NullableSequencePattern seq6)
                 {
-                    case NullableSequencePattern seq:
-                        seq.Operands = new List<IElement>();
-                        break;
-                    case ElementPattern elem:
-                        elem.Element = null;
-                        break;
-                    case IntegerPattern integer:
-                        integer.Element = null;
-                        break;
-                    default:
-                        break;
+                    for (var i = 0; i < expr.Operands.Count - 1; i++)
+                    {
+                        for (var j = 0; j < expr.Operands.Count; j++)
+                        {
+                            if (expr.Operands[i] is Expression &&
+                                expr.Operands[j] is Expression &&
+                                expr.Operands[i].Head == nameof(mul) && 
+                                expr.Operands[j].Head == nameof(mul) &&
+                                ((Expression)expr.Operands[j]).Operands.First() is Integer &&
+                                AreOperandsSame(((Expression)expr.Operands[i]).Operands, 
+                                    ((Expression)expr.Operands[j]).Operands.Skip(1).ToList()))
+                            {
+                                seq4.Operands = expr.Operands.GetRange(0, i);
+                                seq5.Operands = expr.Operands.GetRange(i + 1, j - i - 1);
+                                if (j == expr.Operands.Count - 1)
+                                {
+                                    seq6.Operands = new List<IElement>();
+                                }
+                                else
+                                {
+                                    seq6.Operands = expr.Operands.GetRange(j + 1, expr.Operands.Count - j - 1);
+                                }
+                                integer.Element = (Integer)((Expression)expr.Operands[j]).Operands.First();
+                                seqX.Operands = ((Expression)expr.Operands[i]).Operands;
+                                seqY.Operands = ((Expression)expr.Operands[i]).Operands;
+                                return new Result(true, pattern);
+                            }
+                        }
+                    }
+                    return new Result(false);
                 }
             }
-            return expr;
+
+            return new Result(false);
+        }
+
+        private static bool AreOperandsSame(List<IElement> l1, List<IElement> l2)
+        {
+            var list = l1.Zip(l2);
+            foreach (var li in list)
+            {
+                if (Comparer.Compare(li.First, li.Second) != 0) return false;
+            }
+            return true;
         }
 
         // To see if all patterns with name 'x' are contain the same data.

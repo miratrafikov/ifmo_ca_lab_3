@@ -14,7 +14,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 {
     public static class Evaluator
     {
-        private static readonly int s_maxIterationsAmount = 10000;
+        private static readonly int s_maxIterationsAmount = 100000;
         private static int s_iterations = 0;
         private static readonly ElementComparer s_comparer = new ElementComparer();
 

@@ -16,11 +16,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Attributes
             {
                 if (operand is Expression e)
                 {
-                    if (e.Operands.Count == 1)
-                    {
-                        operands.Add(e.Operands.First());
-                    }
-                    else if (e.Head == head)
+                    if (e.Head == head)
                     {
                         operands = operands.Concat(((Expression)operand).Operands).ToList();
                     }
