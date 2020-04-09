@@ -130,7 +130,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                     }
                     return new Result(false);
                 }
-                else 
+                else
                 if (pattern.Head == nameof(sum) &&
                     expr.Head == nameof(sum) &&
                     pattern.Operands.Count == 5 &&
@@ -149,14 +149,14 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                 {
                     for (var i = 0; i < expr.Operands.Count - 1; i++)
                     {
-                        for (var j = 0; j < expr.Operands.Count; j++)
+                        for (var j = i + 1; j < expr.Operands.Count; j++)
                         {
                             if (expr.Operands[i] is Expression &&
                                 expr.Operands[j] is Expression &&
-                                expr.Operands[i].Head == nameof(mul) && 
+                                expr.Operands[i].Head == nameof(mul) &&
                                 expr.Operands[j].Head == nameof(mul) &&
                                 ((Expression)expr.Operands[j]).Operands.First() is Integer &&
-                                AreOperandsSame(((Expression)expr.Operands[i]).Operands, 
+                                AreOperandsSame(((Expression)expr.Operands[i]).Operands,
                                     ((Expression)expr.Operands[j]).Operands.Skip(1).ToList()))
                             {
                                 seq4.Operands = expr.Operands.GetRange(0, i);
@@ -178,6 +178,59 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                     }
                     return new Result(false);
                 }
+                else
+                if (pattern.Head == nameof(sum) &&
+                    expr.Head == nameof(sum) &&
+                    pattern.Operands.Count == 5 &&
+                    pattern.Operands[0] is NullableSequencePattern seq7 &&
+                    pattern.Operands[1] is Expression e3 &&
+                    e3.Head == nameof(mul) &&
+                    e3.Operands.Count == 2 &&
+                    e3.Operands[0] is IntegerPattern integer1 &&
+                    e3.Operands[1] is NullableSequencePattern seqx &&
+                    pattern.Operands[2] is NullableSequencePattern seq8 &&
+                    pattern.Operands[3] is Expression e4 &&
+                    e4.Head == nameof(mul) &&
+                    e4.Operands.Count == 2 &&
+                    e4.Operands[0] is IntegerPattern integer2 &&
+                    e4.Operands[1] is NullableSequencePattern seqy &&
+                    pattern.Operands[4] is NullableSequencePattern seq9)
+                {
+                    for (var i = 0; i < expr.Operands.Count - 1; i++)
+                    {
+                        for (var j = i + 1; j < expr.Operands.Count; j++)
+                        {
+                            if (expr.Operands[i] is Expression &&
+                                expr.Operands[j] is Expression &&
+                                expr.Operands[i].Head == nameof(mul) &&
+                                expr.Operands[j].Head == nameof(mul) &&
+                                ((Expression)expr.Operands[i]).Operands.First() is Integer &&
+                                ((Expression)expr.Operands[j]).Operands.First() is Integer &&
+                                AreOperandsSame(((Expression)expr.Operands[i]).Operands.Skip(1).ToList(),
+                                                ((Expression)expr.Operands[j]).Operands.Skip(1).ToList()))
+                            {
+                                seq7.Operands = expr.Operands.GetRange(0, i);
+                                seq8.Operands = expr.Operands.GetRange(i + 1, j - i - 1);
+                                if (j == expr.Operands.Count - 1)
+                                {
+                                    seq9.Operands = new List<IElement>();
+                                }
+                                else
+                                {
+                                    seq9.Operands = expr.Operands.GetRange(j + 1, expr.Operands.Count - j - 1);
+                                }
+                                integer1.Element = (Integer)((Expression)expr.Operands[i]).Operands.First();
+                                integer2.Element = (Integer)((Expression)expr.Operands[j]).Operands.First();
+                                seqx.Operands = ((Expression)expr.Operands[i]).Operands.Skip(1).ToList();
+                                seqy.Operands = ((Expression)expr.Operands[i]).Operands.Skip(1).ToList();
+                                return new Result(true, pattern);
+                            }
+                        }
+                    }
+
+                    return new Result(false);
+                }
+
             }
 
             return new Result(false);
@@ -185,6 +238,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 
         private static bool AreOperandsSame(List<IElement> l1, List<IElement> l2)
         {
+            if (l1.Count != l2.Count) return false;
             var list = l1.Zip(l2);
             foreach (var li in list)
             {
