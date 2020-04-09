@@ -295,5 +295,10 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                 return true;
             }
         }
+
+        public static bool MatchWithComplexPattern(Expression rule, IElement input)
+        {
+            return false;
+        }
     }
 }

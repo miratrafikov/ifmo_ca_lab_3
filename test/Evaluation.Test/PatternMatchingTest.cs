@@ -59,5 +59,32 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
             var matches = PatternMatcher.Matches(rule, expr);
             Assert.AreEqual(true, matches);
         }
+
+        [TestMethod]
+        public void MatchWithComplexPattern_MatchableInput_Matches()
+        {
+            var rule = new Expression(nameof(sum), new List<IElement>()
+            {
+                new NullableSequencePattern("seq1"),
+                new ElementPattern("x"),
+                new NullableSequencePattern("seq2"),
+                new ElementPattern("x"),
+                new NullableSequencePattern("seq2")
+            });
+
+            var input = new Expression("sum", new List<IElement>()
+            {
+                new Symbol("anySymbol1"),
+                new Symbol("anySymbol2"),
+                new Symbol("asX"),
+                new Symbol("anySymbol3"),
+                new Symbol("asX"),
+                new Symbol("anySymbol4")
+            });
+
+            var matches = PatternMatcher.MatchWithComplexPattern(rule, input);
+
+            Assert.IsTrue(matches);
+        }
     }
 }
