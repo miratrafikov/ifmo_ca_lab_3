@@ -3,8 +3,8 @@ using System.Collections.Generic;
 
 using ConsoleTables;
 
-using ShiftCo.ifmo_ca_lab_3.Evaluation.Types;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
+using ShiftCo.ifmo_ca_lab_3.Evaluation.Types;
 using ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Lexington;
 
 namespace ShiftCo.ifmo_ca_lab_3.Chief.IOUtils

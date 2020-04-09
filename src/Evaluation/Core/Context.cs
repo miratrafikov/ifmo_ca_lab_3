@@ -2,20 +2,21 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using ShiftCo.ifmo_ca_lab_3.Commons.Exceptions;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Patterns;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Types;
-using static ShiftCo.ifmo_ca_lab_3.Evaluation.Util.Head;
 
+using static ShiftCo.ifmo_ca_lab_3.Evaluation.Core.ContextInitializer;
 using static ShiftCo.ifmo_ca_lab_3.Evaluation.Core.PatternMatcher;
-using ShiftCo.ifmo_ca_lab_3.Commons.Exceptions;
+using static ShiftCo.ifmo_ca_lab_3.Evaluation.Util.Head;
 
 namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 {
     public static class Context
     {
         private static Dictionary<string, IPattern> s_patterns = new Dictionary<string, IPattern>();
-        private static List<(IElement, IElement)> s_context = new List<(IElement, IElement)>();
+        public static readonly List<(IElement, IElement)> s_context = GetInitialContext();
 
         public static void AddRule(IElement lhs, IElement rhs)
         {
@@ -36,16 +37,15 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             foreach (var rule in s_context)
             {
                 var (lhs, rhs) = rule;
-                var clone = lhs.Clone();
-                var matcher = new PatternMatcher();
-                var matchresult = matcher.Matches((IElement)clone, element);
-                if (!(matchresult is null))
+                var matchResult = Matches(lhs, element);
+                if (matchResult.Success == true)
                 {
-                    return GetRhs(matchresult, rhs);
+                    return GetRhs((IElement)matchResult.Value, rhs);
                 }
             }
             return element;
         }
+
 
         private static void ClearPatterns()
         {
@@ -53,6 +53,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             {
                 var (lhs, rhs) = rule;
                 lhs = ClearPatterns(lhs);
+                rhs = ClearPatterns(rhs);
             }
         }
 
@@ -81,6 +82,39 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 
         private static IElement GetRhs(IElement lhs, IElement rhs)
         {
+            IntegerPattern left = null, right = null;
+
+            // Conditions
+            switch (lhs.Head)
+            {
+                case ("equals"):
+                    left = (IntegerPattern)((Expression)lhs).Operands[0];
+                    right = (IntegerPattern)((Expression)lhs).Operands[1];
+                    return left.Element == right.Element ? new Symbol("true") : new Symbol("false");
+                case ("nequals"):
+                    left = (IntegerPattern)((Expression)lhs).Operands[0];
+                    right = (IntegerPattern)((Expression)lhs).Operands[1];
+                    return left.Element != right.Element ? new Symbol("true") : new Symbol("false");
+                case ("greater"):
+                    left = (IntegerPattern)((Expression)lhs).Operands[0];
+                    right = (IntegerPattern)((Expression)lhs).Operands[1];
+                    return left.Element.Value > right.Element.Value ? new Symbol("true") : new Symbol("false");
+                case ("greatere"):
+                    left = (IntegerPattern)((Expression)lhs).Operands[0];
+                    right = (IntegerPattern)((Expression)lhs).Operands[1];
+                    return left.Element.Value >= right.Element.Value ? new Symbol("true") : new Symbol("false");
+                case ("less"):
+                    left = (IntegerPattern)((Expression)lhs).Operands[0];
+                    right = (IntegerPattern)((Expression)lhs).Operands[1];
+                    return left.Element.Value < right.Element.Value ? new Symbol("true") : new Symbol("false");
+                case ("lesse"):
+                    left = (IntegerPattern)((Expression)lhs).Operands[0];
+                    right = (IntegerPattern)((Expression)lhs).Operands[1];
+                    return left.Element.Value <= right.Element.Value ? new Symbol("true") : new Symbol("false");
+                default:
+                    break;
+            }
+
             // Hardcode
             if (lhs is Expression expr &&
                 expr.Operands.Count == 5 &&
@@ -101,7 +135,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                         val = new Integer(int1.Element.Value * int2.Element.Value);
                         break;
 
-                    case nameof(pow):
+                    case nameof(Util.Head.pow):
                         val = new Integer((int)Math.Pow(int1.Element.Value, int2.Element.Value));
                         break;
 
@@ -120,6 +154,16 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                                                 n.Operands.Count == 0);
                     return exp;
                 }
+            }
+            if (lhs is Expression pow &&
+                pow.Operands.Count == 5 &&
+                pow.Operands[0] is NullableSequencePattern seq4 &&
+                pow.Operands[1] is ElementPattern el &&
+                pow.Operands[2] is NullableSequencePattern seq5 &&
+                pow.Operands[3] is IntegerPattern int3 &&
+                pow.Operands[4] is NullableSequencePattern seq6)
+            {
+                return new Expression(nameof(mul), Enumerable.Repeat(el.Element, int3.Element.Value).ToList());
             }
 
             s_patterns = new Dictionary<string, IPattern>();
@@ -152,46 +196,57 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 
         private static IElement ApplyPatterns(IElement rhs)
         {
+            IElement result = null;
             IPattern pattern = null;
             switch (rhs)
             {
+                case IPattern p when (!s_patterns.ContainsKey(p.Name.Value)):
+                    result = rhs;
+                    break;
                 case IPattern p when p.GetType() != s_patterns[p.Name.Value].GetType():
                     throw new PatternsDontMatchException();
                 case IntegerPattern integer:
                     pattern = s_patterns[integer.Name.Value];
-                    return ((IntegerPattern)pattern).Element;
+                    result = ((IntegerPattern)pattern).Element;
+                    break;
 
                 case ElementPattern element:
                     pattern = s_patterns[element.Name.Value];
-                    return ((ElementPattern)pattern).Element;
+                    result = ((ElementPattern)pattern).Element;
+                    break;
 
-                case Expression exp:
-                    for (int i = 0; i < exp.Operands.Count; i++)
+                case Expression expr:
+                    result = new Expression(expr.Head);
+                    foreach (var operand in expr.Operands)
                     {
-                        if (exp.Operands[i] is NullableSequencePattern seq)
+                        if (operand is NullableSequencePattern seq)
                         {
-                            pattern = s_patterns[seq.Name.Value];
-                            if (!(pattern is NullableSequencePattern))
+                            if (s_patterns.ContainsKey(seq.Name.Value))
                             {
-                                throw new PatternsDontMatchException();
-                            }
-                            if (((NullableSequencePattern)pattern).Operands.Count > 0)
-                            {
-                                exp.Operands.InsertRange(i, ((NullableSequencePattern)pattern).Operands);
+                                pattern = s_patterns[seq.Name.Value];
+                                if (!(pattern is NullableSequencePattern))
+                                {
+                                    throw new PatternsDontMatchException();
+                                }
+                                if (((NullableSequencePattern)pattern).Operands.Count > 0)
+                                {
+                                    var operands = ((NullableSequencePattern)pattern).Operands;
+                                    ((Expression)result).Operands.AddRange(operands);
+                                }
                             }
                         }
                         else
                         {
-                            exp.Operands[i] = ApplyPatterns(exp.Operands[i]);
+                            ((Expression)result).Operands.Add(ApplyPatterns(operand));
                         }
                     }
-                    exp.Operands.RemoveAll(o => o is NullableSequencePattern n &&
-                                                n.Operands.Count == 0);
-                    return exp;
+                    break;
 
                 default:
-                    return rhs;
+                    result = rhs;
+                    break;
             }
+            return result;
         }
     }
 }

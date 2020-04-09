@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Util
+﻿namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Util
 {
     public static class EnumUtilizer
     {

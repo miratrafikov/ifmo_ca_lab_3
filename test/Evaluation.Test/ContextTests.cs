@@ -6,14 +6,14 @@ using ShiftCo.ifmo_ca_lab_3.Evaluation.Core;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Patterns;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Types;
-using ShiftCo.ifmo_ca_lab_3.Evaluation.Util;
+
 using static ShiftCo.ifmo_ca_lab_3.Evaluation.Util.Head;
 
 namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
 {
-    [TestClass]
     public class ContextTests
     {
+        [TestMethod]
         public void Test1()
         {
             var lhs = new Expression(nameof(sum), new List<IElement>()
@@ -48,7 +48,7 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
         }
 
         [TestMethod]
-        public void Test3()
+        public void Test2()
         {
             var add = new Expression(nameof(sum), new List<IElement>()
             {
@@ -64,13 +64,10 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
                 new IntegerPattern("y"),
                 new NullableSequencePattern("c")
             });
-            var rhs = new Expression(nameof(mul), new List<IElement>
-            {
-                new Integer(default)
-            });
+            var rhs = new Expression();
 
             Context.AddRule(lhs, rhs);
-            var e = Context.GetElement(add);
+            _ = Context.GetElement(add);
             Assert.AreEqual(add, new Integer(4));
         }
     }

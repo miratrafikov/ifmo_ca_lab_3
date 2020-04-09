@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
+﻿using System.Diagnostics;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Types;
 using ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Lexington;
 using ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Parseltongue;
 
 namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
 {
-    [TestClass]
     public class FromInput
     {
         [TestMethod]

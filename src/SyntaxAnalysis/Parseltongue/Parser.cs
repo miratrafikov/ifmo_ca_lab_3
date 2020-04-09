@@ -25,7 +25,7 @@ namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Parseltongue
             var result = GetSymbol(NonTerminal.Root);
             if (result.Success)
             {
-                var element = ((List<IElement>)result.Value)[0];
+                var element = (IElement)result.Value;
                 return element;
             }
             else
@@ -56,7 +56,7 @@ namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Parseltongue
                 case (_, NonTerminal.Pattern):
                     return new Result(true, BuildPattern((List<IElement>)result.Value));
                 case (_, NonTerminal.Root):
-                    return new Result(true, (IElement)result.Value);
+                    return new Result(true, ((List<IElement>)result.Value)[0]);
                 case (_, Terminal.Number):
                     return new Result(true, new Integer(Convert.ToInt32(result.Value)));
                 case (_, Terminal.Symbol):
@@ -98,7 +98,7 @@ namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Parseltongue
                     }
                     switch (result.Value)
                     {
-                        case null:
+                        case "":
                             continue;
                         case List<IElement> nonTerminal:
                             elements.AddRange(nonTerminal);

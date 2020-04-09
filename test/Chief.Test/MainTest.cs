@@ -1,5 +1,6 @@
-﻿using ShiftCo.ifmo_ca_lab_3.Chief;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using ShiftCo.ifmo_ca_lab_3.Chief;
 
 namespace ShiftCo.ifmo_ca_lab_3.ChiefTest
 {

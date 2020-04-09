@@ -2,8 +2,8 @@
 {
     public enum Head
     {
-        symbol,
         integer,
+        symbol,
         expression,
         sum,
         mul,
