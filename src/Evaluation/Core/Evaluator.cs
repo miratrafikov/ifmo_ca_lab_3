@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Linq;
+using System.Collections.Generic;
 
 using ShiftCo.ifmo_ca_lab_3.Commons.Exceptions;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Attributes;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Types;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Util;
+using ShiftCo.ifmo_ca_lab_3.Plot;
 
 using static ShiftCo.ifmo_ca_lab_3.Evaluation.Util.Head;
+using System.Threading;
 
 namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 {
@@ -25,8 +28,13 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             {
                 return LoopedEvaluate(element);
             }
+
             var expr = new Expression("Evaluate", element);
-            return LoopedEvaluate(expr);
+            var evaluated = LoopedEvaluate(expr);
+
+            ShowPlot(evaluated);
+            
+            return evaluated;
         }
 
         private static void IncreaseIterations()
@@ -106,6 +114,32 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                 default:
                     return element;
             }
+        }
+
+        private static void ShowPlot(IElement evaluated)
+        {
+            if (Thread.CurrentThread.GetApartmentState() is ApartmentState.STA)
+            {
+                if (evaluated.GetHead().Equals(new Symbol("Points")))
+                {
+                    var list = new List<(int, int)>();
+                    foreach (var point in ((Expression)evaluated).Operands)
+                    {
+                        int x = ((Integer)((Expression)point).Operands[0]).Value;
+                        int y = ((Integer)((Expression)point).Operands[1]).Value;
+                        list.Add((x, y));
+                    }
+                    new MainWindow(list).ShowDialog();
+                }
+                if (evaluated.GetHead().Equals(new Symbol("Point")))
+                {
+                    int x = ((Integer)((Expression)evaluated).Operands[0]).Value;
+                    int y = ((Integer)((Expression)evaluated).Operands[1]).Value;
+                    var list = new List<(int, int)>() { (x, y) };
+                    new MainWindow(list).ShowDialog();
+                }
+            }
+
         }
 
         private static Expression AddAttributes(Expression expr)

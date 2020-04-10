@@ -13,6 +13,7 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
     public class PlotTests
     {
         [TestMethod]
+        [STAThread]
         public void Test1()
         {
             var setF = new Expression(nameof(delayed),
