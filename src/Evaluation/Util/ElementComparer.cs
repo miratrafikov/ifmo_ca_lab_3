@@ -18,7 +18,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Util
             if (left is null) return -1;
 
             // Compare Heads first
-            if (CompareHeads(left.Head, right.Head) != 0) return CompareHeads(left.Head, right.Head);
+            if (CompareHeads(left.GetHead(), right.GetHead()) != 0) return CompareHeads(left.GetHead(), right.GetHead());
 
             // If both elemements are Integers return value according to the arithmetical order
             if (left is Integer li && right is Integer ri)
@@ -50,16 +50,25 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Util
             return default;
         }
 
-        private int CompareHeads(string left, string right)
+        private int CompareHeads(IElement lh, IElement rh)
         {
-            Enum.TryParse(typeof(Head), left, true, out var parsedLeft);
-            Enum.TryParse(typeof(Head), right, true, out var parsedRight);
+            if (lh is Symbol && rh is Symbol)
+            {
+                var left = ((Symbol)lh).Value;
+                var right = ((Symbol)rh).Value;
+                Enum.TryParse(typeof(Head), left, true, out var parsedLeft);
+                Enum.TryParse(typeof(Head), right, true, out var parsedRight);
 
-            if (parsedRight is null && parsedLeft is null) return 0;
-            if (parsedLeft is null) return -1;
-            if (parsedRight is null) return 1;
+                if (parsedRight is null && parsedLeft is null) return 0;
+                if (parsedLeft is null) return -1;
+                if (parsedRight is null) return 1;
 
-            return (int)parsedLeft - (int)parsedRight;
+                return (int)parsedLeft - (int)parsedRight;
+            }
+            else
+            {
+                return Compare(lh, rh);
+            }
         }
     }
 }

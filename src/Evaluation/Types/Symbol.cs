@@ -1,5 +1,5 @@
 ﻿using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
-
+using ShiftCo.ifmo_ca_lab_3.Evaluation.Util;
 using static ShiftCo.ifmo_ca_lab_3.Evaluation.Util.Head;
 
 namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Types
@@ -8,24 +8,26 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Types
     {
         public Symbol(string value)
         {
-            Head = nameof(symbol);
             Value = value;
         }
 
-        public string Head { get; set; }
+        public IElement GetHead()
+        {
+            return new Symbol("symbol");
+        }
+
         public string Value { get; set; }
 
         public static implicit operator Symbol(string value) => new Symbol(value);
 
-        public static bool operator ==(Symbol left, Symbol right) =>
-            string.Compare(left.Value, right.Value) == 0;
-
-        public static bool operator !=(Symbol left, Symbol right) =>
-            string.Compare(left.Value, right.Value) != 0;
-
-        public object Clone()
+        public override bool Equals(object obj)
         {
-            return this.MemberwiseClone();
+            var comparer = new ElementComparer();
+            if (obj is  IElement element)
+            {
+                return 0 == comparer.Compare(element, this);
+            }
+            return false;
         }
     }
 }

@@ -20,7 +20,8 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
         public static IElement Run(IElement element)
         {
             s_iterations = 0;
-            if (element is Expression && (element.Head == nameof(set) || element.Head == nameof(delayed)))
+            if (element is Expression && (element.GetHead().Equals(new Symbol(nameof(set))) || 
+                element.GetHead().Equals(new Symbol(nameof(delayed)))))
             {
                 return LoopedEvaluate(element);
             }
@@ -40,30 +41,31 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
         private static IElement LoopedEvaluate(IElement element)
         {
             // evaluate head and apply attributes
-            if (element is Expression)
+            if (element is Expression expr)
             {
-                element.Head = EvaluateHead(element);
-                element = AddAttributes((Expression)element);
-            }
+                expr.Head = LoopedEvaluate(expr.Head);
+                expr = AddAttributes((Expression)element);
+                if (expr.Head.Equals(new Symbol(nameof(plot))) && ((Expression)element).Operands[0] is Symbol symbol)
+                {
+                    Context.AddRule(symbol, new Symbol("func"));
+                }
 
-            if (element.Head == nameof(plot) && ((Expression)element).Operands[0] is Symbol symbol)
-            {
-                Context.AddRule(symbol, new Symbol("func"));
-            }
-
-            // add a rule in the context if expr is delayed 
-            if (element.Head == nameof(delayed) || element.Head == nameof(set))
-            {
-                var e = Evaluate(element);
-                Context.AddRule(((Expression)e).Operands[0], ((Expression)e).Operands[1]);
-                return ((Expression)e).Operands[1];
+                // add a rule in the context if expr is delayed 
+                if (expr.Head.Equals(new Symbol(nameof(delayed))) || expr.Head.Equals(new Symbol(nameof(set))))
+                {
+                    var e = Evaluate(element);
+                    Context.AddRule(((Expression)e).Operands[0], ((Expression)e).Operands[1]);
+                    return ((Expression)e).Operands[1];
+                }
             }
 
             var evaluated = Evaluate(element);
-            if (evaluated is Expression expr && expr.Operands.Count == 1)
+
+            if (evaluated is Expression && ((Expression)evaluated).Operands.Count == 1)
             {
-                evaluated = expr.Operands.First();
+                evaluated = ((Expression)evaluated).Operands.First();
             }
+
             if (s_comparer.Compare(evaluated, element) == 0)
             {
                 return evaluated;
@@ -113,41 +115,30 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
         private static Expression AddAttributes(Expression expr)
         {
 
-            switch (expr.Head)
+            if (expr.Head.Equals(new Symbol("set")))
             {
-                case nameof(set):
-                    expr.Attributes.Add(new HoldAttribute("HoldFirst"));
-                    break;
-                case nameof(delayed):
-                    expr.Attributes.Add(new HoldAttribute("HoldAll"));
-                    break;
-                case ("if"):
-                    expr.Attributes.Add(new HoldAttribute("HoldRest"));
-                    break;
-                default:
-                    break;
+                expr.Attributes.Add(new HoldAttribute("HoldFirst"));
+            }
+
+            if (expr.Head.Equals(new Symbol("delayed")))
+            {
+                expr.Attributes.Add(new HoldAttribute("HoldAll"));
+            }
+
+            if (expr.Head.Equals(new Symbol("if")))
+            {
+                expr.Attributes.Add(new HoldAttribute("HoldRest"));
             }
             return expr;
         }
 
-        private static string EvaluateHead(IElement expr)
-        {
-            var head = new Symbol(expr.Head);
-            var newHead = Context.GetElement(head);
-            if (newHead is Symbol nhead)
-            {
-                expr.Head = nhead.Value;
-            }
-            return expr.Head;
-        }
-
         private static Expression ApplyAttributes(Expression expr)
         {
-            if (expr.Head == nameof(set) || expr.Head == nameof(delayed) || expr.Head == "if" ||
-                expr.Head == "equals" || expr.Head == "nequals" || expr.Head == "greater" ||
-                expr.Head == "greatere" || expr.Head == "less" || expr.Head == "lesse" ||
-                expr.Head == "and" || expr.Head == "or" || expr.Head == "not" ||
-                expr.Head == "Point" || expr.Head == nameof(plot))
+            if (expr.Head.Equals(new Symbol("set")) || expr.Head.Equals(new Symbol("delayed")) || expr.Head.Equals(new Symbol("if")) ||
+                expr.Head.Equals(new Symbol("equals")) || expr.Head.Equals(new Symbol("nequals")) || expr.Head.Equals(new Symbol("greater")) ||
+                expr.Head.Equals(new Symbol("greatere")) || expr.Head.Equals(new Symbol("less")) || expr.Head.Equals(new Symbol("lesse")) ||
+                expr.Head.Equals(new Symbol("and")) || expr.Head.Equals(new Symbol("or")) || expr.Head.Equals(new Symbol("not")) ||
+                expr.Head.Equals(new Symbol("Point")) || expr.Head.Equals(new Symbol("plot")))
             {
                 return expr;
             }
@@ -155,7 +146,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             var tmp = expr;
             foreach (var attribute in expr.Attributes)
             {
-                if (tmp.Head == "Points")
+                if (tmp.Head.Equals(new Symbol("Points")))
                 {
                     if (attribute is FlatAttribute)
                     {

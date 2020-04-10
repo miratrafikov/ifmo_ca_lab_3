@@ -8,11 +8,13 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Types
     {
         public Integer(int value)
         {
-            Head = nameof(integer);
             Value = value;
         }
 
-        public string Head { get; set; }
+        public IElement GetHead()
+        {
+            return new Symbol("integer");
+        }
         public int Value { get; set; }
 
         public static implicit operator Integer(int value) => new Integer(value);
@@ -22,10 +24,5 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Types
 
         public static bool operator !=(Integer left, Integer right) =>
             left.Value - right.Value != 0;
-
-        public object Clone()
-        {
-            return this.MemberwiseClone();
-        }
     }
 }

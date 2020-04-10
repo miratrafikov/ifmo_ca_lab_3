@@ -27,7 +27,8 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             }
 
             // Pattern is either Atom or Expression
-            if (obj.Head != lhs.Head && lhs.Head != nameof(pattern))
+            if (!obj.GetHead().Equals(lhs.GetHead()) && 
+                !lhs.GetHead().Equals(new Symbol(nameof(pattern))))
             {
                 return new Result(false);
             }
@@ -84,7 +85,15 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                 if (j == ((Expression)lhs).Operands.Count)
                 {
                     Patterns = new Dictionary<string, IPattern>();
-                    if (ArePatternsSame(lhs)) return new Result(true, lhs);
+                    if (ArePatternsSame(lhs))
+                    {
+                        return new Result(true, lhs);
+                    }
+                    else
+                    {
+                        return new Result(false);
+                    }
+                        
                 }
                 else
                 {
@@ -98,8 +107,8 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
         {
             if (el1 is Expression pattern && el2 is Expression expr)
             {
-                if (pattern.Head == nameof(sum) &&
-                    expr.Head == nameof(sum) &&
+                if (pattern.GetHead().Equals(new Symbol(nameof(sum))) &&
+                    expr.GetHead().Equals(new Symbol(nameof(sum))) &&
                     pattern.Operands.Count == 5 &&
                     pattern.Operands[0] is NullableSequencePattern seq1 &&
                     pattern.Operands[1] is ElementPattern x &&
@@ -132,17 +141,17 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                     return new Result(false);
                 }
                 else
-                if (pattern.Head == nameof(sum) &&
-                    expr.Head == nameof(sum) &&
+                if (pattern.GetHead().Equals(new Symbol(nameof(sum))) &&
+                    expr.GetHead().Equals(new Symbol(nameof(sum))) &&
                     pattern.Operands.Count == 5 &&
                     pattern.Operands[0] is NullableSequencePattern seq4 &&
                     pattern.Operands[1] is Expression e1 &&
-                    e1.Head == nameof(mul) &&
+                    e1.GetHead().Equals(new Symbol(nameof(mul))) &&
                     e1.Operands.Count == 1 &&
                     e1.Operands[0] is NullableSequencePattern seqX &&
                     pattern.Operands[2] is NullableSequencePattern seq5 &&
                     pattern.Operands[3] is Expression e2 &&
-                    e2.Head == nameof(mul) &&
+                    e2.GetHead().Equals(new Symbol(nameof(mul))) &&
                     e2.Operands.Count == 2 &&
                     e2.Operands[0] is IntegerPattern integer &&
                     e2.Operands[1] is NullableSequencePattern seqY &&
@@ -154,8 +163,8 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                         {
                             if (expr.Operands[i] is Expression &&
                                 expr.Operands[j] is Expression &&
-                                expr.Operands[i].Head == nameof(mul) &&
-                                expr.Operands[j].Head == nameof(mul) &&
+                                expr.Operands[i].GetHead().Equals(new Symbol(nameof(mul))) &&
+                                expr.Operands[j].GetHead().Equals(new Symbol(nameof(mul))) &&
                                 ((Expression)expr.Operands[j]).Operands.First() is Integer &&
                                 AreOperandsSame(((Expression)expr.Operands[i]).Operands,
                                     ((Expression)expr.Operands[j]).Operands.Skip(1).ToList()))
@@ -180,18 +189,18 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                     return new Result(false);
                 }
                 else
-                if (pattern.Head == nameof(sum) &&
-                    expr.Head == nameof(sum) &&
+                if (pattern.GetHead().Equals(new Symbol(nameof(sum))) &&
+                    expr.GetHead().Equals(new Symbol(nameof(sum))) &&
                     pattern.Operands.Count == 5 &&
                     pattern.Operands[0] is NullableSequencePattern seq7 &&
                     pattern.Operands[1] is Expression e3 &&
-                    e3.Head == nameof(mul) &&
+                    e3.GetHead().Equals(new Symbol(nameof(mul))) &&
                     e3.Operands.Count == 2 &&
                     e3.Operands[0] is IntegerPattern integer1 &&
                     e3.Operands[1] is NullableSequencePattern seqx &&
                     pattern.Operands[2] is NullableSequencePattern seq8 &&
                     pattern.Operands[3] is Expression e4 &&
-                    e4.Head == nameof(mul) &&
+                    e4.GetHead().Equals(new Symbol(nameof(mul))) &&
                     e4.Operands.Count == 2 &&
                     e4.Operands[0] is IntegerPattern integer2 &&
                     e4.Operands[1] is NullableSequencePattern seqy &&
@@ -203,8 +212,8 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                         {
                             if (expr.Operands[i] is Expression &&
                                 expr.Operands[j] is Expression &&
-                                expr.Operands[i].Head == nameof(mul) &&
-                                expr.Operands[j].Head == nameof(mul) &&
+                                expr.Operands[i].GetHead().Equals(new Symbol(nameof(mul))) &&
+                                expr.Operands[j].GetHead().Equals(new Symbol(nameof(mul))) &&
                                 ((Expression)expr.Operands[i]).Operands.First() is Integer &&
                                 ((Expression)expr.Operands[j]).Operands.First() is Integer &&
                                 AreOperandsSame(((Expression)expr.Operands[i]).Operands.Skip(1).ToList(),

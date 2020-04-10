@@ -1,25 +1,33 @@
 ﻿using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Types;
 
-using static ShiftCo.ifmo_ca_lab_3.Evaluation.Util.Head;
-
 namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Patterns
 {
     public class ElementPattern : IPattern
     {
         public ElementPattern(string name)
         {
-            Head = nameof(pattern);
             Name = name;
         }
 
-        public string Head { get; set; }
+        public IElement GetHead()
+        {
+            return new Symbol("pattern");
+        }
+
         public Symbol Name { get; set; }
         public IElement Element { get; set; }
 
-        public object Clone()
+        public override bool Equals(object obj)
         {
-            return this.MemberwiseClone();
+            if (obj is ElementPattern p && p.Name == Name && p.Element == Element)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

@@ -16,7 +16,7 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
             string input = "set(x,5)";
             var tokens = Lexer.Tokenize(input);
             var tree = Parser.Parse(tokens);
-            Debug.WriteLine(tree.Head);
+            Debug.WriteLine(tree.GetHead());
 
             Expression result = (Expression)Evaluation.Core.Evaluator.Run(tree);
             Debug.WriteLine(result.Head);
