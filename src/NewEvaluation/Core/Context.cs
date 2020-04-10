@@ -8,7 +8,7 @@ using ShiftCo.ifmo_ca_lab_3.NewEvaluation.Utils;
 
 namespace ShiftCo.ifmo_ca_lab_3.NewEvaluation.Core
 {
-    public class Context
+    public static class Context
     {
         private static readonly List<(IElement, IElement)> s_rules;
 
