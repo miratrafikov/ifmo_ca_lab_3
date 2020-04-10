@@ -42,7 +42,7 @@ namespace ShiftCo.ifmo_ca_lab_3.NewEvaluation.Core
         {
             foreach (var (lhs, rhs) in s_rules)
             {
-                var result = TryMatch(element, lhs);
+                var result = PatternMatcher.TryMatch(element, lhs);
                 if (result.Success)
                 {
                     var retrievedVariables = (Dictionary<Symbol, List<IElement>>)result.Value;
@@ -51,11 +51,6 @@ namespace ShiftCo.ifmo_ca_lab_3.NewEvaluation.Core
             }
 
             return element;
-        }
-
-        private static Result TryMatch(IElement element, IElement lhs)
-        {
-            throw new NotImplementedException();
         }
 
         private static IElement ApplyTransformation(IElement rhs, Dictionary<Symbol, List<IElement>> retrievedVariables)
