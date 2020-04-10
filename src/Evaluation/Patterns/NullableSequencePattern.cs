@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
-
+using System.Linq;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Types;
-
-using static ShiftCo.ifmo_ca_lab_3.Evaluation.Util.Head;
 
 namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Patterns
 {
@@ -11,17 +9,36 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Patterns
     {
         public NullableSequencePattern(string name)
         {
-            Head = nameof(pattern);
             Name = name;
             Operands = new List<IElement>();
         }
 
-        public string Head { get; set; }
+        public IElement GetHead()
+        {
+            return new Symbol("pattern");
+        }
+
         public Symbol Name { get; set; }
         public List<IElement> Operands { get; set; }
-        public object Clone()
+
+        public override bool Equals(object obj)
         {
-            return this.MemberwiseClone();
+            if (obj is NullableSequencePattern p && p.Name == Name && p.Operands.Count == Operands.Count)
+            {
+                var ops = Operands.Zip(p.Operands);
+                foreach (var op in ops)
+                {
+                    if (!op.First.Equals(op.Second))
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

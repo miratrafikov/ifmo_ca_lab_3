@@ -49,6 +49,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                 .Concat(MulBuiltins())
                 .Concat(AddBuiltins())
                 .Concat(IfBuiltins())
+                .Concat(PlotBuiltins())
                 .ToList();
             return context;
         }
@@ -455,5 +456,52 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             return builtins;
         }
 
+        // Plot
+        private static List<(IElement, IElement)> PlotBuiltins()
+        {
+            var builtins = new List<(IElement, IElement)>();
+
+            // plot(f,from,to,step)
+            IElement lhs = new Expression(nameof(plot),
+                new Symbol("func"),
+                new IntegerPattern("from"),
+                new IntegerPattern("to"),
+                new IntegerPattern("step")
+            );
+            IElement rhs = new Expression("if",
+                new Expression("lesse",
+                    new Expression(nameof(sum),
+                        new IntegerPattern("from"),
+                        new IntegerPattern("step")
+                    ),
+                    new IntegerPattern("to")
+                ),
+                new Expression("Points",
+                    new Expression("Point",
+                        new IntegerPattern("from"),
+                        new Expression("func",
+                            new IntegerPattern("from")
+                        )
+                    ),
+                    new Expression(nameof(plot),
+                        new Symbol("func"),
+                        new Expression(nameof(sum),
+                            new IntegerPattern("from"),
+                            new IntegerPattern("step")
+                        ),
+                        new IntegerPattern("to"),
+                        new IntegerPattern("step")
+                    )
+                ),
+                new Expression("Point",
+                    new IntegerPattern("from"),
+                    new Expression("func",
+                        new IntegerPattern("from")
+                    )
+                )
+            );
+            builtins.Add((lhs, rhs));
+            return builtins;
+        }
     }
 }
