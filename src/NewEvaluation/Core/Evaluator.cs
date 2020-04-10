@@ -48,7 +48,7 @@ namespace ShiftCo.ifmo_ca_lab_3.NewEvaluation.Core
 
         private static IElement EvaluateInteger(Integer integer)
         {
-            throw new NotImplementedException();
+            return integer;
         }
 
         private static IElement EvaluateSymbol(Symbol symbol)
@@ -58,7 +58,15 @@ namespace ShiftCo.ifmo_ca_lab_3.NewEvaluation.Core
 
         private static IElement EvaluateExpression(Expression expression)
         {
+            // The Standard Evaluation Procedure
+            // https://reference.wolfram.com/language/tutorial/EvaluationOfExpressions.html#18938
             throw new NotImplementedException();
+            // 1. Evaluate the head of the expression
+            // 2. Evaluate each element in turn
+            // 3. Apply transformations associated with the attributes Orderless, Listable, and Flat
+            // 4. Apply any definitions that you have given
+            // 5. Apply any built‐in definitions
+            // 6. Evaluate the result
         }
 
         private static bool ElementNotChanged(IElement initialElement, IElement evaluatedElement)
