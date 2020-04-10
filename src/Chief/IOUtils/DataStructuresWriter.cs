@@ -13,7 +13,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Chief.IOUtils
     {
         public static void PrintTree(object element, string indent = "", bool last = true)
         {
-            var head = ((IElement)element).Head;
+            var head = ((IElement)element).GetHead();
             switch (element)
             {
                 case Integer integer:

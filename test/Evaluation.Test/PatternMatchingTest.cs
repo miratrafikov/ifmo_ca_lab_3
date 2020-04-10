@@ -17,47 +17,55 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
         [TestMethod]
         public void Test1()
         {
-            var expr = new Expression(nameof(sum), new List<IElement>()
+            var expr = new Expression(new Symbol(nameof(sum)), new List<IElement>()
             {
                  new Integer(2),
                  new Integer(3)
             });
-            IElement rule = new Expression(nameof(pattern), new List<IElement>()
+            IElement rule = new Expression(new Symbol(nameof(sum)), new List<IElement>()
             {
                 new IntegerPattern("a"),
                 new NullableSequencePattern("b")
             });
             var matches = PatternMatcher.Matches(rule, expr);
-            Assert.AreEqual(true, matches);
+            Assert.AreEqual(true, matches.Success);
         }
 
         [TestMethod]
         public void Test2()
         {
-            var expr = new Expression(nameof(sum), new List<IElement>()
+            var expr = new Expression(new Symbol(nameof(sum)), new List<IElement>()
             {
                 new Symbol("x"),
-                new Expression(nameof(mul), new List<IElement>()
+                new Expression(new Symbol(nameof(mul)), new List<IElement>()
                 {
                     new Integer(3),
                     new Symbol("x")
                 })
             });
-            var times = new Expression(nameof(sum), new List<IElement>()
-            {
-                new IntegerPattern("d"),
-                new ElementPattern("x")
-            });
-            IElement rule = new Expression(nameof(sum), new List<IElement>()
+            IElement rule = new Expression(new Symbol(nameof(sum)), new List<IElement>()
             {
                 new NullableSequencePattern("a"),
                 new ElementPattern("x"),
                 new NullableSequencePattern("c"),
-                times,
+                new Expression(new Symbol(nameof(mul)), new List<IElement>()
+                {
+                    new IntegerPattern("d"),
+                    new ElementPattern("x")
+                }),
                 new NullableSequencePattern("e")
             });
             var matches = PatternMatcher.Matches(rule, expr);
-            Assert.AreEqual(true, matches);
+            Assert.AreEqual(true, matches.Success);
+        }
+
+        [TestMethod]
+        public void Test3()
+        {
+            var pattern = new Expression(new SymbolPattern("f"), new IntegerPattern("x"));
+            var expr = new Expression("fact", new Integer(5));
+            var matches = PatternMatcher.Matches(pattern, expr);
+            Assert.AreEqual(true, matches.Success);
         }
     }
 }

@@ -2,8 +2,8 @@
 
 namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces
 {
-    public interface IElement : ICloneable
+    public interface IElement
     {
-        public string Head { get; set; }
+        public IElement GetHead();
     }
 }

@@ -1,26 +1,30 @@
-﻿using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Types;
 
 namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Patterns
 {
-    public class ElementPattern : IPattern
+    public class SymbolPattern : IPattern
     {
-        public ElementPattern(string name)
+        public SymbolPattern(string name)
         {
-            Name = name;
+            Name = new Symbol(name);
         }
+
+        public Symbol Name { get; set; }
 
         public IElement GetHead()
         {
             return new Symbol("pattern");
         }
 
-        public Symbol Name { get; set; }
-        public IElement Element { get; set; }
+        public Symbol Element { get; set; }
 
         public override bool Equals(object obj)
         {
-            if (obj is ElementPattern p && p.Name.Equals(Name) && p.Element.Equals(Element))
+            if (obj is SymbolPattern p && p.Name.Equals(Name) && p.Element.Equals(Element))
             {
                 return true;
             }

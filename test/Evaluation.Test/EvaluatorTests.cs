@@ -66,7 +66,7 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
                 )
             );
             var evaluated = Evaluator.Run(expr);
-            Assert.AreEqual(s_comparer.Compare(evaluated, altered), 0);
+            Assert.AreEqual(0, s_comparer.Compare(evaluated, altered));
         }
 
         [TestMethod]
@@ -210,6 +210,7 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
             Assert.AreEqual(0, s_comparer.Compare(eavluated, altered));
         }
 
+        [TestMethod]
         public void Test9()
         {
             var expr = new Expression(nameof(pow),
@@ -219,23 +220,7 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
                 ),
                 new Integer(10)
             );
-            var altered = new Expression(nameof(sum),
-                new Expression(nameof(mul),
-                    new Symbol("x"),
-                    new Symbol("x")
-                ),
-                new Expression(nameof(mul),
-                    new Symbol("y"),
-                    new Symbol("y")
-                ),
-                new Expression(nameof(mul),
-                    new Integer(-2),
-                    new Symbol("x"),
-                    new Symbol("y")
-                )
-            );
             var evaluated = Evaluator.Run(expr);
-            Assert.AreEqual(0, s_comparer.Compare(evaluated, altered));
         }
     }
 }

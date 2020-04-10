@@ -19,7 +19,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Types
             };
         }
 
-        public Expression(string head)
+        public Expression(IElement head)
         {
             Head = head;
             Operands = new List<IElement>();
@@ -30,7 +30,18 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Types
             };
         }
 
-        public Expression(string head, List<IElement> operands)
+        public Expression(string head)
+        {
+            Head = new Symbol(head);
+            Operands = new List<IElement>();
+            Attributes = new List<IAttribute>()
+            {
+                new FlatAttribute(),
+                new OrderlessAttribute()
+            };
+        }
+
+        public Expression(IElement head, List<IElement> operands)
         {
             Head = head;
             Operands = operands;
@@ -41,7 +52,18 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Types
             };
         }
 
-        public Expression(string head, params IElement[] operands)
+        public Expression(string head, List<IElement> operands)
+        {
+            Head = new Symbol(head);
+            Operands = operands;
+            Attributes = new List<IAttribute>()
+            {
+                new FlatAttribute(),
+                new OrderlessAttribute()
+            };
+        }
+
+        public Expression(IElement head, params IElement[] operands)
         {
             Head = head;
             Operands = new List<IElement>();
@@ -56,15 +78,30 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Types
             };
         }
 
+        public Expression(string head, params IElement[] operands)
+        {
+            Head = new Symbol(head);
+            Operands = new List<IElement>();
+            foreach (var operand in operands)
+            {
+                Operands.Add(operand);
+            }
+            Attributes = new List<IAttribute>()
+            {
+                new FlatAttribute(),
+                new OrderlessAttribute()
+            };
+        }
+
         #endregion Constructors
 
-        public List<IElement> Operands;
-        public string Head { get; set; }
-        public List<IAttribute> Attributes { get; set; }
-
-        public object Clone()
+        public IElement GetHead()
         {
-            return this.MemberwiseClone();
+            return Head;
         }
+
+        public List<IElement> Operands;
+        public IElement Head { get; set; }
+        public List<IAttribute> Attributes { get; set; }
     }
 }

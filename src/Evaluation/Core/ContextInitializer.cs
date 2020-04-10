@@ -19,6 +19,11 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
         private static readonly IPattern s_y = new ElementPattern("y");
         private static readonly IPattern s_z = new ElementPattern("z");
 
+        // Symbols
+        private static readonly SymbolPattern s_sym1 = new SymbolPattern("sym1");
+        private static readonly SymbolPattern s_sym2 = new SymbolPattern("sym2");
+        private static readonly SymbolPattern s_sym3 = new SymbolPattern("sym3");
+
         // Integers
         private static readonly IPattern s_int1 = new IntegerPattern("int1");
         private static readonly IPattern s_int2 = new IntegerPattern("int2");
@@ -49,6 +54,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                 .Concat(MulBuiltins())
                 .Concat(AddBuiltins())
                 .Concat(IfBuiltins())
+                .Concat(PlotBuiltins())
                 .ToList();
             return context;
         }
@@ -455,5 +461,52 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             return builtins;
         }
 
+        // Plot
+        private static List<(IElement, IElement)> PlotBuiltins()
+        {
+            var builtins = new List<(IElement, IElement)>();
+
+            // plot(f,from,to,step)
+            IElement lhs = new Expression(nameof(plot),
+                new SymbolPattern("func"),
+                new IntegerPattern("from"),
+                new IntegerPattern("to"),
+                new IntegerPattern("step")
+            );
+            IElement rhs = new Expression("if",
+                new Expression("lesse",
+                    new Expression(nameof(sum),
+                        new IntegerPattern("from"),
+                        new IntegerPattern("step")
+                    ),
+                    new IntegerPattern("to")
+                ),
+                new Expression("Points",
+                    new Expression("Point",
+                        new IntegerPattern("from"),
+                        new Expression(new SymbolPattern("func"),
+                            new IntegerPattern("from")
+                        )
+                    ),
+                    new Expression(nameof(plot),
+                        new SymbolPattern("func"),
+                        new Expression(nameof(sum),
+                            new IntegerPattern("from"),
+                            new IntegerPattern("step")
+                        ),
+                        new IntegerPattern("to"),
+                        new IntegerPattern("step")
+                    )
+                ),
+                new Expression("Point",
+                    new IntegerPattern("from"),
+                    new Expression(new SymbolPattern("func"),
+                        new IntegerPattern("from")
+                    )
+                )
+            );
+            builtins.Add((lhs, rhs));
+            return builtins;
+        }
     }
 }
