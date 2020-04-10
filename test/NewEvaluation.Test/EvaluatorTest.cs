@@ -21,5 +21,15 @@ namespace ShiftCo.ifmo_ca_lab_3.NewEvaluation.Test
 
             Assert.IsTrue(patternElement.Equals(evaluationResult));
         }
+
+        [TestMethod]
+        public void Run_GivenInteger_ReturnsSame()
+        {
+            var integerElement = new Integer(127);
+
+            var evaluationResult = Evaluator.Run(integerElement);
+
+            Assert.IsTrue(integerElement.Equals(evaluationResult));
+        }
     }
 }
