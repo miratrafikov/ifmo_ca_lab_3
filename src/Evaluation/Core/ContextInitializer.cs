@@ -468,7 +468,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 
             // plot(f,from,to,step)
             IElement lhs = new Expression(nameof(plot),
-                new Symbol("func"),
+                new SymbolPattern("func"),
                 new IntegerPattern("from"),
                 new IntegerPattern("to"),
                 new IntegerPattern("step")
@@ -484,12 +484,12 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                 new Expression("Points",
                     new Expression("Point",
                         new IntegerPattern("from"),
-                        new Expression("func",
+                        new Expression(new SymbolPattern("func"),
                             new IntegerPattern("from")
                         )
                     ),
                     new Expression(nameof(plot),
-                        new Symbol("func"),
+                        new SymbolPattern("func"),
                         new Expression(nameof(sum),
                             new IntegerPattern("from"),
                             new IntegerPattern("step")
@@ -500,7 +500,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                 ),
                 new Expression("Point",
                     new IntegerPattern("from"),
-                    new Expression("func",
+                    new Expression(new SymbolPattern("func"),
                         new IntegerPattern("from")
                     )
                 )
