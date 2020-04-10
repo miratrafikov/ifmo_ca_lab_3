@@ -28,7 +28,7 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
             var expr = new Expression(nameof(plot),
                 new Symbol("f"),
                 new Integer(1),
-                new Integer(1),
+                new Integer(3),
                 new Integer(1)
             );
             var evaluated = Evaluator.Run(expr);

@@ -45,11 +45,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             {
                 expr.Head = LoopedEvaluate(expr.Head);
                 expr = AddAttributes((Expression)element);
-                if (expr.Head.Equals(new Symbol(nameof(plot))) && ((Expression)element).Operands[0] is Symbol symbol)
-                {
-                    Context.AddRule(symbol, new Symbol("func"));
-                }
-
+                
                 // add a rule in the context if expr is delayed 
                 if (expr.Head.Equals(new Symbol(nameof(delayed))) || expr.Head.Equals(new Symbol(nameof(set))))
                 {

@@ -6,7 +6,7 @@ using ShiftCo.ifmo_ca_lab_3.Evaluation.Types;
 
 namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Patterns
 {
-    class SymbolPattern : IPattern
+    public class SymbolPattern : IPattern
     {
         public SymbolPattern(string name)
         {
@@ -21,5 +21,17 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Patterns
         }
 
         public Symbol Element { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is SymbolPattern p && p.Name.Equals(Name) && p.Element.Equals(Element))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }
