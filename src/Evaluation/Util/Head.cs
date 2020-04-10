@@ -11,5 +11,6 @@
         set,
         delayed,
         pattern,
+        plot
     }
 }

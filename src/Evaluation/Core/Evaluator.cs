@@ -39,24 +39,16 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 
         private static IElement LoopedEvaluate(IElement element)
         {
-            // evaluate head
+            // evaluate head and apply attributes
             if (element is Expression)
             {
                 element.Head = EvaluateHead(element);
+                element = AddAttributes((Expression)element);
             }
 
-            // add hold if needed
-            if (element.Head == nameof(set))
+            if (element.Head == nameof(plot) && ((Expression)element).Operands[0] is Symbol symbol)
             {
-                ((Expression)element).Attributes.Add(new HoldAttribute("HoldFirst"));
-            }
-            if (element.Head == nameof(delayed))
-            {
-                ((Expression)element).Attributes.Add(new HoldAttribute("HoldAll"));
-            }
-            if (element.Head == "if")
-            {
-                ((Expression)element).Attributes.Add(new HoldAttribute("HoldRest"));
+                Context.AddRule(symbol, new Symbol("func"));
             }
 
             // add a rule in the context if expr is delayed 
@@ -118,6 +110,26 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             }
         }
 
+        private static Expression AddAttributes(Expression expr)
+        {
+
+            switch (expr.Head)
+            {
+                case nameof(set):
+                    expr.Attributes.Add(new HoldAttribute("HoldFirst"));
+                    break;
+                case nameof(delayed):
+                    expr.Attributes.Add(new HoldAttribute("HoldAll"));
+                    break;
+                case ("if"):
+                    expr.Attributes.Add(new HoldAttribute("HoldRest"));
+                    break;
+                default:
+                    break;
+            }
+            return expr;
+        }
+
         private static string EvaluateHead(IElement expr)
         {
             var head = new Symbol(expr.Head);
@@ -134,7 +146,8 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             if (expr.Head == nameof(set) || expr.Head == nameof(delayed) || expr.Head == "if" ||
                 expr.Head == "equals" || expr.Head == "nequals" || expr.Head == "greater" ||
                 expr.Head == "greatere" || expr.Head == "less" || expr.Head == "lesse" ||
-                expr.Head == "and" || expr.Head == "or" || expr.Head == "not")
+                expr.Head == "and" || expr.Head == "or" || expr.Head == "not" ||
+                expr.Head == "Point" || expr.Head == nameof(plot))
             {
                 return expr;
             }
@@ -142,7 +155,17 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             var tmp = expr;
             foreach (var attribute in expr.Attributes)
             {
-                tmp = attribute.Apply(tmp);
+                if (tmp.Head == "Points")
+                {
+                    if (attribute is FlatAttribute)
+                    {
+                        tmp = attribute.Apply(tmp);
+                    }
+                }
+                else
+                {
+                    tmp = attribute.Apply(tmp);
+                }
             }
             expr = tmp;
 
