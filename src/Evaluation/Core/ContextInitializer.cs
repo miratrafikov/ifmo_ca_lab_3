@@ -19,6 +19,11 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
         private static readonly IPattern s_y = new ElementPattern("y");
         private static readonly IPattern s_z = new ElementPattern("z");
 
+        // Symbols
+        private static readonly SymbolPattern s_sym1 = new SymbolPattern("sym1");
+        private static readonly SymbolPattern s_sym2 = new SymbolPattern("sym2");
+        private static readonly SymbolPattern s_sym3 = new SymbolPattern("sym3");
+
         // Integers
         private static readonly IPattern s_int1 = new IntegerPattern("int1");
         private static readonly IPattern s_int2 = new IntegerPattern("int2");

@@ -58,5 +58,14 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
             var matches = PatternMatcher.Matches(rule, expr);
             Assert.AreEqual(true, matches.Success);
         }
+
+        [TestMethod]
+        public void Test3()
+        {
+            var pattern = new Expression(new SymbolPattern("f"), new IntegerPattern("x"));
+            var expr = new Expression("fact", new Integer(5));
+            var matches = PatternMatcher.Matches(pattern, expr);
+            Assert.AreEqual(true, matches.Success);
+        }
     }
 }

@@ -23,7 +23,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Patterns
 
         public override bool Equals(object obj)
         {
-            if (obj is NullableSequencePattern p && p.Name == Name && p.Operands.Count == Operands.Count)
+            if (obj is NullableSequencePattern p && p.Name.Equals(Name) && p.Operands.Count == Operands.Count)
             {
                 var ops = Operands.Zip(p.Operands);
                 foreach (var op in ops)

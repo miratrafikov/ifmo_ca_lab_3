@@ -20,7 +20,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Patterns
 
         public override bool Equals(object obj)
         {
-            if (obj is ElementPattern p && p.Name == Name && p.Element == Element)
+            if (obj is ElementPattern p && p.Name.Equals(Name) && p.Element.Equals(Element))
             {
                 return true;
             }

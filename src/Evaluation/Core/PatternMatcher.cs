@@ -26,17 +26,26 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                 return new Result(false);
             }
 
+            /*
             // Pattern is either Atom or Expression
             if (!obj.GetHead().Equals(lhs.GetHead()) && 
                 !lhs.GetHead().Equals(new Symbol(nameof(pattern))))
             {
                 return new Result(false);
             }
+            */
 
             // Pattern is kind of '_Integer'
             if (obj is Integer integer && lhs is IntegerPattern)
             {
                 ((IntegerPattern)lhs).Element = integer;
+                return new Result(true, lhs);
+            }
+
+            // Pattern is kind of '_Symbol'
+            if (obj is Symbol sym && lhs is SymbolPattern)
+            {
+                ((SymbolPattern)lhs).Element = sym;
                 return new Result(true, lhs);
             }
 
@@ -56,6 +65,16 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 
             if (lhs is Expression p && obj is Expression o)
             {
+                var headMatch = Matches(p.Head, o.Head);
+                if (headMatch.Success)
+                {
+                    p.Head = (IElement)headMatch.Value;
+                } 
+                else
+                {
+                    return new Result(false);
+                }
+
                 int j = 0;
                 for (int i = 0; i < o.Operands.Count; i++)
                 {
@@ -274,6 +293,10 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                             if (comparer.Compare(o.First, o.Second) != 0) return false;
                         }
                         return true;
+                    }
+                    else if (p is SymbolPattern && dp is SymbolPattern)
+                    {
+                        return comparer.Compare(((SymbolPattern)p).Element, ((SymbolPattern)dp).Element) == 0;
                     }
                     else if (p is ElementPattern && dp is ElementPattern)
                     {

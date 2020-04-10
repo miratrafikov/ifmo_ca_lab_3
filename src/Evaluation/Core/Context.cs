@@ -61,6 +61,8 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
         {
             switch (lhs)
             {
+                case SymbolPattern sym:
+                    return new SymbolPattern(sym.Name.Value);
                 case IntegerPattern integer:
                     return new IntegerPattern(integer.Name.Value);
                 case ElementPattern element:
@@ -226,8 +228,15 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                 case IPattern p when (!s_patterns.ContainsKey(p.Name.Value)):
                     result = rhs;
                     break;
+
                 case IPattern p when p.GetType() != s_patterns[p.Name.Value].GetType():
                     throw new PatternsDontMatchException();
+
+                case SymbolPattern sym:
+                    pattern = s_patterns[sym.Name.Value];
+                    result = ((SymbolPattern)pattern).Element;
+                    break;
+
                 case IntegerPattern integer:
                     pattern = s_patterns[integer.Name.Value];
                     result = ((IntegerPattern)pattern).Element;
@@ -239,7 +248,8 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                     break;
 
                 case Expression expr:
-                    result = new Expression(expr.Head);
+                    result = new Expression(ApplyPatterns(expr.Head));
+
                     foreach (var operand in expr.Operands)
                     {
                         if (operand is NullableSequencePattern seq)
