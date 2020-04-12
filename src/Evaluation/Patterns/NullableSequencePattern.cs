@@ -40,5 +40,10 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Patterns
                 return false;
             }
         }
+
+        public override string ToString()
+        {
+            return $"NullableSequencePattern: {Name.Value}";
+        }
     }
 }

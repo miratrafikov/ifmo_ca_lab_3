@@ -58,7 +58,7 @@ namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Parseltongue
                 case (_, NonTerminal.Root):
                     return new Result(true, ((List<IElement>)result.Value)[0]);
                 case (_, Terminal.Number):
-                    return new Result(true, new Integer(Convert.ToInt32(result.Value)));
+                    return new Result(true, new Number(Convert.ToInt32(result.Value)));
                 case (_, Terminal.Symbol):
                     return new Result(true, new Symbol((string)result.Value));
                 case (_, Terminal.Underscores):
@@ -136,7 +136,7 @@ namespace ShiftCo.ifmo_ca_lab_3.SyntaxAnalysis.Parseltongue
                 case (1, "symbol"):
                     return new ElementPattern(patternName);
                 case (1, "integer"):
-                    return new IntegerPattern(patternName);
+                    return new NumberPattern(patternName);
                 case (3, ""):
                     return new NullableSequencePattern(patternName);
                 default:

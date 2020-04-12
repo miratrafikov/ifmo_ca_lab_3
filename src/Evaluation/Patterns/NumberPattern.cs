@@ -3,9 +3,9 @@ using ShiftCo.ifmo_ca_lab_3.Evaluation.Types;
 
 namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Patterns
 {
-    public class IntegerPattern : IPattern
+    public class NumberPattern : IPattern
     {
-        public IntegerPattern(string name)
+        public NumberPattern(string name)
         {
             Name = name;
         }
@@ -16,11 +16,11 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Patterns
         }
 
         public Symbol Name { get; set; }
-        public Integer Element { get; set; }
+        public Number Element { get; set; }
 
         public override bool Equals(object obj)
         {
-            if (obj is IntegerPattern p && p.Name.Equals(Name) && p.Element.Equals(Element))
+            if (obj is NumberPattern p && p.Name.Equals(Name) && p.Element.Equals(Element))
             {
                 return true;
             }
@@ -28,6 +28,11 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Patterns
             {
                 return false;
             }
+        }
+
+        public override string ToString()
+        {
+            return $"NumberPattern: {Name.Value}";
         }
     }
 }

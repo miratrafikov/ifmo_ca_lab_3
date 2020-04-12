@@ -13,21 +13,21 @@ namespace ShiftCo.ifmo_ca_lab_3.Plot
             InitializeComponent();
         }
 
-        public MainWindow(List<(int, int)> points)
+        public MainWindow(List<(decimal, decimal)> points)
         {
             InitializeComponent();
             Model = SetUpModel(points);
             DataContext = this;
         }
 
-        PlotModel SetUpModel(List<(int, int)> points)
+        PlotModel SetUpModel(List<(decimal, decimal)> points)
         {
-            var model = new PlotModel { Title = "Function plot" };
+            var model = new PlotModel { Title = "Plot" };
             var series = new LineSeries();
 
             foreach (var point in points) 
             {
-                series.Points.Add(new DataPoint(point.Item1, point.Item2));
+                series.Points.Add(new DataPoint((double)point.Item1, (double)point.Item2));
             }
             
             model.Series.Add(series);

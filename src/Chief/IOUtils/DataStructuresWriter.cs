@@ -16,7 +16,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Chief.IOUtils
             var head = ((IElement)element).GetHead();
             switch (element)
             {
-                case Integer integer:
+                case Number integer:
                     var value = integer.Value.ToString();
                     Console.WriteLine($"{indent}+- {head} {value}");
                     break;

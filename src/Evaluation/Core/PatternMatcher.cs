@@ -36,9 +36,9 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             */
 
             // Pattern is kind of '_Integer'
-            if (obj is Integer integer && lhs is IntegerPattern)
+            if (obj is Number integer && lhs is NumberPattern)
             {
-                ((IntegerPattern)lhs).Element = integer;
+                ((NumberPattern)lhs).Element = integer;
                 return new Result(true, lhs);
             }
 
@@ -172,7 +172,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                     pattern.Operands[3] is Expression e2 &&
                     e2.GetHead().Equals(new Symbol(nameof(mul))) &&
                     e2.Operands.Count == 2 &&
-                    e2.Operands[0] is IntegerPattern integer &&
+                    e2.Operands[0] is NumberPattern integer &&
                     e2.Operands[1] is NullableSequencePattern seqY &&
                     pattern.Operands[4] is NullableSequencePattern seq6)
                 {
@@ -184,7 +184,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                                 expr.Operands[j] is Expression &&
                                 expr.Operands[i].GetHead().Equals(new Symbol(nameof(mul))) &&
                                 expr.Operands[j].GetHead().Equals(new Symbol(nameof(mul))) &&
-                                ((Expression)expr.Operands[j]).Operands.First() is Integer &&
+                                ((Expression)expr.Operands[j]).Operands.First() is Number &&
                                 AreOperandsSame(((Expression)expr.Operands[i]).Operands,
                                     ((Expression)expr.Operands[j]).Operands.Skip(1).ToList()))
                             {
@@ -198,7 +198,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                                 {
                                     seq6.Operands = expr.Operands.GetRange(j + 1, expr.Operands.Count - j - 1);
                                 }
-                                integer.Element = (Integer)((Expression)expr.Operands[j]).Operands.First();
+                                integer.Element = (Number)((Expression)expr.Operands[j]).Operands.First();
                                 seqX.Operands = ((Expression)expr.Operands[i]).Operands;
                                 seqY.Operands = ((Expression)expr.Operands[i]).Operands;
                                 return new Result(true, pattern);
@@ -215,13 +215,13 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                     pattern.Operands[1] is Expression e3 &&
                     e3.GetHead().Equals(new Symbol(nameof(mul))) &&
                     e3.Operands.Count == 2 &&
-                    e3.Operands[0] is IntegerPattern integer1 &&
+                    e3.Operands[0] is NumberPattern integer1 &&
                     e3.Operands[1] is NullableSequencePattern seqx &&
                     pattern.Operands[2] is NullableSequencePattern seq8 &&
                     pattern.Operands[3] is Expression e4 &&
                     e4.GetHead().Equals(new Symbol(nameof(mul))) &&
                     e4.Operands.Count == 2 &&
-                    e4.Operands[0] is IntegerPattern integer2 &&
+                    e4.Operands[0] is NumberPattern integer2 &&
                     e4.Operands[1] is NullableSequencePattern seqy &&
                     pattern.Operands[4] is NullableSequencePattern seq9)
                 {
@@ -233,8 +233,8 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                                 expr.Operands[j] is Expression &&
                                 expr.Operands[i].GetHead().Equals(new Symbol(nameof(mul))) &&
                                 expr.Operands[j].GetHead().Equals(new Symbol(nameof(mul))) &&
-                                ((Expression)expr.Operands[i]).Operands.First() is Integer &&
-                                ((Expression)expr.Operands[j]).Operands.First() is Integer &&
+                                ((Expression)expr.Operands[i]).Operands.First() is Number &&
+                                ((Expression)expr.Operands[j]).Operands.First() is Number &&
                                 AreOperandsSame(((Expression)expr.Operands[i]).Operands.Skip(1).ToList(),
                                                 ((Expression)expr.Operands[j]).Operands.Skip(1).ToList()))
                             {
@@ -248,8 +248,8 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                                 {
                                     seq9.Operands = expr.Operands.GetRange(j + 1, expr.Operands.Count - j - 1);
                                 }
-                                integer1.Element = (Integer)((Expression)expr.Operands[i]).Operands.First();
-                                integer2.Element = (Integer)((Expression)expr.Operands[j]).Operands.First();
+                                integer1.Element = (Number)((Expression)expr.Operands[i]).Operands.First();
+                                integer2.Element = (Number)((Expression)expr.Operands[j]).Operands.First();
                                 seqx.Operands = ((Expression)expr.Operands[i]).Operands.Skip(1).ToList();
                                 seqy.Operands = ((Expression)expr.Operands[i]).Operands.Skip(1).ToList();
                                 return new Result(true, pattern);
@@ -302,9 +302,9 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                     {
                         return comparer.Compare(((ElementPattern)p).Element, ((ElementPattern)dp).Element) == 0;
                     }
-                    else if (p is IntegerPattern && dp is IntegerPattern)
+                    else if (p is NumberPattern && dp is NumberPattern)
                     {
-                        return (((IntegerPattern)p).Element.Value - ((IntegerPattern)dp).Element.Value == 0);
+                        return (((NumberPattern)p).Element.Value - ((NumberPattern)dp).Element.Value == 0);
                     }
                     return false;
                 }

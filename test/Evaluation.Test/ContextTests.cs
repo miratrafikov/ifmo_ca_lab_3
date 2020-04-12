@@ -26,7 +26,7 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
             });
             var times = new Expression(nameof(mul), new List<IElement>()
             {
-                new Integer(2),
+                new Number(2),
                 new ElementPattern("x")
             });
             var rhs = new Expression(nameof(sum), new List<IElement>()
@@ -52,23 +52,23 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
         {
             var add = new Expression(nameof(sum), new List<IElement>()
             {
-                new Integer(2),
-                new Integer(3),
-                new Integer(3)
+                new Number(2),
+                new Number(3),
+                new Number(3)
             });
             var lhs = new Expression(nameof(sum), new List<IElement>()
             {
                 new NullableSequencePattern("a"),
-                new IntegerPattern("x"),
+                new NumberPattern("x"),
                 new NullableSequencePattern("b"),
-                new IntegerPattern("y"),
+                new NumberPattern("y"),
                 new NullableSequencePattern("c")
             });
             var rhs = new Expression();
 
             Context.AddRule(lhs, rhs);
             _ = Context.GetElement(add);
-            Assert.AreEqual(add, new Integer(4));
+            Assert.AreEqual(add, new Number(4));
         }
     }
 }

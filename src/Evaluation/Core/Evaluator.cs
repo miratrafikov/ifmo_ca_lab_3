@@ -55,7 +55,8 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                 expr = AddAttributes((Expression)element);
                 
                 // add a rule in the context if expr is delayed 
-                if (expr.Head.Equals(new Symbol(nameof(delayed))) || expr.Head.Equals(new Symbol(nameof(set))))
+                if (expr.Head.Equals(new Symbol(nameof(delayed))) || 
+                    expr.Head.Equals(new Symbol(nameof(set))))
                 {
                     var e = Evaluate(element);
                     Context.AddRule(((Expression)e).Operands[0], ((Expression)e).Operands[1]);
@@ -85,7 +86,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             IncreaseIterations();
             switch (element)
             {
-                case Integer i:
+                case Number i:
                     return i;
 
                 case Symbol s:
@@ -122,20 +123,20 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             {
                 if (evaluated.GetHead().Equals(new Symbol("Points")))
                 {
-                    var list = new List<(int, int)>();
+                    var list = new List<(decimal, decimal)>();
                     foreach (var point in ((Expression)evaluated).Operands)
                     {
-                        int x = ((Integer)((Expression)point).Operands[0]).Value;
-                        int y = ((Integer)((Expression)point).Operands[1]).Value;
+                        decimal x = ((Number)((Expression)point).Operands[0]).Value;
+                        decimal y = ((Number)((Expression)point).Operands[1]).Value;
                         list.Add((x, y));
                     }
                     new MainWindow(list).ShowDialog();
                 }
                 if (evaluated.GetHead().Equals(new Symbol("Point")))
                 {
-                    int x = ((Integer)((Expression)evaluated).Operands[0]).Value;
-                    int y = ((Integer)((Expression)evaluated).Operands[1]).Value;
-                    var list = new List<(int, int)>() { (x, y) };
+                    decimal x = ((Number)((Expression)evaluated).Operands[0]).Value;
+                    decimal y = ((Number)((Expression)evaluated).Operands[1]).Value;
+                    var list = new List<(decimal, decimal)>() { (x, y) };
                     new MainWindow(list).ShowDialog();
                 }
             }
@@ -168,7 +169,8 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                 expr.Head.Equals(new Symbol("equals")) || expr.Head.Equals(new Symbol("nequals")) || expr.Head.Equals(new Symbol("greater")) ||
                 expr.Head.Equals(new Symbol("greatere")) || expr.Head.Equals(new Symbol("less")) || expr.Head.Equals(new Symbol("lesse")) ||
                 expr.Head.Equals(new Symbol("and")) || expr.Head.Equals(new Symbol("or")) || expr.Head.Equals(new Symbol("not")) ||
-                expr.Head.Equals(new Symbol("Point")) || expr.Head.Equals(new Symbol("plot")))
+                expr.Head.Equals(new Symbol("Point")) || expr.Head.Equals(new Symbol("plot")) || expr.Head.Equals(new Symbol("Points")) ||
+                expr.Head.Equals(new Symbol("div")) || expr.Head.Equals(new Symbol("taylorsin")) || expr.Head.Equals(new Symbol("term")))
             {
                 return expr;
             }
