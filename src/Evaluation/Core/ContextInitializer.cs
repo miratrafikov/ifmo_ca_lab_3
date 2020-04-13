@@ -546,10 +546,16 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
         {
             var builtins = new List<(IElement, IElement)>();
 
-            // Factorial(x)
+            #region Factorial
+
             IElement lhs = new Expression("factorial", new Number(1));
             IElement rhs = new Number(1);
             builtins.Add((lhs, rhs));
+
+            lhs = new Expression("factorial", new Number(0));
+            rhs = new Number(1);
+            builtins.Add((lhs, rhs));
+
             lhs = new Expression("factorial", new NumberPattern("x"));
             rhs = new Expression("mul",
                     new NumberPattern("x"),
@@ -562,36 +568,31 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             );
             builtins.Add((lhs, rhs));
 
-            // x^(2n+1) / (2n+1)! | aka term
+            #endregion
+
+            #region Term | x^(n) / (n)!
+
             lhs = new Expression("term", new NumberPattern("x"), new NumberPattern("n"));
-            rhs = new Expression(nameof(div), 
-                new Expression("pow", 
+            rhs = new Expression(nameof(div),
+                new Expression("pow",
                     new NumberPattern("x"),
-                    new Expression("sum",
-                        new Expression("mul",
-                            new Number(2),
-                            new NumberPattern("n")
-                        ),
-                        new Number(1)
-                    )
+                    new NumberPattern("n")
                 ),
                 new Expression("factorial",
-                    new Expression("sum", 
-                        new Expression("mul", 
-                            new Number(2),
-                            new NumberPattern("n")
-                        ),
-                        new Number(1)
-                    )
+                    new NumberPattern("n")
                 )
             );
             builtins.Add((lhs, rhs));
+
+            #endregion
+
+            #region Sin
 
             // sin(x) -> taylor_sin(curr, x)
             lhs = new Expression("sin", new NumberPattern("x"));
             rhs = new Expression("taylorsin",
                 new Number(0),
-                new Number(10),
+                new Number(4),
                 new NumberPattern("x")
             );
             builtins.Add((lhs, rhs));
@@ -612,7 +613,16 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                             new Number(-1),
                             new NumberPattern("curr")
                         ),
-                        new Expression("term", new NumberPattern("x"), new NumberPattern("curr"))
+                        new Expression("term", 
+                            new NumberPattern("x"),
+                            new Expression("sum",
+                                new Expression("mul",
+                                    new Number(2),
+                                    new NumberPattern("curr")
+                                ),
+                                new Number(1)
+                            )
+                        )
                     ),
                     new Expression("taylorsin", 
                         new Expression("sum",
@@ -627,10 +637,83 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                         new Number(-1),
                         new NumberPattern("curr")
                     ),
-                    new Expression("term", new NumberPattern("x"), new NumberPattern("curr"))
+                    new Expression("term", 
+                        new NumberPattern("x"),
+                        new Expression("sum",
+                            new Expression("mul",
+                                new Number(2),
+                                new NumberPattern("curr")
+                            ),
+                            new Number(1)
+                        )
+                    )
                 )
             );
             builtins.Add((lhs, rhs));
+
+            #endregion
+
+            #region Cos
+
+            // cos(x) -> taylor_cos(curr, x)
+            lhs = new Expression("cos", new NumberPattern("x"));
+            rhs = new Expression("taylorcos",
+                new Number(0),
+                new Number(4),
+                new NumberPattern("x")
+            );
+            builtins.Add((lhs, rhs));
+
+            // taylor_cos -> 1 - xx/2! + ...
+            lhs = new Expression("taylorcos", new NumberPattern("curr"), new NumberPattern("n"), new NumberPattern("x"));
+            rhs = new Expression("if",
+                new Expression("lesse",
+                    new Expression("sum",
+                        new NumberPattern("curr"),
+                        new Number(1)
+                    ),
+                    new NumberPattern("n")
+                ),
+                new Expression("sum",
+                    new Expression("mul",
+                        new Expression("pow",
+                            new Number(-1),
+                            new NumberPattern("curr")
+                        ),
+                        new Expression("term",
+                            new NumberPattern("x"),
+                            new Expression("mul",
+                                new Number(2),
+                                new NumberPattern("curr")
+                            )
+                        )
+                    ),
+                    new Expression("taylorcos",
+                        new Expression("sum",
+                            new Number(1),
+                            new NumberPattern("curr")
+                        ),
+                        new NumberPattern("n"),
+                        new NumberPattern("x")
+                    )
+                ),
+                new Expression("mul",
+                    new Expression("pow",
+                        new Number(-1),
+                        new NumberPattern("curr")
+                    ),
+                    new Expression("term",
+                        new NumberPattern("x"),
+                        new Expression("mul",
+                            new Number(2),
+                            new NumberPattern("curr")
+                        )
+                    )
+                )
+            );
+            builtins.Add((lhs, rhs));
+
+            #endregion
 
             return builtins;
         }

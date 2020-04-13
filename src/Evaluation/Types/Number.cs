@@ -16,6 +16,11 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Types
             Value = value;
         }
 
+        public Number(double value)
+        {
+            Value = (decimal)value;
+        }
+
         public IElement GetHead()
         {
             return new Symbol("integer");

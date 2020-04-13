@@ -101,8 +101,15 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                     {
                         // evaluate each child
                         int from = 0, to = e.Operands.Count;
-                        if (((Expression)element).Attributes.Contains(new HoldAttribute("HoldFirst"))) from = Math.Min(1, e.Operands.Count);
-                        if (((Expression)element).Attributes.Contains(new HoldAttribute("HoldRest"))) to = Math.Min(1, e.Operands.Count);
+                        if (((Expression)element).Attributes.Contains(new HoldAttribute("HoldFirst")))
+                        {
+                            from = Math.Min(1, e.Operands.Count);
+                        }
+                        if (((Expression)element).Attributes.Contains(new HoldAttribute("HoldRest")))
+                        {
+                            to = Math.Min(1, e.Operands.Count);
+                        }
+
                         for (var i = from; i < to; i++)
                         {
                             e.Operands[i] = LoopedEvaluate(e.Operands[i]);
@@ -170,7 +177,8 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                 expr.Head.Equals(new Symbol("greatere")) || expr.Head.Equals(new Symbol("less")) || expr.Head.Equals(new Symbol("lesse")) ||
                 expr.Head.Equals(new Symbol("and")) || expr.Head.Equals(new Symbol("or")) || expr.Head.Equals(new Symbol("not")) ||
                 expr.Head.Equals(new Symbol("Point")) || expr.Head.Equals(new Symbol("plot")) || expr.Head.Equals(new Symbol("Points")) ||
-                expr.Head.Equals(new Symbol("div")) || expr.Head.Equals(new Symbol("taylorsin")) || expr.Head.Equals(new Symbol("term")))
+                expr.Head.Equals(new Symbol("div")) || expr.Head.Equals(new Symbol("taylorsin")) || expr.Head.Equals(new Symbol("term")) || 
+                expr.Head.Equals(new Symbol("taylorcos")))
             {
                 return expr;
             }

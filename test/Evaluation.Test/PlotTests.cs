@@ -38,7 +38,7 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
         }
 
         [TestMethod]
-        public void Test2()
+        public void Sin0()
         {
             var sin = new Expression("sin", new Number(0));
             var evaluated = Evaluator.Run(sin);
@@ -46,19 +46,42 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
         }
 
         [TestMethod]
-        public void Test3()
+        public void SinPiDiv2()
         {
             var sin = new Expression("sin", new Number((decimal)Math.PI / 2));
             var evaluated = Evaluator.Run(sin);
-            Assert.IsTrue( ((Number)evaluated).Value - 1 < 0.0001m);
+            Assert.IsTrue( ((Number)evaluated).Value - (decimal)Math.Sin(Math.PI / 2) < 0.0001m);
         }
 
         [TestMethod]
-        public void Test4()
+        public void Sin2()
         {
             var sin = new Expression("sin", new Number(2));
             var evaluated = Evaluator.Run(sin);
-            Assert.IsTrue(((Number)evaluated).Value - 0.9092m < 0.0001m);
+            Assert.IsTrue(((Number)evaluated).Value - (decimal)Math.Sin(2) < 0.0001m);
+        }
+
+        [TestMethod]
+        public void Cos0()
+        {
+            var cos = new Expression("cos", new Number(0));
+            var evaluated = Evaluator.Run(cos);
+            Assert.IsTrue(((Number)evaluated).Value - (decimal)Math.Cos(0) < 0.0001m);
+        }
+
+        [TestMethod]
+        public void CosPiDiv2()
+        {
+            var cos = new Expression("cos", new Number(Math.PI / 2));
+            var evaluated = Evaluator.Run(cos);
+            Assert.IsTrue(((Number)evaluated).Value - (decimal)Math.Cos(Math.PI / 2) < 0.0001m);
+        }
+        [TestMethod]
+        public void Cos2()
+        {
+            var cos = new Expression("cos", new Number(2));
+            var evaluated = Evaluator.Run(cos);
+            Assert.IsTrue(Math.Abs(((Number)evaluated).Value) - Math.Abs((decimal)Math.Cos(2)) < 0.0001m);
         }
     }
 }

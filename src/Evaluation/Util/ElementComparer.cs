@@ -61,7 +61,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Util
                 Enum.TryParse(typeof(Head), left, true, out var parsedLeft);
                 Enum.TryParse(typeof(Head), right, true, out var parsedRight);
 
-                if (parsedRight is null && parsedLeft is null) return 0;
+                if (parsedRight is null && parsedLeft is null) return string.Compare(left, right);
                 if (parsedLeft is null) return -1;
                 if (parsedRight is null) return 1;
 
