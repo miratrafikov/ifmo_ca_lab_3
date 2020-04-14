@@ -12,6 +12,8 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
     public class ContextInitializer
     {
 
+        private const int TERMS_AMOUNT = 12;
+
         #region Alphabet
 
         // Elements
@@ -545,6 +547,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
         private static List<(IElement, IElement)> TaylorBuiltins()
         {
             var builtins = new List<(IElement, IElement)>();
+            
 
             #region Factorial
 
@@ -592,7 +595,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             lhs = new Expression("sin", new NumberPattern("x"));
             rhs = new Expression("taylorsin",
                 new Number(0),
-                new Number(4),
+                new Number(TERMS_AMOUNT),
                 new NumberPattern("x")
             );
             builtins.Add((lhs, rhs));
@@ -659,7 +662,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             lhs = new Expression("cos", new NumberPattern("x"));
             rhs = new Expression("taylorcos",
                 new Number(0),
-                new Number(4),
+                new Number(TERMS_AMOUNT),
                 new NumberPattern("x")
             );
             builtins.Add((lhs, rhs));

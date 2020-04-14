@@ -76,12 +76,21 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
             var evaluated = Evaluator.Run(cos);
             Assert.IsTrue(((Number)evaluated).Value - (decimal)Math.Cos(Math.PI / 2) < 0.0001m);
         }
+
         [TestMethod]
         public void Cos2()
         {
             var cos = new Expression("cos", new Number(2));
             var evaluated = Evaluator.Run(cos);
             Assert.IsTrue(Math.Abs(((Number)evaluated).Value) - Math.Abs((decimal)Math.Cos(2)) < 0.0001m);
+        }
+
+        [TestMethod]
+        public void Sin10()
+        {
+            var sin = new Expression("sin", new Number(10));
+            var evaluated = Evaluator.Run(sin);
+            Assert.IsTrue(Math.Abs(((Number)evaluated).Value) - Math.Abs((decimal)Math.Sin(10)) < 0.0001m);
         }
     }
 }

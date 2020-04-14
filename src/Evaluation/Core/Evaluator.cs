@@ -16,10 +16,11 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 {
     public static class Evaluator
     {
-        private static readonly int s_maxIterationsAmount = 100000;
+        private static readonly int s_maxIterationsAmount = 1000000;
         private static int s_iterations = 0;
         private static readonly ElementComparer s_comparer = new ElementComparer();
 
+        [STAThread]
         public static IElement Run(IElement element)
         {
             s_iterations = 0;
@@ -35,6 +36,30 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             ShowPlot(evaluated);
             
             return evaluated;
+        }
+
+        [STAThread]
+        private static void ShowPlot(IElement evaluated)
+        {
+            if (evaluated.GetHead().Equals(new Symbol("Points")))
+            {
+                var list = new List<(decimal, decimal)>();
+                foreach (var point in ((Expression)evaluated).Operands)
+                {
+                    decimal x = ((Number)((Expression)point).Operands[0]).Value;
+                    decimal y = ((Number)((Expression)point).Operands[1]).Value;
+                    list.Add((x, y));
+                }
+                new MainWindow(list).ShowDialog();
+            }
+            if (evaluated.GetHead().Equals(new Symbol("Point")))
+            {
+                decimal x = ((Number)((Expression)evaluated).Operands[0]).Value;
+                decimal y = ((Number)((Expression)evaluated).Operands[1]).Value;
+                var list = new List<(decimal, decimal)>() { (x, y) };
+                new MainWindow(list).ShowDialog();
+            }
+
         }
 
         private static void IncreaseIterations()
@@ -66,7 +91,10 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 
             var evaluated = Evaluate(element);
 
-            if (evaluated is Expression && ((Expression)evaluated).Operands.Count == 1)
+            if (evaluated is Expression && 
+                ((Expression)evaluated).Operands.Count == 1 && 
+                !((Expression)evaluated).Head.Equals(new Symbol("sin")) &&
+                !((Expression)evaluated).Head.Equals(new Symbol("cos")))
             {
                 evaluated = ((Expression)evaluated).Operands.First();
             }
@@ -124,32 +152,6 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             }
         }
 
-        private static void ShowPlot(IElement evaluated)
-        {
-            if (Thread.CurrentThread.GetApartmentState() is ApartmentState.STA)
-            {
-                if (evaluated.GetHead().Equals(new Symbol("Points")))
-                {
-                    var list = new List<(decimal, decimal)>();
-                    foreach (var point in ((Expression)evaluated).Operands)
-                    {
-                        decimal x = ((Number)((Expression)point).Operands[0]).Value;
-                        decimal y = ((Number)((Expression)point).Operands[1]).Value;
-                        list.Add((x, y));
-                    }
-                    new MainWindow(list).ShowDialog();
-                }
-                if (evaluated.GetHead().Equals(new Symbol("Point")))
-                {
-                    decimal x = ((Number)((Expression)evaluated).Operands[0]).Value;
-                    decimal y = ((Number)((Expression)evaluated).Operands[1]).Value;
-                    var list = new List<(decimal, decimal)>() { (x, y) };
-                    new MainWindow(list).ShowDialog();
-                }
-            }
-
-        }
-
         private static Expression AddAttributes(Expression expr)
         {
 
@@ -172,35 +174,41 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 
         private static Expression ApplyAttributes(Expression expr)
         {
-            if (expr.Head.Equals(new Symbol("set")) || expr.Head.Equals(new Symbol("delayed")) || expr.Head.Equals(new Symbol("if")) ||
-                expr.Head.Equals(new Symbol("equals")) || expr.Head.Equals(new Symbol("nequals")) || expr.Head.Equals(new Symbol("greater")) ||
-                expr.Head.Equals(new Symbol("greatere")) || expr.Head.Equals(new Symbol("less")) || expr.Head.Equals(new Symbol("lesse")) ||
-                expr.Head.Equals(new Symbol("and")) || expr.Head.Equals(new Symbol("or")) || expr.Head.Equals(new Symbol("not")) ||
-                expr.Head.Equals(new Symbol("Point")) || expr.Head.Equals(new Symbol("plot")) || expr.Head.Equals(new Symbol("Points")) ||
-                expr.Head.Equals(new Symbol("div")) || expr.Head.Equals(new Symbol("taylorsin")) || expr.Head.Equals(new Symbol("term")) || 
-                expr.Head.Equals(new Symbol("taylorcos")))
+            if (!AreAttributesForbidden(expr))
             {
-                return expr;
-            }
-
-            var tmp = expr;
-            foreach (var attribute in expr.Attributes)
-            {
-                if (tmp.Head.Equals(new Symbol("Points")))
+                var tmp = expr;
+                foreach (var attribute in expr.Attributes)
                 {
-                    if (attribute is FlatAttribute)
+                    if (tmp.Head.Equals(new Symbol("Points")))
+                    {
+                        if (attribute is FlatAttribute)
+                        {
+                            tmp = attribute.Apply(tmp);
+                        }
+                    }
+                    else
                     {
                         tmp = attribute.Apply(tmp);
                     }
                 }
-                else
-                {
-                    tmp = attribute.Apply(tmp);
-                }
+                expr = tmp;
             }
-            expr = tmp;
-
             return expr;
+        }
+
+        private static bool AreAttributesForbidden(Expression expr)
+        {
+            if (expr.Head.Equals(new Symbol("set")) || expr.Head.Equals(new Symbol("delayed")) || expr.Head.Equals(new Symbol("if")) ||
+                expr.Head.Equals(new Symbol("equals")) || expr.Head.Equals(new Symbol("nequals")) || expr.Head.Equals(new Symbol("greater")) ||
+                expr.Head.Equals(new Symbol("greatere")) || expr.Head.Equals(new Symbol("less")) || expr.Head.Equals(new Symbol("lesse")) ||
+                expr.Head.Equals(new Symbol("and")) || expr.Head.Equals(new Symbol("or")) || expr.Head.Equals(new Symbol("not")) ||
+                expr.Head.Equals(new Symbol("Point")) || expr.Head.Equals(new Symbol("plot")) ||
+                expr.Head.Equals(new Symbol("div")) || expr.Head.Equals(new Symbol("taylorsin")) || expr.Head.Equals(new Symbol("term")) ||
+                expr.Head.Equals(new Symbol("taylorcos")))
+            {
+                return true;
+            }
+                return false;
         }
     }
 }
