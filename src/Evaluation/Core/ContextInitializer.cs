@@ -500,6 +500,8 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
         {
             var builtins = new List<(IElement, IElement)>();
 
+            #region Plot
+
             // plot(f,from,to,step)
             IElement lhs = new Expression(nameof(plot),
                 new SymbolPattern("func"),
@@ -540,6 +542,67 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                 )
             );
             builtins.Add((lhs, rhs));
+
+            #endregion
+
+            #region SpiralPlot
+
+            // x = r * cos(phi) = a * phi * cos(phi)
+            // y = r * sin(phi) = a * phi * sin(phi)
+
+            lhs = new Expression("spiral",
+                new NumberPattern("density"),   // a
+                new NumberPattern("from"),     // min angle
+                new NumberPattern("to"),     // max angle
+                new NumberPattern("step")       // angle's step
+            );
+            rhs = new Expression("if",
+                new Expression("lesse",
+                    new Expression("sum",
+                        new NumberPattern("from"),
+                        new NumberPattern("step")
+                    ),
+                    new NumberPattern("to")
+                ),
+                new Expression("Points",
+                    new Expression("Point",
+                        new Expression("mul",
+                            new NumberPattern("density"),
+                            new NumberPattern("from"),
+                            new Expression("cos", new NumberPattern("from"))
+                        ),
+                        new Expression("mul",
+                            new NumberPattern("density"),
+                            new NumberPattern("from"),
+                            new Expression("sin", new NumberPattern("from"))
+                        )
+                    ),
+                    new Expression("spiral",
+                        new NumberPattern("density"),
+                        new Expression("sum", 
+                            new NumberPattern("from"),
+                            new NumberPattern("step")
+                        ),
+                        new NumberPattern("to"),
+                        new NumberPattern("step")
+                    )
+                ),
+                new Expression("Point",
+                    new Expression("mul",
+                        new NumberPattern("density"),
+                        new NumberPattern("from"),
+                        new Expression("cos", new NumberPattern("from"))
+                    ),
+                    new Expression("mul",
+                        new NumberPattern("density"),
+                        new NumberPattern("from"),
+                        new Expression("sin", new NumberPattern("from"))
+                    )
+                )
+            );
+            builtins.Add((lhs, rhs));
+            #endregion
+
             return builtins;
         }
 

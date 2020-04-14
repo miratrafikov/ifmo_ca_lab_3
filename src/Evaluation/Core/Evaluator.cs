@@ -20,7 +20,6 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
         private static int s_iterations = 0;
         private static readonly ElementComparer s_comparer = new ElementComparer();
 
-        [STAThread]
         public static IElement Run(IElement element)
         {
             s_iterations = 0;
@@ -38,7 +37,6 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             return evaluated;
         }
 
-        [STAThread]
         private static void ShowPlot(IElement evaluated)
         {
             if (evaluated.GetHead().Equals(new Symbol("Points")))
@@ -202,7 +200,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                 expr.Head.Equals(new Symbol("equals")) || expr.Head.Equals(new Symbol("nequals")) || expr.Head.Equals(new Symbol("greater")) ||
                 expr.Head.Equals(new Symbol("greatere")) || expr.Head.Equals(new Symbol("less")) || expr.Head.Equals(new Symbol("lesse")) ||
                 expr.Head.Equals(new Symbol("and")) || expr.Head.Equals(new Symbol("or")) || expr.Head.Equals(new Symbol("not")) ||
-                expr.Head.Equals(new Symbol("Point")) || expr.Head.Equals(new Symbol("plot")) ||
+                expr.Head.Equals(new Symbol("Point")) || expr.Head.Equals(new Symbol("plot")) || expr.Head.Equals(new Symbol("spiral")) ||
                 expr.Head.Equals(new Symbol("div")) || expr.Head.Equals(new Symbol("taylorsin")) || expr.Head.Equals(new Symbol("term")) ||
                 expr.Head.Equals(new Symbol("taylorcos")))
             {

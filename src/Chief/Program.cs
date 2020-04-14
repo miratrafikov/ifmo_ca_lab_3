@@ -15,7 +15,6 @@ namespace ShiftCo.ifmo_ca_lab_3.Chief
 {
     public class Program
     {
-        [STAThread]
         public static async Task<int> Main()
         {
             Thread plot = new Thread(PlotTesting);
@@ -28,10 +27,16 @@ namespace ShiftCo.ifmo_ca_lab_3.Chief
                 .RunAsync();
         }
 
-        [STAThread]
         private static void PlotTesting()
         {
-            var setF = new Expression(nameof(delayed),
+            var spiral = new Expression("spiral",
+                new Number(2),
+                new Number(0),
+                new Number(6),
+                new Number(0.1)
+            );
+            var evaluated = Evaluator.Run(spiral);
+            /*var setF = new Expression(nameof(delayed),
                 new Expression("f",
                     new NumberPattern("x")
                 ),
@@ -42,11 +47,11 @@ namespace ShiftCo.ifmo_ca_lab_3.Chief
             var setResult = Evaluator.Run(setF);
             var expr = new Expression(nameof(plot),
                 new Symbol("f"),
-                new Number(-10),
-                new Number(10),
+                new Number(0),
+                new Number(3.25),
                 new Number(0.25)
             );
-            var evaluated = Evaluator.Run(expr);
+            var evaluated = Evaluator.Run(expr);*/
         }
     }
 }
