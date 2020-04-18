@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Plot\Plot.csproj" />
     <ProjectReference Include="..\Commons\Commons.csproj" />
     <ProjectReference Include="..\Evaluation\Evaluation.csproj" />
     <ProjectReference Include="..\SyntaxAnalysis\SyntaxAnalysis.csproj" />

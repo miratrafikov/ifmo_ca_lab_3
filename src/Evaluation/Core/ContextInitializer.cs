@@ -12,6 +12,8 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
     public class ContextInitializer
     {
 
+        private const int TERMS_AMOUNT = 12;
+
         #region Alphabet
 
         // Elements
@@ -25,9 +27,9 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
         private static readonly SymbolPattern s_sym3 = new SymbolPattern("sym3");
 
         // Integers
-        private static readonly IPattern s_int1 = new IntegerPattern("int1");
-        private static readonly IPattern s_int2 = new IntegerPattern("int2");
-        private static readonly IPattern s_int3 = new IntegerPattern("int3");
+        private static readonly IPattern s_int1 = new NumberPattern("int1");
+        private static readonly IPattern s_int2 = new NumberPattern("int2");
+        private static readonly IPattern s_int3 = new NumberPattern("int3");
 
         // Sequences
         // Named sequences
@@ -52,9 +54,11 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             context = context
                 .Concat(PowBuiltins())
                 .Concat(MulBuiltins())
+                .Concat(DivBuiltins())
                 .Concat(AddBuiltins())
                 .Concat(IfBuiltins())
                 .Concat(PlotBuiltins())
+                .Concat(TaylorBuiltins())
                 .ToList();
             return context;
         }
@@ -63,24 +67,36 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
         private static List<(IElement, IElement)> PowBuiltins()
         {
             var builtins = new List<(IElement, IElement)>();
-            // Pow(x,2) -> Mul(x,x)
+
+            // Pow(2,2) -> 4
             var lhs = new Expression(nameof(pow),
+                s_seq1,
+                s_int1,
+                s_seq2,
+                s_int2,
+                s_seq3
+            );
+            var rhs = new Expression();
+            builtins.Add((lhs, rhs));
+
+            // Pow(x,2) -> Mul(x,x)
+            lhs = new Expression(nameof(pow),
                 s_seq1,
                 s_x,
                 s_seq2,
                 s_int1,
                 s_seq3
             );
-            var rhs = new Expression();
+            rhs = new Expression();
             builtins.Add((lhs, rhs));
 
             // pow(x, 0) -> 1
             lhs = new Expression(nameof(pow),
                 s_seq1,
-                new Integer(0)
+                new Number(0)
             );
             rhs = new Expression(nameof(pow),
-                new Integer(1)
+                new Number(1)
             );
             builtins.Add((lhs, rhs));
             return builtins;
@@ -92,20 +108,20 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             var builtins = new List<(IElement, IElement)>();
 
             // mul(1,2) -> 2
-            var lhs = new Expression(nameof(mul),
+            IElement lhs = new Expression(nameof(mul),
                 s_seq1,
                 s_int1,
                 s_seq2,
                 s_int2,
                 s_seq3
             );
-            var rhs = new Expression();
+            IElement rhs = new Expression();
             builtins.Add((lhs, rhs));
 
             // mul(1,x) -> x
             lhs = new Expression(nameof(mul),
                 s_seq1,
-                new Integer(1),
+                new Number(1),
                 s_seq2,
                 s_seqX,
                 s_seq3
@@ -118,13 +134,13 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             );
             builtins.Add((lhs, rhs));
 
-            // mul(0,x) -> o/
+            // mul(0,x) -> 0
             lhs = new Expression(nameof(mul),
                 s_seq1,
-                new Integer(0),
+                new Number(0),
                 s_seq2
             );
-            rhs = new Expression(nameof(mul), new Integer(0));
+            rhs = new Number(0);
             builtins.Add((lhs, rhs));
 
             // mul(add(x_, y___), add(z___)) -> add(mul(x_, z___), mul(add(y___), add(z___)))
@@ -186,6 +202,24 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             return builtins;
         }
 
+        // Div
+        private static List<(IElement, IElement)> DivBuiltins()
+        {
+            var builtins = new List<(IElement, IElement)>();
+
+            var lhs = new Expression(nameof(div),
+                s_seq1,
+                s_int1,
+                s_seq2,
+                s_int2,
+                s_seq3
+            );
+            var rhs = new Expression();
+            builtins.Add((lhs, rhs));
+
+            return builtins;
+        }
+
         //Sum
         private static List<(IElement, IElement)> AddBuiltins()
         {
@@ -205,7 +239,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             // add(0,x,y) -> add(x,y)
             lhs = new Expression(nameof(sum),
                 s_seq1,
-                new Integer(0),
+                new Number(0),
                 s_seq2
             );
             rhs = new Expression(nameof(sum),
@@ -226,7 +260,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                 s_seq1,
                 s_seq2,
                 new Expression(nameof(mul),
-                    new Integer(2),
+                    new Number(2),
                     s_x
                 ),
                 s_seq3
@@ -284,7 +318,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                         s_seq4,
                         s_int1,
                         s_seq5,
-                        new Integer(1),
+                        new Number(1),
                         s_seq6
                     ),
                     s_x
@@ -312,7 +346,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                         s_seq4,
                         s_int1,
                         s_seq5,
-                        new Integer(1),
+                        new Number(1),
                         s_seq6
                     ),
                     s_seqX
@@ -466,46 +500,287 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
         {
             var builtins = new List<(IElement, IElement)>();
 
+            #region Plot
+
             // plot(f,from,to,step)
             IElement lhs = new Expression(nameof(plot),
                 new SymbolPattern("func"),
-                new IntegerPattern("from"),
-                new IntegerPattern("to"),
-                new IntegerPattern("step")
+                new NumberPattern("from"),
+                new NumberPattern("to"),
+                new NumberPattern("step")
             );
             IElement rhs = new Expression("if",
                 new Expression("lesse",
                     new Expression(nameof(sum),
-                        new IntegerPattern("from"),
-                        new IntegerPattern("step")
+                        new NumberPattern("from"),
+                        new NumberPattern("step")
                     ),
-                    new IntegerPattern("to")
+                    new NumberPattern("to")
                 ),
                 new Expression("Points",
                     new Expression("Point",
-                        new IntegerPattern("from"),
+                        new NumberPattern("from"),
                         new Expression(new SymbolPattern("func"),
-                            new IntegerPattern("from")
+                            new NumberPattern("from")
                         )
                     ),
                     new Expression(nameof(plot),
                         new SymbolPattern("func"),
                         new Expression(nameof(sum),
-                            new IntegerPattern("from"),
-                            new IntegerPattern("step")
+                            new NumberPattern("from"),
+                            new NumberPattern("step")
                         ),
-                        new IntegerPattern("to"),
-                        new IntegerPattern("step")
+                        new NumberPattern("to"),
+                        new NumberPattern("step")
                     )
                 ),
                 new Expression("Point",
-                    new IntegerPattern("from"),
+                    new NumberPattern("from"),
                     new Expression(new SymbolPattern("func"),
-                        new IntegerPattern("from")
+                        new NumberPattern("from")
                     )
                 )
             );
             builtins.Add((lhs, rhs));
+
+            #endregion
+
+            #region SpiralPlot
+
+            // x = r * cos(phi) = a * phi * cos(phi)
+            // y = r * sin(phi) = a * phi * sin(phi)
+
+            lhs = new Expression("spiral",
+                new NumberPattern("density"),   // a
+                new NumberPattern("from"),     // min angle
+                new NumberPattern("to"),     // max angle
+                new NumberPattern("step")       // angle's step
+            );
+            rhs = new Expression("if",
+                new Expression("lesse",
+                    new Expression("sum",
+                        new NumberPattern("from"),
+                        new NumberPattern("step")
+                    ),
+                    new NumberPattern("to")
+                ),
+                new Expression("Points",
+                    new Expression("Point",
+                        new Expression("mul",
+                            new NumberPattern("density"),
+                            new NumberPattern("from"),
+                            new Expression("cos", new NumberPattern("from"))
+                        ),
+                        new Expression("mul",
+                            new NumberPattern("density"),
+                            new NumberPattern("from"),
+                            new Expression("sin", new NumberPattern("from"))
+                        )
+                    ),
+                    new Expression("spiral",
+                        new NumberPattern("density"),
+                        new Expression("sum", 
+                            new NumberPattern("from"),
+                            new NumberPattern("step")
+                        ),
+                        new NumberPattern("to"),
+                        new NumberPattern("step")
+                    )
+                ),
+                new Expression("Point",
+                    new Expression("mul",
+                        new NumberPattern("density"),
+                        new NumberPattern("from"),
+                        new Expression("cos", new NumberPattern("from"))
+                    ),
+                    new Expression("mul",
+                        new NumberPattern("density"),
+                        new NumberPattern("from"),
+                        new Expression("sin", new NumberPattern("from"))
+                    )
+                )
+            );
+            builtins.Add((lhs, rhs));
+            #endregion
+
+            return builtins;
+        }
+
+        // Taylor
+        private static List<(IElement, IElement)> TaylorBuiltins()
+        {
+            var builtins = new List<(IElement, IElement)>();
+            
+
+            #region Factorial
+
+            IElement lhs = new Expression("factorial", new Number(1));
+            IElement rhs = new Number(1);
+            builtins.Add((lhs, rhs));
+
+            lhs = new Expression("factorial", new Number(0));
+            rhs = new Number(1);
+            builtins.Add((lhs, rhs));
+
+            lhs = new Expression("factorial", new NumberPattern("x"));
+            rhs = new Expression("mul",
+                    new NumberPattern("x"),
+                    new Expression("factorial",
+                        new Expression("sum",
+                            new Number(-1),
+                            new NumberPattern("x")
+                        )
+                    )
+            );
+            builtins.Add((lhs, rhs));
+
+            #endregion
+
+            #region Term | x^(n) / (n)!
+
+            lhs = new Expression("term", new NumberPattern("x"), new NumberPattern("n"));
+            rhs = new Expression(nameof(div),
+                new Expression("pow",
+                    new NumberPattern("x"),
+                    new NumberPattern("n")
+                ),
+                new Expression("factorial",
+                    new NumberPattern("n")
+                )
+            );
+            builtins.Add((lhs, rhs));
+
+            #endregion
+
+            #region Sin
+
+            // sin(x) -> taylor_sin(curr, x)
+            lhs = new Expression("sin", new NumberPattern("x"));
+            rhs = new Expression("taylorsin",
+                new Number(0),
+                new Number(TERMS_AMOUNT),
+                new NumberPattern("x")
+            );
+            builtins.Add((lhs, rhs));
+
+            // taylor_sin -> x - xxx/3! + ...
+            lhs = new Expression("taylorsin", new NumberPattern("curr"), new NumberPattern("n"), new NumberPattern("x"));
+            rhs = new Expression("if",
+                new Expression("lesse",
+                    new Expression("sum",
+                        new NumberPattern("curr"),
+                        new Number(1)
+                    ),
+                    new NumberPattern("n")
+                ),
+                new Expression("sum", 
+                    new Expression("mul",
+                        new Expression("pow",
+                            new Number(-1),
+                            new NumberPattern("curr")
+                        ),
+                        new Expression("term", 
+                            new NumberPattern("x"),
+                            new Expression("sum",
+                                new Expression("mul",
+                                    new Number(2),
+                                    new NumberPattern("curr")
+                                ),
+                                new Number(1)
+                            )
+                        )
+                    ),
+                    new Expression("taylorsin", 
+                        new Expression("sum",
+                            new Number(1),
+                            new NumberPattern("curr")
+                        ),
+                        new NumberPattern("n"),
+                        new NumberPattern("x"))
+                ),
+                new Expression("mul",
+                    new Expression("pow",
+                        new Number(-1),
+                        new NumberPattern("curr")
+                    ),
+                    new Expression("term", 
+                        new NumberPattern("x"),
+                        new Expression("sum",
+                            new Expression("mul",
+                                new Number(2),
+                                new NumberPattern("curr")
+                            ),
+                            new Number(1)
+                        )
+                    )
+                )
+            );
+            builtins.Add((lhs, rhs));
+
+            #endregion
+
+            #region Cos
+
+            // cos(x) -> taylor_cos(curr, x)
+            lhs = new Expression("cos", new NumberPattern("x"));
+            rhs = new Expression("taylorcos",
+                new Number(0),
+                new Number(TERMS_AMOUNT),
+                new NumberPattern("x")
+            );
+            builtins.Add((lhs, rhs));
+
+            // taylor_cos -> 1 - xx/2! + ...
+            lhs = new Expression("taylorcos", new NumberPattern("curr"), new NumberPattern("n"), new NumberPattern("x"));
+            rhs = new Expression("if",
+                new Expression("lesse",
+                    new Expression("sum",
+                        new NumberPattern("curr"),
+                        new Number(1)
+                    ),
+                    new NumberPattern("n")
+                ),
+                new Expression("sum",
+                    new Expression("mul",
+                        new Expression("pow",
+                            new Number(-1),
+                            new NumberPattern("curr")
+                        ),
+                        new Expression("term",
+                            new NumberPattern("x"),
+                            new Expression("mul",
+                                new Number(2),
+                                new NumberPattern("curr")
+                            )
+                        )
+                    ),
+                    new Expression("taylorcos",
+                        new Expression("sum",
+                            new Number(1),
+                            new NumberPattern("curr")
+                        ),
+                        new NumberPattern("n"),
+                        new NumberPattern("x")
+                    )
+                ),
+                new Expression("mul",
+                    new Expression("pow",
+                        new Number(-1),
+                        new NumberPattern("curr")
+                    ),
+                    new Expression("term",
+                        new NumberPattern("x"),
+                        new Expression("mul",
+                            new Number(2),
+                            new NumberPattern("curr")
+                        )
+                    )
+                )
+            );
+            builtins.Add((lhs, rhs));
+
+            #endregion
+
             return builtins;
         }
     }

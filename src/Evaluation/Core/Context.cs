@@ -63,8 +63,8 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             {
                 case SymbolPattern sym:
                     return new SymbolPattern(sym.Name.Value);
-                case IntegerPattern integer:
-                    return new IntegerPattern(integer.Name.Value);
+                case NumberPattern integer:
+                    return new NumberPattern(integer.Name.Value);
                 case ElementPattern element:
                     return new ElementPattern(element.Name.Value);
                 case NullableSequencePattern seq:
@@ -84,49 +84,49 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
 
         private static IElement GetRhs(IElement lhs, IElement rhs)
         {
-            IntegerPattern left = null, right = null;
+            NumberPattern left = null, right = null;
 
             #region Conditions
 
             if (lhs.GetHead().Equals(new Symbol("equals")))
             {
-                left = (IntegerPattern)((Expression)lhs).Operands[0];
-                right = (IntegerPattern)((Expression)lhs).Operands[1];
+                left = (NumberPattern)((Expression)lhs).Operands[0];
+                right = (NumberPattern)((Expression)lhs).Operands[1];
                 return left.Element == right.Element ? new Symbol("true") : new Symbol("false");
             }
 
             if (lhs.GetHead().Equals(new Symbol("nequals")))
             {
-                left = (IntegerPattern)((Expression)lhs).Operands[0];
-                right = (IntegerPattern)((Expression)lhs).Operands[1];
+                left = (NumberPattern)((Expression)lhs).Operands[0];
+                right = (NumberPattern)((Expression)lhs).Operands[1];
                 return left.Element != right.Element ? new Symbol("true") : new Symbol("false");
             }
 
             if (lhs.GetHead().Equals(new Symbol("greater")))
             {
-                left = (IntegerPattern)((Expression)lhs).Operands[0];
-                right = (IntegerPattern)((Expression)lhs).Operands[1];
+                left = (NumberPattern)((Expression)lhs).Operands[0];
+                right = (NumberPattern)((Expression)lhs).Operands[1];
                 return left.Element.Value > right.Element.Value ? new Symbol("true") : new Symbol("false");
             }
             
             if (lhs.GetHead().Equals(new Symbol("greatere")))
             {
-                left = (IntegerPattern)((Expression)lhs).Operands[0];
-                right = (IntegerPattern)((Expression)lhs).Operands[1];
+                left = (NumberPattern)((Expression)lhs).Operands[0];
+                right = (NumberPattern)((Expression)lhs).Operands[1];
                 return left.Element.Value >= right.Element.Value ? new Symbol("true") : new Symbol("false");
             }
 
             if (lhs.GetHead().Equals(new Symbol("less")))
             {
-                left = (IntegerPattern)((Expression)lhs).Operands[0];
-                right = (IntegerPattern)((Expression)lhs).Operands[1];
+                left = (NumberPattern)((Expression)lhs).Operands[0];
+                right = (NumberPattern)((Expression)lhs).Operands[1];
                 return left.Element.Value < right.Element.Value ? new Symbol("true") : new Symbol("false");
             }
 
             if (lhs.GetHead().Equals(new Symbol("lesse")))
             {
-                left = (IntegerPattern)((Expression)lhs).Operands[0];
-                right = (IntegerPattern)((Expression)lhs).Operands[1];
+                left = (NumberPattern)((Expression)lhs).Operands[0];
+                right = (NumberPattern)((Expression)lhs).Operands[1];
                 return left.Element.Value <= right.Element.Value ? new Symbol("true") : new Symbol("false");
             }
 
@@ -137,25 +137,30 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
             if (lhs is Expression expr &&
                 expr.Operands.Count == 5 &&
                 expr.Operands[0] is NullableSequencePattern seq1 &&
-                expr.Operands[1] is IntegerPattern int1 &&
+                expr.Operands[1] is NumberPattern int1 &&
                 expr.Operands[2] is NullableSequencePattern seq2 &&
-                expr.Operands[3] is IntegerPattern int2 &&
+                expr.Operands[3] is NumberPattern int2 &&
                 expr.Operands[4] is NullableSequencePattern seq3)
             {
-                Integer val;
+                Number val;
                 if (expr.Head.Equals(new Symbol(nameof(sum))))
                 {
-                    val = new Integer(int1.Element.Value + int2.Element.Value);
+                    val = new Number(int1.Element.Value + int2.Element.Value);
                 }
                 else
                 if (expr.Head.Equals(new Symbol(nameof(mul))))
                 {
-                    val = new Integer(int1.Element.Value * int2.Element.Value);
+                    val = new Number(int1.Element.Value * int2.Element.Value);
+                }
+                else
+                if (expr.Head.Equals(new Symbol(nameof(div))))
+                {
+                    val = new Number(int1.Element.Value / int2.Element.Value);
                 }
                 else
                 if (expr.Head.Equals(new Symbol("pow")))
                 {
-                    val = new Integer((int)Math.Pow(int1.Element.Value, int2.Element.Value));
+                    val = new Number((decimal)Math.Pow((double)int1.Element.Value, (double)int2.Element.Value));
                 }
                 else
                 {
@@ -168,7 +173,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                     operands = operands.Concat(seq2.Operands).ToList();
                     operands.Add(val);
                     operands = operands.Concat(seq3.Operands).ToList();
-                    var exp = new Expression(expr.Head, operands); ;
+                    var exp = new Expression(expr.Head, operands);
                     exp.Operands.RemoveAll(o => o is NullableSequencePattern n &&
                                                 n.Operands.Count == 0);
                     return exp;
@@ -183,10 +188,12 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                 pow.Operands[0] is NullableSequencePattern seq4 &&
                 pow.Operands[1] is ElementPattern el &&
                 pow.Operands[2] is NullableSequencePattern seq5 &&
-                pow.Operands[3] is IntegerPattern int3 &&
+                pow.Operands[3] is NumberPattern int3 &&
                 pow.Operands[4] is NullableSequencePattern seq6)
             {
-                return new Expression(nameof(mul), Enumerable.Repeat(el.Element, int3.Element.Value).ToList());
+                if (int3.Element.Value == 0) return new Number(1);
+                return new Expression(nameof(mul), Enumerable.Repeat(el.Element, 
+                    (int)Math.Floor(int3.Element.Value)).ToList());
             }
 
             #endregion
@@ -237,9 +244,9 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Core
                     result = ((SymbolPattern)pattern).Element;
                     break;
 
-                case IntegerPattern integer:
+                case NumberPattern integer:
                     pattern = s_patterns[integer.Name.Value];
-                    result = ((IntegerPattern)pattern).Element;
+                    result = ((NumberPattern)pattern).Element;
                     break;
 
                 case ElementPattern element:

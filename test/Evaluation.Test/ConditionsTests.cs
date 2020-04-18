@@ -15,13 +15,13 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
         {
             var expr = new Expression("if",
                 new Symbol("true"),
-                new Integer(4),
+                new Number(4),
                 new Symbol("x"));
             var eval1 = Evaluator.Run(expr);
-            Assert.AreEqual(0, Comparer.Compare(new Integer(4), eval1));
+            Assert.AreEqual(0, Comparer.Compare(new Number(4), eval1));
             expr = new Expression("if",
                 new Symbol("false"),
-                new Integer(4),
+                new Number(4),
                 new Symbol("x"));
             var eval2 = Evaluator.Run(expr);
             Assert.AreEqual(0, Comparer.Compare(new Symbol("x"), eval2));
@@ -31,8 +31,8 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
         public void Test2()
         {
             var expr = new Expression("less",
-                new Integer(2),
-                new Integer(3));
+                new Number(2),
+                new Number(3));
             var altered = new Symbol("true");
             var evaluated = Evaluator.Run(expr);
             Assert.AreEqual(0, Comparer.Compare(evaluated, altered));
@@ -42,8 +42,8 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
         public void Test3()
         {
             var expr = new Expression("lesse",
-                new Integer(2),
-                new Integer(2));
+                new Number(2),
+                new Number(2));
             var altered = new Symbol("true");
             var evaluated = Evaluator.Run(expr);
             Assert.AreEqual(0, Comparer.Compare(evaluated, altered));
@@ -53,8 +53,8 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
         public void Test4()
         {
             var expr = new Expression("equals",
-                new Integer(2),
-                new Integer(3));
+                new Number(2),
+                new Number(3));
             var altered = new Symbol("false");
             var evaluated = Evaluator.Run(expr);
             Assert.AreEqual(0, Comparer.Compare(evaluated, altered));

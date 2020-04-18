@@ -2,6 +2,7 @@
 
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Attributes;
 using ShiftCo.ifmo_ca_lab_3.Evaluation.Interfaces;
+using ShiftCo.ifmo_ca_lab_3.Evaluation.Util;
 
 namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Types
 {
@@ -103,5 +104,20 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Types
         public List<IElement> Operands;
         public IElement Head { get; set; }
         public List<IAttribute> Attributes { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is Expression e)
+            {
+                var comparer = new ElementComparer();
+                return comparer.Compare(this, e) == 0 ? true : false;
+            }
+            return false;
+        }
+
+        public override string ToString()
+        {
+            return $"Expression: {Head}";
+        }
     }
 }

@@ -29,5 +29,10 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Types
             }
             return false;
         }
+
+        public override string ToString()
+        {
+            return $"Symbol: {Value}";
+        }
     }
 }

@@ -20,10 +20,12 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Util
             // Compare Heads first
             if (CompareHeads(left.GetHead(), right.GetHead()) != 0) return CompareHeads(left.GetHead(), right.GetHead());
 
-            // If both elemements are Integers return value according to the arithmetical order
-            if (left is Integer li && right is Integer ri)
+            // If both elements are Numbers return value according to the arithmetical order
+            if (left is Number ln && right is Number rn)
             {
-                return li.Value - ri.Value;
+                if (ln.Value == rn.Value) return 0;
+                else if (ln.Value > rn.Value) return 1;
+                else return - 1;
             }
             // If both elements are Symbols return the result of string comparing
             if (left is Symbol ls && right is Symbol rs)
@@ -59,7 +61,7 @@ namespace ShiftCo.ifmo_ca_lab_3.Evaluation.Util
                 Enum.TryParse(typeof(Head), left, true, out var parsedLeft);
                 Enum.TryParse(typeof(Head), right, true, out var parsedRight);
 
-                if (parsedRight is null && parsedLeft is null) return 0;
+                if (parsedRight is null && parsedLeft is null) return string.Compare(left, right);
                 if (parsedLeft is null) return -1;
                 if (parsedRight is null) return 1;
 

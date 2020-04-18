@@ -19,12 +19,12 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
         {
             var expr = new Expression(new Symbol(nameof(sum)), new List<IElement>()
             {
-                 new Integer(2),
-                 new Integer(3)
+                 new Number(2),
+                 new Number(3)
             });
             IElement rule = new Expression(new Symbol(nameof(sum)), new List<IElement>()
             {
-                new IntegerPattern("a"),
+                new NumberPattern("a"),
                 new NullableSequencePattern("b")
             });
             var matches = PatternMatcher.Matches(rule, expr);
@@ -39,7 +39,7 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
                 new Symbol("x"),
                 new Expression(new Symbol(nameof(mul)), new List<IElement>()
                 {
-                    new Integer(3),
+                    new Number(3),
                     new Symbol("x")
                 })
             });
@@ -50,7 +50,7 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
                 new NullableSequencePattern("c"),
                 new Expression(new Symbol(nameof(mul)), new List<IElement>()
                 {
-                    new IntegerPattern("d"),
+                    new NumberPattern("d"),
                     new ElementPattern("x")
                 }),
                 new NullableSequencePattern("e")
@@ -62,8 +62,8 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
         [TestMethod]
         public void Test3()
         {
-            var pattern = new Expression(new SymbolPattern("f"), new IntegerPattern("x"));
-            var expr = new Expression("fact", new Integer(5));
+            var pattern = new Expression(new SymbolPattern("f"), new NumberPattern("x"));
+            var expr = new Expression("fact", new Number(5));
             var matches = PatternMatcher.Matches(pattern, expr);
             Assert.AreEqual(true, matches.Success);
         }

@@ -21,12 +21,12 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
         {
             var add = new Expression(nameof(sum), new List<IElement>()
             {
-                new Integer(2),
-                new Integer(3),
-                new Integer(3)
+                new Number(2),
+                new Number(3),
+                new Number(3)
             });
             var evaluated = Evaluator.Run(add);
-            Assert.AreEqual(s_comparer.Compare(new Integer(8), evaluated), 0);
+            Assert.AreEqual(s_comparer.Compare(new Number(8), evaluated), 0);
         }
 
         [TestMethod]
@@ -35,13 +35,13 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
             var expr = new Expression(nameof(sum),
                 new Symbol("x"),
                 new Expression(nameof(mul),
-                    new Integer(3),
+                    new Number(3),
                     new Symbol("x")
                 ),
                 new Symbol("x")
             );
             var alteredExpr = new Expression(nameof(mul),
-                new Integer(5),
+                new Number(5),
                 new Symbol("x")
             );
             var evaluated = Evaluator.Run(expr);
@@ -53,15 +53,15 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
         {
             var expr = new Expression(nameof(mul),
                 new Expression(nameof(sum),
-                    new Integer(3),
+                    new Number(3),
                     new Symbol("x")
                 ),
-                new Integer(2)
+                new Number(2)
             );
             var altered = new Expression(nameof(sum),
-                new Integer(6),
+                new Number(6),
                 new Expression(nameof(mul),
-                    new Integer(2),
+                    new Number(2),
                     new Symbol("x")
                 )
             );
@@ -74,18 +74,18 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
         {
             var expr = new Expression(nameof(mul),
                 new Expression(nameof(sum),
-                    new Integer(2),
+                    new Number(2),
                     new Symbol("x")
                 ),
                 new Expression(nameof(sum),
-                    new Integer(2),
+                    new Number(2),
                     new Symbol("x")
                 )
             );
             var altered = new Expression(nameof(sum),
-                new Integer(4),
+                new Number(4),
                 new Expression(nameof(mul),
-                    new Integer(4),
+                    new Number(4),
                     new Symbol("x")
                 ),
                 new Expression(nameof(mul),
@@ -102,15 +102,15 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
         {
             var expr = new Expression(nameof(pow),
                 new Expression(nameof(sum),
-                    new Integer(2),
+                    new Number(2),
                     new Symbol("x")
                 ),
-                new Integer(2)
+                new Number(2)
             );
             var altered = new Expression(nameof(sum),
-                new Integer(4),
+                new Number(4),
                 new Expression(nameof(mul),
-                    new Integer(4),
+                    new Number(4),
                     new Symbol("x")
                 ),
                 new Expression(nameof(mul),
@@ -127,15 +127,15 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
         {
             var expr = new Expression(nameof(pow),
                 new Expression(nameof(sum),
-                    new Integer(-2),
+                    new Number(-2),
                     new Symbol("x")
                 ),
-                new Integer(2)
+                new Number(2)
             );
             var altered = new Expression(nameof(sum),
-                new Integer(4),
+                new Number(4),
                 new Expression(nameof(mul),
-                    new Integer(-4),
+                    new Number(-4),
                     new Symbol("x")
                 ),
                 new Expression(nameof(mul),
@@ -153,12 +153,12 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
             var expr = new Expression(nameof(pow),
                 new Expression(nameof(sum),
                     new Expression(nameof(mul),
-                        new Integer(-1),
+                        new Number(-1),
                         new Symbol("y")
                     ),
                     new Symbol("x")
                 ),
-                new Integer(2)
+                new Number(2)
             );
             var altered = new Expression(nameof(sum),
                 new Expression(nameof(mul),
@@ -170,7 +170,7 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
                     new Symbol("y")
                 ),
                 new Expression(nameof(mul),
-                    new Integer(-2),
+                    new Number(-2),
                     new Symbol("x"),
                     new Symbol("y")
                 )
@@ -186,7 +186,7 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
                 new Expression(nameof(sum),
                     new Symbol("x"),
                     new Expression(nameof(mul),
-                        new Integer(-1),
+                        new Number(-1),
                         new Symbol("y")
                     )
                 ),
@@ -201,7 +201,7 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
                     new Symbol("x")
                 ),
                 new Expression("mul",
-                    new Integer(-1),
+                    new Number(-1),
                     new Symbol("y"),
                     new Symbol("y")
                 )
@@ -218,7 +218,7 @@ namespace ShiftCo.ifmo_ca_lab_3.EvaluationTest
                     new Symbol("y"),
                     new Symbol("x")
                 ),
-                new Integer(10)
+                new Number(10)
             );
             var evaluated = Evaluator.Run(expr);
         }

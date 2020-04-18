@@ -7,6 +7,7 @@
         expression,
         sum,
         mul,
+        div,
         pow,
         set,
         delayed,
