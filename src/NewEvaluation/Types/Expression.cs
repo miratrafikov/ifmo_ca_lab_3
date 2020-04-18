@@ -16,6 +16,7 @@ namespace ShiftCo.ifmo_ca_lab_3.NewEvaluation.Types
         public Expression(IElement head)
         {
             Head = head;
+            Elements = new List<IElement>();
         }
 
         public Expression(IElement head, List<IElement> elements)
@@ -45,10 +46,11 @@ namespace ShiftCo.ifmo_ca_lab_3.NewEvaluation.Types
         public override string ToString()
         {
             var str = Head + "[";
-            foreach (var element in Elements)
+            for (var itElements = 0; itElements < Elements.Count; itElements++)
             {
+                var element = Elements[itElements];
                 str += element.ToString();
-                if (element.Equals(Elements.Last()))
+                if (itElements == Elements.Count - 1)
                 {
                     str += "]";
                 }
@@ -57,6 +59,7 @@ namespace ShiftCo.ifmo_ca_lab_3.NewEvaluation.Types
                     str += ", ";
                 }
             }
+
             return str;
         }
 

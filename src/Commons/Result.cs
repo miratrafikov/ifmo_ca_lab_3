@@ -16,5 +16,10 @@
             Success = success;
             Value = value;
         }
+
+        public override string ToString()
+        {
+            return Success + ", " + (Value ?? "null");
+        }
     }
 }

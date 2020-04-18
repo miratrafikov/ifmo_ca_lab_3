@@ -35,7 +35,7 @@ namespace ShiftCo.ifmo_ca_lab_3.NewEvaluation.Types
 
         public override string ToString()
         {
-            return Name + (IsSequence ? "___" : "_") + (Type == typeof(IElement) ? "" : Type.ToString());
+            return Name + (IsSequence ? "___" : "_") + (Type == typeof(IElement) ? "" : Type.Name);
         }
     }
 }
